@@ -11,7 +11,7 @@ if not exist "%destdir%\.git" mkdir "%destdir%\.git"
 
 ECHO COPYING .git RESOURCES...
 xcopy "%sourcedir%\.gitignore" %destdir% /s /Y >nul
-xcopy "%sourcedir%\README.md" %destdir% /s /Y >nul
+xcopy "%sourcedir%\*.md" %destdir% /s /Y >nul
 xcopy "%sourcedir%\.git" "%destdir%\.git" /s /Y /D >nul
 ECHO Success^^!
 ECHO.
