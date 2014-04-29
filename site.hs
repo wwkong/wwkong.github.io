@@ -10,8 +10,13 @@ postCtx =
 
 --------------------------------------------------------------------------------
 main :: IO ()
-main = hakyllWith config $ do
+main = hakyll $ do
+    
     match "images/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
+    match "etc/*" $ do
         route   idRoute
         compile copyFileCompiler
 
