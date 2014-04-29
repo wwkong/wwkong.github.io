@@ -3,6 +3,8 @@ SETLOCAL EnableDelayedExpansion
 
 ECHO SETTING UP TEMP DIRECTORY...
 if not exist "%CD%\temp" mkdir "%CD%\temp"
+ECHO Success^^!
+ECHO.
 
 set "sourcedir=%CD%\_site"
 set "destdir=%CD%\temp"
@@ -29,8 +31,8 @@ ECHO MOVING .git RESOURCES...
 xcopy %destdir%  %sourcedir% /s /Y >nul
 mkdir "%sourcedir%\.git" >nul
 xcopy "%destdir%\.git" "%sourcedir%\.git" /s /Y /D >nul
-ECHO.
 ECHO Success^^!
+ECHO.
 
 ECHO DELETING TEMP DIRECTORY...
 del "%destdir%\*.*" /S /A /Q >nul

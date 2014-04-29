@@ -3,6 +3,8 @@ SETLOCAL EnableDelayedExpansion
 
 ECHO SETTING UP TEMP DIRECTORY...
 if not exist "%CD%\temp" mkdir "%CD%\temp"
+ECHO Success^^!
+ECHO.
 
 set "sourcedir=%CD%\_site"
 set "destdir=%CD%\temp"
