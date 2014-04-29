@@ -1,14 +1,27 @@
 html {
-    background: #D0D0D0;
+	background: #EEEEEE;
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px 0px 0px 0px;
 }
 
 div#navigation {
+	background: #D7D7D7;
     padding-bottom: 18px;
     text-align: center;
 }
 
 div#navigation a {
     margin: 0px 6px 0px 6px;
+    border-bottom: 2px;
+}
+
+div#content {
+    margin: 12px;
 }
 
 div#footer {
@@ -20,10 +33,10 @@ div#footer {
     text-align: center;
 }
 
-@media all and (min-width: 974px) {
+@media all and (min-width: 962px) {
 
     html {
-        background: #D0D0D0 url("../images/sidebar.jpg") repeat-y left top;
+        background: #EEEEEE url("../images/sidebar.jpg") repeat-y left top;
     }
 
     div#navigation {
@@ -33,7 +46,7 @@ div#footer {
         margin: 0px 0px 0px 18px;
         position: fixed;
         top: 0px;
-        width: 100px;
+        width: 150px;
     }
 
     div#navigation h1, div#navigation a {
@@ -47,7 +60,7 @@ div#footer {
     }
 
     div#content {
-        margin: 0px 0px 0px 156px;
+        margin: 0px 0px 0px 200px;
         padding: 0px 36px 0px 36px;
         width: 800px;
         overflow: auto;
