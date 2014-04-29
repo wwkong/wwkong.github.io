@@ -1,0 +1,6 @@
+*.exe
+etc/*
+images/*
+!images/haskell-logo.png
+_cache/*
+_site/*
