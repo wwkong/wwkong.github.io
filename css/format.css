@@ -1,0 +1,30 @@
+html {
+    font-size: 16px;
+    font-family: sans-serif;
+    line-height: 24px;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+body {
+    color: #111;
+}
+
+a {
+    color: #111;
+    text-decoration: none;
+    border-bottom: 1px solid #555;
+}
+
+div#content {
+    margin: 0px 0px 0px 156px;
+    padding: 0px 36px 0px 36px;
+    width: 648px;
+    overflow: auto;
+}

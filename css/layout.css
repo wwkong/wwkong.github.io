@@ -1,33 +1,30 @@
 html {
-    margin: 0px;
-    padding: 0px;
-}
-
-body {
-    margin: 0px;
-    padding: 0px 0px 0px 0px;
+    background: #D0D0D0;
 }
 
 div#navigation {
-    background: none;
-    float: left;
-    left: 0px;
-    margin: 0px 0px 0px 18px;
-    position: fixed;
-    top: 0px;
-    width: 102px;
+    padding-bottom: 18px;
+    text-align: center;
 }
 
 div#navigation a {
-    border: none;
     margin: 0px 6px 0px 6px;
 }
 
-div#content {
-    margin: 12px;
+div#footer {
+    border-top: solid 2px black;
+    color: #555;
+    font-size: 14px;
+    margin-top: 30px;
+    padding: 12px 0px 12px 0px;
+    text-align: center;
 }
 
-@media all {
+@media all and (min-width: 974px) {
+
+    html {
+        background: #D0D0D0 url("../images/sidebar.jpg") repeat-y left top;
+    }
 
     div#navigation {
         background: none;
@@ -36,7 +33,7 @@ div#content {
         margin: 0px 0px 0px 18px;
         position: fixed;
         top: 0px;
-        width: 102px;
+        width: 100px;
     }
 
     div#navigation h1, div#navigation a {
@@ -45,25 +42,14 @@ div#content {
     }
 
     div#navigation a {
-        color: #333;
         margin: 6px 0px 6px 0px;
+        border-top: 2px;
     }
 
     div#content {
         margin: 0px 0px 0px 156px;
         padding: 0px 36px 0px 36px;
-        width: 648px;
-    }
-
-    div#logo {
-        margin: 0px 0px 0px 156px;
-        padding: 0px 36px 0px 36px;
-        width: 648px;
-    }
-
-    div#footer {
-        margin: 0px 0px 0px 156px;
-        padding: 0px 36px 0px 36px;
-        width: 648px;
+        width: 800px;
+        overflow: auto;
     }
 }
