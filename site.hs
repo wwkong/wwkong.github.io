@@ -95,6 +95,21 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` indexContext)
                 >>= relativizeUrls
 
+    -- Achives
+    match "archive.html" $ do
+        route idRoute
+        compile $ do
+            posts <- fmap (take 3) . recentFirst =<< loadAll "posts/*"
+            let indexContext =
+                    listField "posts" (postCtxTags tags) (return posts) <>
+                    field "tags" (\_ -> renderTagList tags) <>
+                    defaultContext
+
+            getResourceBody
+                >>= applyAsTemplate indexContext
+                >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` indexContext)
+                >>= relativizeUrls
+
     -- Default template and other basic pages
     match (fromList sidebarList) $ do
         route   $ setExtension "html"
@@ -113,7 +128,7 @@ main = hakyll $ do
                 >>= applyTemplate defaultTpl 	(mathCtx `mappend` defaultContext)
                 >>= relativizeUrls
 
-    -- Post list (replaces archives)
+    -- Post list
     create ["posts.html"] $ do
         route idRoute
         compile $ do
