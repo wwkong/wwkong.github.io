@@ -5,11 +5,7 @@ tags: test
 mathjax: on
 ---
 
-$\begin{aligned}
-\dot{x} & = \sigma(y-x) \\
-\dot{y} & = \rho x - y - xz \\
-\dot{z} & = -\beta z + xy
-\end{aligned}$
+$$\displaystyle \omega_0 = \frac{1}{\sqrt{LC}}$$
 
 Mauris in lorem nisl. Maecenas tempus facilisis ante, eget viverra nisl
 tincidunt et. Donec turpis lectus, mattis ac malesuada a, accumsan eu libero.
