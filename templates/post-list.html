@@ -1,7 +1,20 @@
+
 <ul>
     $for(posts)$
         <li>
-            <a href="$url$">$title$</a> - $date$
+        $if(author)$
+        	<p>
+	            <a href="$url$">$title$</a> - 
+                <span class="soft">$date$</span> by <span class="soft">$author$</span><br />
+	            $description$
+            </p>
+        $else$
+        	<p>
+        		<a href="$url$">$title$</a> - 
+                <span class="soft">$date$</span> by <span class="soft">Unknown Author</span><br />
+        		$description$
+        	</p>
+        $endif$
         </li>
     $endfor$
 </ul>

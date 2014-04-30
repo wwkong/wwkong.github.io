@@ -27,3 +27,16 @@ a {
     text-decoration: none;
     border-bottom: 1px solid #555;
 }
+
+p, ul {
+    margin: 14px 0px 14px 10px;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+.soft, .caption {
+    font-style: italic;
+    color: #555;
+}
