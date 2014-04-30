@@ -17,8 +17,7 @@ sidebarList :: [Identifier]
 sidebarList = [ "contact.md",
                 "notes.md",
                 "pe.md",
-                "programming.md",
-                "resume.md" ]
+                "programming.md" ]
 
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
@@ -47,6 +46,7 @@ mathCtx = field "mathjax" $ \item -> do
     return $ if "mathjax" `M.member` metadata
                   then mathJaxScr
                   else ""
+
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -95,19 +95,30 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` indexContext)
                 >>= relativizeUrls
 
-    -- Default template
+    -- Default template and other basic pages
     match (fromList sidebarList) $ do
         route   $ setExtension "html"
         compile $ pandocCompilerWith defaultHakyllReaderOptions pandocOptions 
             >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` defaultContext)
             >>= relativizeUrls
 
+    -- Resume page
+    match "resume.md" $ do
+        route   $ setExtension ".html"
+        compile $ do
+            cvTpl      <- loadBody "templates/resume.html"
+            defaultTpl <- loadBody "templates/default.html"
+            pandocCompiler
+                >>= applyTemplate cvTpl 		(mathCtx `mappend` defaultContext)
+                >>= applyTemplate defaultTpl 	(mathCtx `mappend` defaultContext)
+                >>= relativizeUrls
+
     -- Post list (replaces archives)
     create ["posts.html"] $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
-            let ctx = constField "title" "Posts" <>
+            let ctx = constField "title" "Archive" <>
                       listField "posts" (postCtxTags tags) (return posts) <>
                       defaultContext
 
