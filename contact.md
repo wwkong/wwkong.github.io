@@ -4,5 +4,4 @@ title: Contact
 
 # Contact #
 
-I live in a small hut in the mountains of Kumano Kodō on Kii Hantō and would not
-like to be contacted.
+If you have any questions or comments regarding the content on my blog or website, the best and most preferred way to contact me is through email at [wwkong92@gmail.com](wwkong92@gmail.com).

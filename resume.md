@@ -55,10 +55,10 @@ University of Waterloo, Waterloo ON
 * Professional Risk Management Program September 2010 - Present
 * Mathematical Finance Program, Statistics Minor May 2011 - Present
 
-*Relevant Courses*: Forecasting, Differential Equations, Measure Theory, Advanced Optimization, Numerical
+**Relevant Courses**: Forecasting, Differential Equations, Measure Theory, Advanced Optimization, Numerical
 Methods for Finance, Mathematical Models for Finance, Data Analysis (Online)
 
-*Professional Certifications*: Passed two Society of Actuaries exams (P, FM)
+**Professional Certifications**: Passed two Society of Actuaries exams (P, FM)
 
 ## Independent Projects ##
 
