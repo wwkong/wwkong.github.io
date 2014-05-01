@@ -1,38 +1,46 @@
-html {
-	background: #EEEEEE;
-    margin: 0px;
-    padding: 0px;
+@media all and (min-width: 320px) {
+	@-viewport {
+	    width: device-width;
+	    zoom: .5;
+	  }
+
+	html {
+		background: #EEEEEE;
+	    margin: 0px;
+	    padding: 0px;
+	}
+
+	body {
+	    margin: 0px;
+	    padding: 0px 0px 0px 0px;
+	}
+
+	div#navigation {
+		background: #D7D7D7;
+	    padding-bottom: 18px;
+	    text-align: center;
+	}
+
+	div#navigation a {
+	    margin: 0px 6px 0px 6px;
+	    border-bottom: 2px;
+	}
+
+	div#content {
+	    margin: 12px;
+	}
+
+	div#footer {
+	    border-top: solid 2px black;
+	    color: #555;
+	    font-size: 14px;
+	    margin-top: 30px;
+	    padding: 12px 0px 12px 0px;
+	    text-align: center;
+	}
 }
 
-body {
-    margin: 0px;
-    padding: 0px 0px 0px 0px;
-}
-
-div#navigation {
-	background: #D7D7D7;
-    padding-bottom: 18px;
-    text-align: center;
-}
-
-div#navigation a {
-    margin: 0px 6px 0px 6px;
-    border-bottom: 2px;
-}
-
-div#content {
-    margin: 12px;
-}
-
-div#footer {
-    border-top: solid 2px black;
-    color: #555;
-    font-size: 14px;
-    margin-top: 30px;
-    padding: 12px 0px 12px 0px;
-    text-align: center;
-}
-
+/* Now for larger devices */
 @media all and (min-width: 962px) {
 
     html {
