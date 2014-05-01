@@ -48,7 +48,7 @@ Why, you ask? Well, the hard fact is that mathematics is not easy. In fact, many
 
 I found out about this first hand when I first entered into the \"Advanced\" mathematics classes at the University of Waterloo. Suddenly, problems on assignments became mini projects often taking several days to solve. It was very different to the finish-in-one-day assignments that I found in high school and part of first year university.
 
-As further reinforcement, the author of \"A Mathematician\'s Survival Guide: Graduate School and Early Career Development\" \(a book that I would highly recommend\) echoes these sentiments. In one chapter he describes a student, a young prodigy, who excelled in all his upper year maths courses, aced Putnam contests \(the university version of the Euclid\) regularly and was accepted to all the top graduate schools in the country. Yet, when he finished his graduate thesis, earning his Ph.D\. the young student was
+As further reinforcement, the author of \"A Mathematician\'s Survival Guide: Graduate School and Early Career Development\", a book that I would highly recommend, echoes these sentiments. In one chapter he describes a student, a young prodigy, who excelled in all his upper year maths courses, aced Putnam contests, the university version of the Euclid, regularly and was accepted to all the top graduate schools in the country. Yet, when he finished his graduate thesis, earning his Ph.D\. the young student was
 
 > \"so disgusted with mathematics that he quit and went to work in a genomics laboratory\"
 

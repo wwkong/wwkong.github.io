@@ -99,7 +99,7 @@ main = hakyll $ do
     match "archive.html" $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 3) . recentFirst =<< loadAll "posts/*"
+            posts <- recentFirst =<< loadAll "posts/*"
             let indexContext =
                     listField "posts" (postCtxTags tags) (return posts) <>
                     field "tags" (\_ -> renderTagList tags) <>
