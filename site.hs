@@ -57,13 +57,13 @@ main = hakyll $ do
         route   idRoute
         compile copyFileCompiler
 
-    match "etc/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
     match "css/*" $ do
         route   idRoute
         compile compressCssCompiler
+
+    match "files/*" $ do
+        route   idRoute
+        compile copyFileCompiler    
 
     -- Build tags
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
@@ -124,8 +124,8 @@ main = hakyll $ do
             cvTpl      <- loadBody "templates/resume.html"
             defaultTpl <- loadBody "templates/default.html"
             pandocCompiler
-                >>= applyTemplate cvTpl 		(mathCtx `mappend` defaultContext)
-                >>= applyTemplate defaultTpl 	(mathCtx `mappend` defaultContext)
+                >>= applyTemplate cvTpl         (mathCtx `mappend` defaultContext)
+                >>= applyTemplate defaultTpl    (mathCtx `mappend` defaultContext)
                 >>= relativizeUrls
 
     -- Post list
