@@ -1,0 +1,66 @@
+---
+title: High School Life (Part III)
+author: William Kong
+description: high school life, research topics, and advice for the young aspiring mathematician.
+tags: mathematics, education
+mathjax: on
+---
+
+This will be the final post in my three part saga about mathematics and high school. In this post I want to end off by offering the final part that was mentioned in the description, research topics.
+
+If you have been reading any of my previous posts, you might remember me talking about how a critical part of learning mathematics is knowing how to explore, be creative, and think about problems outside of the classroom. It is better to sow your tiny seeds of interests early than later, because as many of you find out from learning maths, many of the areas interconnect beautifully if you just take a while to examine the subtleties.
+
+Thus, below, I have provided some topics of interest that can be researched at the high school level but delve deeply into undergraduate topics; all they need is a bit of perseverance, time, and creativity to get started. You can probably even get your teacher in on this. Ask him/her if instead of completing droll textbook problems or monotonous exercises, you could start a research topic instead! No more spending one hour every day copying down exactly what the book asks you to do or sketching and drawing precise margins because at the university level, precisely drawn graphs is one of the lesser important aspects of mathematics. Instead, mathematics turns out to be a continuous process that you can do every day, without the stress.
+
+
+![\... unless of course, your teacher wants you know the critical skills of copying and pasting. Then, it is advisable to keep at those \'exercises\'.](/files/hsl3_1.jpg)
+
+So without further ado, here they are with difficulty rankings relative to high school content:
+
+**Population Dynamics**
+
+Difficulty: 7/10
+Mathematics Topics: Differential Equations, Chaos Theory
+About: Students can examine the different  population models such as Malthusian, logistic, and island biogeography. Investigations can be about the limitations of each model, the strengths and the ideal conditions for the model to work.
+Bonus: Students can talk about how current day population models are more similar to chaotic systems than deterministic ones
+
+**Poker, Probability, and Game Theory**
+
+Difficulty: 6/10
+Mathematics Topics: Game Theory, Probability, Statistics, Simulations
+About: Students can investigate the best course of action to take with various poker hands, categorized by winning strategy. Approaches can be from a game theoretical, probabilistic or statistics side or all three.
+Bonus: Create a computer simulation to accept or deny your theory through a null hypothesis and Monte Carlo simulations.
+
+**Rings, Fields, Groups, Vector Spaces, and Algebras**
+
+Difficulty: 9.5/10
+Mathematics Topics: Abstract Algebra, Linear Algebra
+About: Students can discuss the differences and similarities between the above algebraic objects and how to construct them. Investigations can be made about various isomorphisms between algebraic objects and about interesting objects such as the power set of the real numbers being an algebra under the union and intersection operators.
+Bonus: Construct your own simple algebraic object \(maybe the set of all watermelons that taste like oranges; something silly\) and see if you can go from a magma all the way to an algebra.
+
+**Fractals and Iteration**
+
+Difficulty: 9/10
+Mathematics topics: Fractals, Chaos Theory
+About: Students could take a look at the definition of a fractal and what exactly is fractal dimension. Investigations can be made about the construction of fractals under various domains, their applications \(e.g. coastlines\), and their self-similarity properties. Students could try to generate fractals through freeware found online.
+Bonus: Students could investigate what higher dimensional fractals would look like if projected on to the 3D or 2D plane. An example of a 3D projection into the 2D plane would be a contour map.
+
+**Methods for Computing Mathematical Constants**
+
+Difficulty: 8/10
+Mathematics Topics: Computer Science, Simulations, Calculus
+About: Students can investigate the different methods for computing mathematical constants such as $\pi$, $e$, and $\phi$ the golden ratio. Some investigation could be made about the complexity of the algorithms and how fast they converge to the constants.
+Bonus: Come up with your own unique constant and an algorithm used to compute it. Talk about complexity and rate of convergence as well as if it can be represented by current day mathematical constants
+
+**Cardinality of Various Sets**
+
+Difficulty: 8.5/10
+Mathematics Topics: Set Theory, Ordinals
+About: Students can investigate the various cardinalities contained in sets such as the natural numbers, integers, irrational numbers, rational numbers, real numbers, and algebraic numbers. Students could also define their own set and try to determine the cardinality of that set.
+Bonus: Students can devise a model for classifying the cardinalities of different sets based  on certain characteristics contained in each set.
+
+The above topics are merely suggestion to get you started on interesting topics. However, one should definitelynot be limited to the above because, to quote Georg Cantor:
+
+![\"The essence of mathematics is in its freedom.\"](/files/hsl3_2.jpg)
+  
+I hope you all enjoyed my little mini-series rant about my high school experiences and if you did, I would love to hear about your experiences in the comments below.

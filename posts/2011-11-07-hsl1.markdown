@@ -1,0 +1,41 @@
+---
+title: High School Life (Part I)
+author: William Kong
+description: high school life, research topics, and advice for the young aspiring mathematician.
+tags: mathematics, education
+mathjax: on
+---
+
+Brace yourselves as this is going to be a very long post - split into two to three parts - of myself reminiscing back to my high school years.
+
+Specifically it will cover my experiences in:
+
+* Grade 9,10 and part of 11
+* My developing interest in mathematics
+* The beginning of my Extended Essay on set theoretical topics
+
+To recount my experiences in high school, I can honestly say that for my first two years doing mathematics at the ninth and early tenth grade level that I really hated it, or at least hated how it was taught. Many of the problems were built around repetition and memorization and the \"interesting\" problems that were brought up in class were nothing more than algebra problems that were sugar-coated with words.
+
+Problems like \"if Alice is twice Bob\'s age fifteen years from now and she is twenty right now, how old is Bob?\" populated this category endlessly. I would often solve such problems and then write something to the tune of \"Above is an algebra problem. To find Bob\'s age, ask Bob for his health card.\" just for kicks. And then proceed to lose marks because of it.
+
+Because of the monotony of class, I eventually developed a system wherein I would be able to learn the material in the shortest amount of time while having free time to work on other subjects. Sort of a pseudo-form of procrastination if you will. I would sometimes even spend time reading ahead to the grade eleven and twelve books. Now, while I would always receive 95\%+ on the tests, because I did not do any homework or in-class assignments, my marks would never peak beyond 85\%. This frustrated me quite a bit.
+
+![\"You may have solved the Riemann hypothesis, but you haven\'t completed your exercises on exponents yet. Therfore, you get a B- at best.\"](/files/hsl1_1.jpg)
+
+By the middle of the tenth grade my system still worked, but besides working on other class material during maths classes I was still bored out of my mind. It was only on a whim that I entered the Grade 10 Waterloo Cayley mathematics contest, or maybe it was out of boredom \(I can\'t recall\). But taking that maths contest was possibly the best decision that I made up to that point in my life. This is because after writing it, not only did I win the contest and become the school district champion, the experience lit a flame within me whose goal was only to discover how far into mathematical ocean could I dive. All of this because the contest really challenged me and provoked me to improve myself to sheer effort.
+
+![\"And also to allow for another chance to get back at those pretentious math club members and their non-mathy maths games.\"](/files/hsl1_2.jpg)
+
+In grade eleven, when I began driving straight into learning rigourous mathematics, I also began my two-year journey through the arduous IB \(International Baccalaureate\) program. One of parts of the program that I genuinely enjoyed was writing the Extended Essay, and in my case it was on Mathematics, specifically Cantor and his classification of the different cardinalities and properties of the cardinality of the continuum.
+
+![\"This was what essentially shaped my two years writing that essay\... what else could be more fun?\"](/files/hsl1_3.png)
+
+Now during the introduction of the essay and its components, which were taught through a series of lectures, my advisers made it very clear that no one chooses a maths topic unless they wanted a low grade or wanted to write about poker \(which is what the last guy did\... two years ago\). Throughout the lectures, the content mainly emphasized skills that would be helpful for those writing history or English papers. None of it was particularly helpful for researching and formatting maths papers.
+
+When it came time to select subjects and topics, sure enough, many of my classmates fell into either English, History or the odd Science related topic. When it came to my turn though, I shyly squeaked out my interest in developing a maths paper and instead of an expected \"That\'s a great choice.\" or \"What an interesting subject.\" like all my other peers, I received a response to the tone of \"Hah. Good luck with that. Nobody ever chooses math.\" and yes those were exact words. No else in my class decided to do a maths paper after that.
+
+![\"He wants to learn math? Hah! Next he\'ll be saying he wants to become a mathematician.\"](/files/hsl1_4.jpeg)
+
+Undeterred though, I was hopeful that my personal faculty adviser could provide input on my thesis topic. Unfortunately, my maths adviser had never done any set theory during his undergraduate career and while that did surprise me a little I later found out, a week into researching my topic, that his majored subject was in physics and not mathematics.
+
+I knew, then, that I had a lot of work ahead of me.

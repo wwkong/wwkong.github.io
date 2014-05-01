@@ -40,3 +40,7 @@ ul {
     font-style: italic;
     color: #555;
 }
+
+div.figure {
+    text-align: center;
+}
