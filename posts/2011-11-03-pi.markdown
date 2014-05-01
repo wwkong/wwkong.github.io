@@ -3,7 +3,6 @@ title: On the Irrationality of Pi
 author: William Kong
 description: An in-depth look on one of the many proofs that Pi is irrational.
 tags: mathematics, education
-mathjax: on
 ---
 
 One of the few of mathematics related details that really bugged me during high school
@@ -11,6 +10,6 @@ One of the few of mathematics related details that really bugged me during high 
 
 There was no easy proof that I could use, at the time, that could prove it was irrational unlike simpler numbers such as $\sqrt{2}$. I could not even find any teacher at the time who could explain to me using basic calculus why the ratio between the diameter of a circle and its radius was never rational.
 
-Skip many years ahead, and I came upon this interesting, albeit \"short\"[proof](http://www.lrz.de/~hr/numb/pi-irr.html). Although the proof can be summarized through eight remarks and a few properties about integrals, trying to prove each remark can be a bit challenging. I would estimate that the average high school grade 11 or 12 student would not be able to get past the second remark without great difficulty.
+Skip many years ahead, and I came upon this interesting, albeit \"short\" [proof](http://www.lrz.de/~hr/numb/pi-irr.html). Although the proof can be summarized through eight remarks and a few properties about integrals, trying to prove each remark can be a bit challenging. I would estimate that the average high school grade 11 or 12 student would not be able to get past the second remark without great difficulty.
 
-That is why I compiled [this](/files/Irrationality_of_Pi.pdf), a fairly easy to follow guide detailing each of the remarks and their derivations. In the .pdf, I also left a couple exercises for the reader to do just for fun, but if you really need to know the answer, don\'t hesitate to private message me.
+That is why I compiled [this](/files/Irrationality_of_Pi.pdf), a fairly easy to follow guide detailing each of the remarks and their derivations. In the .pdf, I also left a couple exercises for the reader to do just for fun, but if you really need to know the answer, don\'t hesitate to email me.

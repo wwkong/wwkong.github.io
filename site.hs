@@ -1,17 +1,15 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import qualified Data.Map    as M
+import qualified Data.Map            as M
 import           Data.Monoid
+import qualified Data.Set            as S
 import           Hakyll
 import           Text.Pandoc
+import           Text.Pandoc.Options
+
 
 
 --------------------------------------------------------------------------------
-
-mathJaxScr :: String
-mathJaxScr = unlines ["<script type=\"text/javascript\" ",
-                      "src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">",
-                      "</script>"]
 
 sidebarList :: [Identifier]
 sidebarList = [ "contact.md",
@@ -28,24 +26,28 @@ myFeedConfiguration = FeedConfiguration
     , feedRoot        = "http://wwkong.github.io/"
     }
 
-pandocOptions :: WriterOptions
-pandocOptions = defaultHakyllWriterOptions{ writerHTMLMathMethod = MathJax "" }
+pandocMathCompiler =
+        let writerOptions = defaultHakyllWriterOptions {
+                          writerExtensions = writerExtensions defaultHakyllWriterOptions,
+                          writerHTMLMathMethod = MathJax ""
+                        }
+    	in pandocCompilerWith defaultHakyllReaderOptions writerOptions
 
 --------------------------------------------------------------------------------
-postCtx :: Context String
-postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
+
+baseCtx :: Context String
+baseCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
 
 postCtxTags :: Tags -> Context String
-postCtxTags tags = tagsField "tags" tags `mappend` postCtx
+postCtxTags tags = tagsField "tags" tags `mappend` baseCtx
 
-mathCtx :: Context a
-mathCtx = field "mathjax" $ \item -> do
-    metadata <- getMetadata $ itemIdentifier item
-    return $ if "mathjax" `M.member` metadata
-                  then mathJaxScr
-                  else ""
+archivesCtx :: Tags -> [Item String] -> Context String
+archivesCtx tags posts =
+	constField "title" "Archive" <>
+	listField "posts" (postCtxTags tags) (return posts) <>
+    field "tags" (\_ -> renderTagList tags) <>
+    postCtxTags tags
+
 
 
 --------------------------------------------------------------------------------
@@ -72,12 +74,11 @@ main = hakyll $ do
     match "posts/*" $ do
         route   $ setExtension ".html"
         compile $ do
-            pandocCompilerWith defaultHakyllReaderOptions pandocOptions 
+            pandocMathCompiler
                 >>= saveSnapshot "content"
                 >>= return . fmap demoteHeaders
-                >>= loadAndApplyTemplate "templates/post.html"      (mathCtx `mappend` postCtxTags tags)
-                >>= saveSnapshot "content"
-                >>= loadAndApplyTemplate "templates/default.html"   (mathCtx `mappend` postCtxTags tags)
+                >>= loadAndApplyTemplate "templates/post.html"      (postCtxTags tags)
+                >>= loadAndApplyTemplate "templates/default.html"   (postCtxTags tags)
                 >>= relativizeUrls
 
     -- Home page
@@ -85,14 +86,9 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- fmap (take 3) . recentFirst =<< loadAll "posts/*"
-            let indexContext =
-                    listField "posts" (postCtxTags tags) (return posts) <>
-                    field "tags" (\_ -> renderTagList tags) <>
-                    defaultContext
-
             getResourceBody
-                >>= applyAsTemplate indexContext
-                >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` indexContext)
+                >>= applyAsTemplate (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
     -- Achives
@@ -100,21 +96,16 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
-            let indexContext =
-                    listField "posts" (postCtxTags tags) (return posts) <>
-                    field "tags" (\_ -> renderTagList tags) <>
-                    defaultContext
-
             getResourceBody
-                >>= applyAsTemplate indexContext
-                >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` indexContext)
+                >>= applyAsTemplate (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
     -- Default template and other basic pages
     match (fromList sidebarList) $ do
         route   $ setExtension "html"
-        compile $ pandocCompilerWith defaultHakyllReaderOptions pandocOptions 
-            >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` defaultContext)
+        compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/default.html" baseCtx
             >>= relativizeUrls
 
     -- Resume page
@@ -124,8 +115,8 @@ main = hakyll $ do
             cvTpl      <- loadBody "templates/resume.html"
             defaultTpl <- loadBody "templates/default.html"
             pandocCompiler
-                >>= applyTemplate cvTpl         (mathCtx `mappend` defaultContext)
-                >>= applyTemplate defaultTpl    (mathCtx `mappend` defaultContext)
+                >>= applyTemplate cvTpl         baseCtx
+                >>= applyTemplate defaultTpl    baseCtx
                 >>= relativizeUrls
 
     -- Post list
@@ -133,13 +124,9 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
-            let ctx = constField "title" "Archive" <>
-                      listField "posts" (postCtxTags tags) (return posts) <>
-                      defaultContext
-
             makeItem ""
-                >>= loadAndApplyTemplate "templates/tag.html" (mathCtx `mappend` ctx)
-                >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` ctx)
+                >>= loadAndApplyTemplate "templates/tag.html" 	  (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
     -- Post tags
@@ -148,19 +135,16 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll pattern
-            let ctx = constField "title" title <>
-                      listField "posts" (postCtxTags tags) (return posts) <>
-                      defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/tag.html" (mathCtx `mappend` ctx)
-                >>= loadAndApplyTemplate "templates/default.html" (mathCtx `mappend` ctx)
+                >>= loadAndApplyTemplate "templates/tag.html" 	  (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
     --- Atom Feed
     create ["atom.xml"] $ do
     route idRoute
     compile $ do
-        let feedCtx = postCtx `mappend` bodyField "description"
+        let feedCtx = baseCtx `mappend` bodyField "description"
         posts <- fmap (take 10) . recentFirst =<<
             loadAllSnapshots "posts/*" "content"
         renderAtom myFeedConfiguration feedCtx posts

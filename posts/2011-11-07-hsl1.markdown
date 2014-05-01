@@ -3,7 +3,6 @@ title: High School Life (Part I)
 author: William Kong
 description: high school life, research topics, and advice for the young aspiring mathematician.
 tags: mathematics, education
-mathjax: on
 ---
 
 Brace yourselves as this is going to be a very long post - split into two to three parts - of myself reminiscing back to my high school years.
