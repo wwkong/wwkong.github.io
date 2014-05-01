@@ -42,7 +42,7 @@ Bonus: Construct your own simple algebraic object \(maybe the set of all waterme
 
 Difficulty: 9/10
 Mathematics topics: Fractals, Chaos Theory
-About: Students could take a look at the definition of a fractal and what exactly is fractal dimension. Investigations can be made about the construction of fractals under various domains, their applications \(e.g. coastlines\), and their self-similarity properties. Students could try to generate fractals through freeware found online.
+About: Students could take a look at the definition of a fractal and what exactly is fractal dimension. Investigations can be made about the construction of fractals under various domains, their applications \(e.g\. coastlines\), and their self-similarity properties. Students could try to generate fractals through freeware found online.
 Bonus: Students could investigate what higher dimensional fractals would look like if projected on to the 3D or 2D plane. An example of a 3D projection into the 2D plane would be a contour map.
 
 **Methods for Computing Mathematical Constants**
