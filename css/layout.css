@@ -41,7 +41,7 @@
 }
 
 /* Now for larger devices */
-@media all and (min-width: 962px) {
+@media all and (min-width: 1040px) {
 
     html {
         background: #EEEEEE url("../images/sidebar.jpg") repeat-y left top;
