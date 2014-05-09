@@ -12,7 +12,7 @@ If you have been reading any of my previous posts, you might remember me talking
 Thus, below, I have provided some topics of interest that can be researched at the high school level but delve deeply into undergraduate topics; all they need is a bit of perseverance, time, and creativity to get started. You can probably even get your teacher in on this. Ask him/her if instead of completing droll textbook problems or monotonous exercises, you could start a research topic instead! No more spending one hour every day copying down exactly what the book asks you to do or sketching and drawing precise margins because at the university level, precisely drawn graphs is one of the lesser important aspects of mathematics. Instead, mathematics turns out to be a continuous process that you can do every day, without the stress.
 
 
-![\... unless of course, your teacher wants you know the critical skills of copying and pasting. Then, it is advisable to keep at those \'exercises\'.](/files/hsl3_1.jpg)
+![... unless of course, your teacher wants you know the critical skills of copying and pasting. Then, it is advisable to keep at those 'exercises'.](/files/hsl3_1.jpg)
 
 So without further ado, here they are with difficulty rankings relative to high school content:
 
@@ -35,13 +35,13 @@ Bonus: Create a computer simulation to accept or deny your theory through a null
 Difficulty: 9.5/10
 Mathematics Topics: Abstract Algebra, Linear Algebra
 About: Students can discuss the differences and similarities between the above algebraic objects and how to construct them. Investigations can be made about various isomorphisms between algebraic objects and about interesting objects such as the power set of the real numbers being an algebra under the union and intersection operators.
-Bonus: Construct your own simple algebraic object \(maybe the set of all watermelons that taste like oranges; something silly\) and see if you can go from a magma all the way to an algebra.
+Bonus: Construct your own simple algebraic object (maybe the set of all watermelons that taste like oranges; something silly) and see if you can go from a magma all the way to an algebra.
 
 **Fractals and Iteration**
 
 Difficulty: 9/10
 Mathematics topics: Fractals, Chaos Theory
-About: Students could take a look at the definition of a fractal and what exactly is fractal dimension. Investigations can be made about the construction of fractals under various domains, their applications \(e.g\. coastlines\), and their self-similarity properties. Students could try to generate fractals through freeware found online.
+About: Students could take a look at the definition of a fractal and what exactly is fractal dimension. Investigations can be made about the construction of fractals under various domains, their applications (e.g. coastlines), and their self-similarity properties. Students could try to generate fractals through freeware found online.
 Bonus: Students could investigate what higher dimensional fractals would look like if projected on to the 3D or 2D plane. An example of a 3D projection into the 2D plane would be a contour map.
 
 **Methods for Computing Mathematical Constants**
@@ -60,6 +60,6 @@ Bonus: Students can devise a model for classifying the cardinalities of differen
 
 The above topics are merely suggestion to get you started on interesting topics. However, one should definitelynot be limited to the above because, to quote Georg Cantor:
 
-![\"The essence of mathematics is in its freedom.\"](/files/hsl3_2.jpg)
+!["The essence of mathematics is in its freedom."](/files/hsl3_2.jpg)
   
 I hope you all enjoyed my little mini-series rant about my high school experiences and if you did, I would love to hear about your experiences in the comments below.

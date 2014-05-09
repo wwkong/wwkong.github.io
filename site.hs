@@ -3,11 +3,10 @@
 import qualified Data.Map            as M
 import           Data.Monoid
 import qualified Data.Set            as S
+import           GHC.IO.Encoding
 import           Hakyll
 import           Text.Pandoc
 import           Text.Pandoc.Options
-
-
 
 --------------------------------------------------------------------------------
 
@@ -31,7 +30,9 @@ pandocMathCompiler =
                           writerExtensions = writerExtensions defaultHakyllWriterOptions,
                           writerHTMLMathMethod = MathJax ""
                         }
-    	in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+        in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+
+--pandocMathCompiler = pandocCompilerWith defaultHakyllReaderOptions defaultHakyllWriterOptions
 
 --------------------------------------------------------------------------------
 
@@ -43,8 +44,8 @@ postCtxTags tags = tagsField "tags" tags `mappend` baseCtx
 
 archivesCtx :: Tags -> [Item String] -> Context String
 archivesCtx tags posts =
-	constField "title" "Archive" <>
-	listField "posts" (postCtxTags tags) (return posts) <>
+    constField "title" "Archive" <>
+    listField "posts" (postCtxTags tags) (return posts) <>
     field "tags" (\_ -> renderTagList tags) <>
     postCtxTags tags
 
@@ -52,7 +53,14 @@ archivesCtx tags posts =
 
 --------------------------------------------------------------------------------
 main :: IO ()
-main = hakyll $ do
+main = do
+    
+    -- Set UTF-8 Encoding
+    setLocaleEncoding utf8
+    setFileSystemEncoding utf8
+    setForeignEncoding utf8
+
+    hakyll $ do
 
     -- Basic folders
     match "images/*" $ do
@@ -125,7 +133,7 @@ main = hakyll $ do
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
             makeItem ""
-                >>= loadAndApplyTemplate "templates/tag.html" 	  (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/tag.html"     (archivesCtx tags posts)
                 >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
@@ -136,7 +144,7 @@ main = hakyll $ do
         compile $ do
             posts <- recentFirst =<< loadAll pattern
             makeItem ""
-                >>= loadAndApplyTemplate "templates/tag.html" 	  (archivesCtx tags posts)
+                >>= loadAndApplyTemplate "templates/tag.html"     (archivesCtx tags posts)
                 >>= loadAndApplyTemplate "templates/default.html" (archivesCtx tags posts)
                 >>= relativizeUrls
 
