@@ -4,9 +4,9 @@ title: Notes
 
 # Notes #
 
-Here you can take a look at some course notes that I have typesetted in the past. Links are through the course subjects below. For courses that are labeled “Review Sheet Only”, please get the review and summary sheets [here](http://sdrv.ms/14ZyPIT).
+Here you can take a look at some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the F and M denotations respectively 
 
-For additional course notes, you can check out Michael Baker\'s notes [here](http://triple-involution.blogspot.ca/p/notes.html).
+For additional course notes, you can check out Michael Baker's notes [here](http://triple-involution.blogspot.ca/p/notes.html).
 
 [Mathematics](http://sdrv.ms/14ZyCFx)
 -----
