@@ -4,14 +4,14 @@ title: Notes
 
 # Notes #
 
-Here you can take a look at some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the F and M denotations respectively 
+Here you can take a look at some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the F and M denotations respectively. Additional errata will use the denotation E[#] where [#] is some integer.
 
 For additional course notes, you can check out Michael Baker's notes [here](http://triple-involution.blogspot.ca/p/notes.html).
 
 [Mathematics](http://sdrv.ms/14ZyCFx)
 -----
 
-[W12] MATH 247, Advanced Calculus III
+[W12] [MATH 247](files/math247_CouseNotes_W12.pdf), Advanced Calculus III
 
 [Pure Mathematics](http://sdrv.ms/14UBwOB)
 -----
