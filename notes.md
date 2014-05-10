@@ -4,7 +4,11 @@ title: Notes
 
 # Notes #
 
+<<<<<<< HEAD
 Here you can take a look at some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the F and M denotations respectively jkadfhsahj
+=======
+Here you can take a look at some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the F and M denotations respectively 
+>>>>>>> 92f707785275e2aecb94e2989053c8be4cf343fa
 
 For additional course notes, you can check out Michael Baker's notes [here](http://triple-involution.blogspot.ca/p/notes.html).
 
