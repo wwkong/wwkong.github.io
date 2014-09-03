@@ -4,9 +4,9 @@ title: Resume
 
 # William Kong #
 
-[wwkong92@gmail.com](wwkong92@gmail.com)  
+[wwkong92@gmail.com](mailto:wwkong92@gmail.com)  
 [http://wwkong.github.io](http://wwkong.github.io)  
-[ca.linkedin.com/in/wwkong](ca.linkedin.com/in/wwkong)  
+[ca.linkedin.com/in/wwkong](http://ca.linkedin.com/in/wwkong)  
 
 ## Summary ##
 * Excellent understanding of financial concepts and theory
