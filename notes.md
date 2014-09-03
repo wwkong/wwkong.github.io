@@ -26,7 +26,7 @@ For additional course notes, you can check out Michael Baker's notes [here](http
 {W12}   CS 330, Management Information Systems  { [F](files/Study Guide for Final Exam CS330.pdf) }  
 {W12}   CS 371, Introduction to Computational Mathematics { [F](files/Study Guide for Final Exam CS371.pdf) }  
 {F12}   CS 338, Databases for Business Systems  { [F](files/Study Guide for Final Exam CS338.pdf) }   
-{W14}   [CS 476](files/cs476_CouseNotes_W14.pdf), Numerical Methods for Finance  { [F](files/Study Guide for Final Exam CS476.pdf) }  
+{W14}   [CS 476](files/cs476_CouseNotes_W14.pdf), Numerical Methods for Finance
 
 [Combinatorics and Optimization](http://1drv.ms/1fI0Fus) 
 -----

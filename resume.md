@@ -23,6 +23,17 @@ title: Resume
 
 ## Work Experience ##
 
+**Risk Modeling Analyst** (May 2014 – August 2014)
+TD Bank Financial Group, Toronto ON
+
+* Developed production-ready code and macroeconomic models in SAS and R for use in Basel II and
+Dodd Frank Act risk reporting as well as internal and regulatory retail credit risk stress tests
+* Created in-house algorithms and models to test the validity of Basel II and III AIRB retail risk-metrics
+using SAS and R
+* Designed several SQL and SAS data queries to create aggregate data models and validation datasets
+* Produced technical documentation for various risk metrics models as well as internal and regulatory
+stress test procedures
+
 **Risk Modeling Analyst** (September 2013 – December 2013)  
 TD Bank Financial Group, Toronto ON  
 
