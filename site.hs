@@ -14,7 +14,7 @@ sidebarList :: [Identifier]
 sidebarList = [ "contact.md",
                 "notes.md",
                 "pe.md",
-                "programming.md" ]
+                "projects.md" ]
 
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
