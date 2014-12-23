@@ -6,6 +6,9 @@ title: Projects
 
 Below are some programming and mathematics related projects that I\'ve worked on in the past or am working on now.
 
+* [Bank of Canada, Data Mining Algorithm](files/BoC_Macro.rar) - *August 2, 2012*  
+VBA macro used to mine pension interest rates from the Bank of Canada under the 2012 version of the website.
+
 * [Stock Simulator](https://github.com/wwkong/Stock-Simulator) - *December 1, 2011*
 Applications of GBM with drift and volatility in Python using finite difference methods.
 

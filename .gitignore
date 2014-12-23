@@ -6,3 +6,4 @@ images/*
 _cache/*
 /_site
 /temp/*
+*.rar

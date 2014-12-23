@@ -5,7 +5,7 @@
 	  }
 
 	html {
-		background: #EEEEEE;
+		background: #FFFFFF;
 	    margin: 0px;
 	    padding: 0px;
 	}
@@ -16,7 +16,8 @@
 	}
 
 	div#navigation {
-		background: #D7D7D7;
+		position:absolute;
+		background: #A9F5A9;
 	    padding-bottom: 18px;
 	    text-align: center;
 	}
@@ -44,15 +45,14 @@
 @media all and (min-width: 1066px) {
 
     html {
-        background: #EEEEEE url("../images/sidebar.jpg") repeat-y left top;
+        background: #FFFFFF url("../images/sidebar.jpg") repeat-y left top;
     }
 
     div#navigation {
         background: none;
-        float: left;
         left: 0px;
         margin: 0px 0px 0px 18px;
-        position: fixed;
+        position: absolute;
         top: 0px;
         width: 150px;
     }

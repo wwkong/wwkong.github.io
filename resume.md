@@ -17,8 +17,8 @@ title: Resume
 * Adept at multitasking and managing multiple concurrent projects
 
 ## Programming Languages ##
-* Natively spoken R and Haskell
-* Experience with Matlab, LaTeX, SQL, VBA, and Python
+* Natively spoken SAS, R, SQL, and Haskell
+* Experience with UNIX (AIX), Matlab, LaTeX, VBA, and Python
 * Dabbled in C/C++, Git, and Scheme (Lisp)
 
 ## Work Experience ##

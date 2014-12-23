@@ -89,6 +89,9 @@ main = do
                 >>= loadAndApplyTemplate "templates/default.html"   (postCtxTags tags)
                 >>= relativizeUrls
 
+    -- 404 page
+    match
+
     -- Home page
     match "index.html" $ do
         route idRoute
