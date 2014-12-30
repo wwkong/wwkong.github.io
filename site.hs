@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import qualified Data.Map            as M
+import qualified Data.Map                 as M
 import           Data.Monoid
-import qualified Data.Set            as S
+import qualified Data.Set                 as S
 import           GHC.IO.Encoding
 import           Hakyll
 import           Text.Pandoc
@@ -37,7 +37,8 @@ pandocMathCompiler =
 --------------------------------------------------------------------------------
 
 baseCtx :: Context String
-baseCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
+baseCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext <>
+		  modificationTimeField "modified" "%B %e, %Y"
 
 postCtxTags :: Tags -> Context String
 postCtxTags tags = tagsField "tags" tags `mappend` baseCtx
@@ -90,7 +91,6 @@ main = do
                 >>= relativizeUrls
 
     -- 404 page
-    match
 
     -- Home page
     match "index.html" $ do

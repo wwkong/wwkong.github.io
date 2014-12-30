@@ -1,19 +1,26 @@
 <h1>$title$</h1>
 
-<div class="info">
-    Posted on $date$
-    $if(author)$
-        by $author$
-    $endif$
-</div>
-
+<br />
 <div class="info"> 
 $if(tags)$ 
     Tags: $tags$ 
 $endif$ 
 </div>
+<br />
+
+<div class="info">
+    Posted: $date$
+    $if(author)$
+        by $author$
+    $endif$
+</div>
+<div class="info">Last Modified: $modified$</div>
+<br />
+
 
 $body$
+
+
 
 <h2>Comments</h2>
 <div id="disqus_thread"></div>
