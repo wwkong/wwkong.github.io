@@ -8,7 +8,7 @@ title: Tables
 The mapping below is intentionally incomplete. To match the UW instructor to the randomized instructor found in the Shiny application, shift the Instructor column down *n* levels cyclically where *n* is the number of TA course evaluation found in the MathSOC course evaluation repository located [here](http://mathsoc.uwaterloo.ca/CourseEvals). Note that this website requires CAS authentication in order to access the archives.
 
 |Randomized Instructor|Instructor|
-|:---:|:---:|
+|----------|----------|
 |Abo, Nathaniel|Koenemann Jochen|
 |Aceviz Delgado, Renee|Metzger ,Riley Adam|
 |Acuna, Nadia|Au Yu-Hin|
