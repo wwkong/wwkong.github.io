@@ -55,7 +55,7 @@ archivesCtx tags posts =
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
-    
+
     -- Set UTF-8 Encoding
     setLocaleEncoding utf8
     setFileSystemEncoding utf8
@@ -74,7 +74,7 @@ main = do
 
     match "files/*" $ do
         route   idRoute
-        compile copyFileCompiler    
+        compile copyFileCompiler
 
     -- Build tags
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
@@ -121,6 +121,17 @@ main = do
 
     -- Resume page
     match "resume.md" $ do
+        route   $ setExtension ".html"
+        compile $ do
+            cvTpl      <- loadBody "templates/resume.html"
+            defaultTpl <- loadBody "templates/default.html"
+            pandocCompiler
+                >>= applyTemplate cvTpl         baseCtx
+                >>= applyTemplate defaultTpl    baseCtx
+                >>= relativizeUrls
+
+    -- Tables page
+    match "tables.md" $ do
         route   $ setExtension ".html"
         compile $ do
             cvTpl      <- loadBody "templates/resume.html"
