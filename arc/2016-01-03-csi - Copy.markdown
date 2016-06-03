@@ -1,0 +1,44 @@
+---
+title: The State of Programming in Industry I
+author: William Kong
+description: Some thoughts on general trends in statistical computing and programming in industry.
+tags: mathematics, education, statistics, programming, industry
+---
+
+While reading some literature on Haskell and [several](https://www.quora.com/Why-dont-more-programmers-use-Haskell) [Quora](https://www.quora.com/What-is-the-track-to-mastering-Haskell-and-where-would-it-lead-me-professionally) [topics](https://www.quora.com/What-is-Haskell-actually-useful-for) on tips about how to become a better functional programmer, I found an [article](http://www.cs.utexas.edu/~EWD/transcriptions/EWD10xx/EWD1036.html) written by a particularly [famous computer scientist](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra) that resonated with my past experiences pertaining to software development and the state of current computer science education. These ideas, while written as a critique of the then current state of programmatic machinery and public understanding of computer science, carry over eerily well to other disciplines that I have observed over the years. This series of entries is a reflection of my thoughts on the trends of programming in several applied mathematics fields which mirror equivalent ideas brought forth by Dijkstra.
+
+To summarize Dijkstra main idea briefly, his original 1988 article describes the concept of *radical novelty*, machineries and trinkets which bring forth new ideas that create a gaping discontinuity in present knowledge, and its typical treatments in society. Much touted by businesses, economists, and venture capitalists as game-changing paradigm shifts which further human society and economies, Dijkstra paints a more sobering picture. As human beings tend to avoid changes to well-established beliefs and practices, radical novelty generally finds itself either in two precarious situations: to be violently rejected - as such in the case of Galileo and his publications in Heliocentrism - or to be held in an indefinite state of ignorance. Dijkstra writes that both outcomes are a result of people naturally trying to tie the 'new' with the 'old' through metaphors, allegories, or analogies and warns about the dangers of such thinking. To face new ideas one must think orthogonally to approach them with a blank mind and consciously refuse to link them with what is familiar, he writes.
+
+!["Behold! The quack who thinks that the Earth is not the center of the celestial bodies! For his heresy, we place him indefinitely under house arrest." - A paraphrasing on the Catholic church's opinion of Galileo.](/files/csi_1.jpg)
+
+From here, Dijkstra expands and relates these ideas to the modern day computer explaining morbidly that the machine embodies not one but two radical novelties. The first of two
+
+---
+
+Recently I've been interested in investigating how gender equality - or equivalently, inequality - has evolved over time in Canada. Using the University of Waterloo's [public Cognos cubes](https://uwaterloo.ca/institutional-analysis-planning/university-data-and-statistics/student-data/student-registration),
+
+Using this data, I use the following method as a crude estimate for Faculty-wide, time dependent gender bias, where I define this as how gender bias a Faculty is relative to past or future states or enrollments of the university. Suppose that for a fixed date we have $n$ programs and $P=\{P_{1,F1}, P_{2,F2}, ..., P_{n,Fn}\}$ is a set of ordered values of percentages of females in $n$ different programs, ordered by least to greatest percentage of females in the first index, and where the second index is representative of the Faculty in which the program falls under. Let $P_{F}=\{P_{k,Fk} \in P: Fk = F\}$ and $n_{F} = | P_{F} |$. Then for each Faculty $F$, we denote the (female-dominated) gender bias as
+
+$$G(F)= (P_{n_{F},Fn_{F}}+P_{n_{F-1},Fn_{F-1}}+P_{n_{F-2},Fn_{F-2}}) / 3n$$
+
+Which we can think of as a three term average [1] of the quantile of the three most female dominated programs. A value close to 100% (less biased) is generally preferred.
+
+Taking only the STEM Faculties into consideration (SCI, ENG, MATH), we plot out this measure over time using the lattice R package below:
+
+![The blue circles indicate points in time, the red lines are LOESS curves and the green lines are smoothing splines. The science faculty seems to follow a rather sinusoidal trend, the engineering faculty a mostly linear trend, except for the sudden rise in the 2003-2005 date range, and the maths faculty being the most sporadic of the three. There is an apparent outlier near the 2008 year in the maths faculty, although this may be explained by the increased interest in the new FARM program and other finance related programs in light of the latest U.S. recession.](/files/stem_2.jpeg)
+
+A least squares regression with slope and intercept interaction factors is also done in R for computing long term trends and is shown below:
+
+![](/files/stem_3.jpg)
+
+Here, Idx is just a normalized Date variable. From the results, we can see that the long-run growth in the MATH and SCI Faculties are not significantly different from one another and we can expect a long-term growth of female gender bias of approximately 0.23% every term in these faculties in the near future, while for engineering, this is closer to 0.03%.
+
+With this in mind, it looks like we won't be seeing fair gender equality for at least 2 decades for the sciences and several times that amount for the mathematics and engineering faculties.
+
+To replicate these results, as well as see the charts above in higher resolution and examine the source data, you can check out the relevant Skydrive directory [here](http://1drv.ms/1fxQWxF).
+
+If you have any comments or suggestions for future statistical projects, let me know in the comments section below.
+
+---
+
+[1] An average is done here in order to smooth out any outliers, which from the data we can see a few, particularly in the architecture program.
