@@ -25,7 +25,7 @@ LinkedIn: [ca.linkedin.com/in/wwkong](http://ca.linkedin.com/in/wwkong)
 
 ## Work Experience ##
 
-**Risk Modeling Analyst** (January 2015 – Present)
+**Senior Risk Modeling Analyst** (January 2015 – Present)
 TD Bank Group, Toronto ON
 
 * Developing code to generate datasets, build generalized linear models (GEEs, GLMs), and validate results for Basel II Pillar I requirements in SAS EG
