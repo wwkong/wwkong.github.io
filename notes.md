@@ -17,7 +17,8 @@ Here you can take a look at some course notes that I have typesetted in the past
 {F16}   [ISYE 6761](files/isye6761_CouseNotes_F16.pdf), Stochastic Processes I  { [F](files/isye6761_final_studysheet.pdf) }  
 {W17}   [ISYE 6662](files/isye6662_CouseNotes_W17.pdf), Discrete Optimization  
 {W17}   [ISYE 6663](files/isye6663_CouseNotes_W17.pdf), Nonlinear Optimization  { [F](files/isye6663_final_studysheet.pdf) }  
-{W17}   [ISYE 6762](files/isye6762_CouseNotes_W17.pdf), Stochastic Processes II    
+{W17}   [ISYE 6762](files/isye6762_CouseNotes_W17.pdf), Stochastic Processes II  
+{F17}   [ISYE 6664](files/isye6664_CouseNotes_F17.pdf), Stochastic Optimization  
 
 [Computer Science / Computational Science & Engineering]
 ---
