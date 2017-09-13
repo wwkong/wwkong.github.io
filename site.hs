@@ -38,7 +38,7 @@ pandocMathCompiler =
 
 baseCtx :: Context String
 baseCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext <>
-		  modificationTimeField "modified" "%B %e, %Y"
+          modificationTimeField "modified" "%B %e, %Y"
 
 postCtxTags :: Tags -> Context String
 postCtxTags tags = tagsField "tags" tags `mappend` baseCtx
