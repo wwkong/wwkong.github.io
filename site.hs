@@ -19,7 +19,7 @@ sidebarList = [ "contact.md",
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
     { feedTitle       = "wwkong.github.io"
-    , feedDescription = "A blend of mathematics, finance, and computer science."
+    , feedDescription = "A blend of mathematics and computer science."
     , feedAuthorName  = "William Kong"
     , feedAuthorEmail = "wwkong92@gmail.com"
     , feedRoot        = "http://wwkong.github.io/"
@@ -76,6 +76,10 @@ main = do
         route   idRoute
         compile copyFileCompiler
 
+    match "files/publications/*" $ do
+        route   idRoute
+        compile copyFileCompiler 
+
     -- Build tags
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
@@ -127,6 +131,15 @@ main = do
             defaultTpl <- loadBody "templates/default.html"
             pandocCompiler
                 >>= applyTemplate cvTpl         baseCtx
+                >>= applyTemplate defaultTpl    baseCtx
+                >>= relativizeUrls
+
+    -- Publications page
+    match "publications.md" $ do
+        route   $ setExtension ".html"
+        compile $ do
+            defaultTpl <- loadBody "templates/default.html"
+            pandocCompiler
                 >>= applyTemplate defaultTpl    baseCtx
                 >>= relativizeUrls
 
