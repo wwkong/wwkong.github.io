@@ -91,20 +91,20 @@ Morneau Shepell, Toronto ON, Canada
 
 ## Projects ##
 
-**Project Euler Competitor** (January 2013 - Present)
+*Project Euler Competitor* (2013 - 2020)
 
 * Competing in an international mathematics and computer science problem repository
 * Ranked in the top 5% using the programming language Haskell
 
-**Vertex Cover Algorithms** (December 2017)  
+*Vertex Cover Algorithms* (2017)  
 
 * Developed an efficient Branch-and-Bound method in C++ for an algorithms class project and won first place in the project competition for the Branch-and-Bound category
 
-**Data Mining Algorithm** (July 2012)
+*Data Mining Algorithm* (2012)
 
 * Programmed a data miner in VBA to mine pension valuation rates from the Bank of Canada
 
-**Vanilla Options Simulator** (November 2011)
+*Vanilla Options Simulator* (2011)
 
 * Programmed an options and stock simulator in Python using the Black-Scholes model and Monte
 Carlo methods
@@ -115,8 +115,7 @@ Carlo methods
 * Waterloo President’s Scholarship (2010)
 
 ## Activities & Interests ##
-**Member**, Georgia Tech Hapkido Club (2016 – Present)  
+**Member**, Georgia Tech Hapkido Club (2016 – 2020)  
 **Grader** for Applied Real Analysis, University of Waterloo (2014)  
 **President**, UW Mathematical Finance Student Association (2014)  
-**VP of Finance**, UW Mathematical Finance Student Association (2013 - 2014)  
-**Senior Member**, University of Waterloo’s Tae Kwon Do Club (2010 - Present)  
+**VP of Finance**, UW Mathematical Finance Student Association (2013 - 2014) 
