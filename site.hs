@@ -143,6 +143,15 @@ main = do
                 >>= applyTemplate defaultTpl    baseCtx
                 >>= relativizeUrls
 
+    -- Software page
+    match "software.md" $ do
+        route   $ setExtension ".html"
+        compile $ do
+            defaultTpl <- loadBody "templates/default.html"
+            pandocCompiler
+                >>= applyTemplate defaultTpl    baseCtx
+                >>= relativizeUrls
+
     -- Tables page
     match "tables.md" $ do
         route   $ setExtension ".html"
