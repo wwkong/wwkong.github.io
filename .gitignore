@@ -7,4 +7,5 @@ images/*
 _cache/*
 /_site
 /temp/*
+/dist-newstyle/*
 *.rar
