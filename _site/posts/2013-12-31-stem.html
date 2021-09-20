@@ -48,7 +48,7 @@
 <br />
 <div class="info"> 
  
-    Tags: <a href="../tags/mathematics.html">mathematics</a>, <a href="../tags/education.html">education</a>, <a href="../tags/statistics.html">statistics</a> 
+    Tags: <a title="All pages tagged 'mathematics'." href="../tags/mathematics.html">mathematics</a>, <a title="All pages tagged 'education'." href="../tags/education.html">education</a>, <a title="All pages tagged 'statistics'." href="../tags/statistics.html">statistics</a> 
  
 </div>
 <br />
@@ -72,15 +72,11 @@
 <p><span class="math display">\[G(F)= (P_{n_{F},Fn_{F}}+P_{n_{F-1},Fn_{F-1}}+P_{n_{F-2},Fn_{F-2}}) / 3n\]</span></p>
 <p>Which we can think of as a three term average [1] of the quantile of the three most female dominated programs. A value close to 100% (less biased) is generally preferred.</p>
 <p>Taking only the STEM Faculties into consideration (SCI, ENG, MATH), we plot out this measure over time using the lattice R package below:</p>
-<div class="figure">
-<img src="../files/stem_2.jpeg" alt="The blue circles indicate points in time, the red lines are LOESS curves and the green lines are smoothing splines. The science faculty seems to follow a rather sinusoidal trend, the engineering faculty a mostly linear trend, except for the sudden rise in the 2003-2005 date range, and the maths faculty being the most sporadic of the three. There is an apparent outlier near the 2008 year in the maths faculty, although this may be explained by the increased interest in the new FARM program and other finance related programs in light of the latest U.S. recession." />
-<p class="caption">The blue circles indicate points in time, the red lines are LOESS curves and the green lines are smoothing splines. The science faculty seems to follow a rather sinusoidal trend, the engineering faculty a mostly linear trend, except for the sudden rise in the 2003-2005 date range, and the maths faculty being the most sporadic of the three. There is an apparent outlier near the 2008 year in the maths faculty, although this may be explained by the increased interest in the new FARM program and other finance related programs in light of the latest U.S. recession.</p>
-</div>
+<figure>
+<img src="../files/stem_2.jpeg" alt="The blue circles indicate points in time, the red lines are LOESS curves and the green lines are smoothing splines. The science faculty seems to follow a rather sinusoidal trend, the engineering faculty a mostly linear trend, except for the sudden rise in the 2003-2005 date range, and the maths faculty being the most sporadic of the three. There is an apparent outlier near the 2008 year in the maths faculty, although this may be explained by the increased interest in the new FARM program and other finance related programs in light of the latest U.S. recession." /><figcaption aria-hidden="true">The blue circles indicate points in time, the red lines are LOESS curves and the green lines are smoothing splines. The science faculty seems to follow a rather sinusoidal trend, the engineering faculty a mostly linear trend, except for the sudden rise in the 2003-2005 date range, and the maths faculty being the most sporadic of the three. There is an apparent outlier near the 2008 year in the maths faculty, although this may be explained by the increased interest in the new FARM program and other finance related programs in light of the latest U.S. recession.</figcaption>
+</figure>
 <p>A least squares regression with slope and intercept interaction factors is also done in R for computing long term trends and is shown below:</p>
-<div class="figure">
-<img src="../files/stem_3.jpg" />
-
-</div>
+<p><img src="../files/stem_3.jpg" /></p>
 <p>Here, Idx is just a normalized Date variable. From the results, we can see that the long-run growth in the MATH and SCI Faculties are not significantly different from one another and we can expect a long-term growth of female gender bias of approximately 0.23% every term in these faculties in the near future, while for engineering, this is closer to 0.03%.</p>
 <p>With this in mind, it looks like we won’t be seeing fair gender equality for at least 2 decades for the sciences and several times that amount for the mathematics and engineering faculties.</p>
 <p>To replicate these results, as well as see the charts above in higher resolution and examine the source data, you can check out the relevant Skydrive directory <a href="http://1drv.ms/1fxQWxF">here</a>.</p>
