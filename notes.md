@@ -18,7 +18,9 @@ Here you can take a look at some course notes that I have typesetted in the past
 {W17}   [ISYE 6662](files/isye6662_CouseNotes_W17.pdf), Discrete Optimization  
 {W17}   [ISYE 6663](files/isye6663_CouseNotes_W17.pdf), Nonlinear Optimization  { [F](files/isye6663_final_studysheet.pdf) }  
 {W17}   [ISYE 6762](files/isye6762_CouseNotes_W17.pdf), Stochastic Processes II  
-{F17}   [ISYE 6664](files/isye6664_CouseNotes_F17.pdf), Stochastic Optimization  
+{F17}   [ISYE 6664](files/isye6664_CouseNotes_F17.pdf), Stochastic Optimization
+{W18}   [ISYE 7683](files/isye7683_CouseNotes_W18.pdf), Advanced Nonlinear Optimization
+{W19}   [ISYE 8813](files/isye8813_MON_CouseNotes_W19.pdf), Topics in Convex Optimization
 
 [Computer Science / Computational Science & Engineering]
 ---
@@ -62,6 +64,7 @@ For additional course notes, you can check out Michael Baker's notes [here](http
 -----
 
 {F07} [AMATH 2XX](files/Course Review for Calculus IV (MIT).pdf), Vector Calculus, MIT Video Series  
+{F14} [AMATH 442](files/amath442_CouseNotes_F14.pdf), Numerical Solutions of Partial Differential Equations
 {W14} [AMATH 350](files/amath350_CouseNotes_W14.pdf), Differential Equations for Business  { [F](files/Study Guide for Midterm Exam AMATH350.pdf) , [M](files/Study Guide for Midterm Exam AMATH350.pdf) , [E1](files/Study Guide for Final Exam AMATH350 - Black Scholes.pdf) , [E2](files/Study Guide for Final Exam AMATH350 - Theorems.pdf) }  
 
 [Statistics]
