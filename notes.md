@@ -64,8 +64,8 @@ For additional course notes, you can check out Michael Baker's notes [here](http
 -----
 
 {F07} [AMATH 2XX](files/Course Review for Calculus IV (MIT).pdf), Vector Calculus, MIT Video Series  
+{W14} [AMATH 350](files/amath350_CouseNotes_W14.pdf), Differential Equations for Business  { [F](files/Study Guide for Midterm Exam AMATH350.pdf) , [M](files/Study Guide for Midterm Exam AMATH350.pdf) , [E1](files/Study Guide for Final Exam AMATH350 - Black Scholes.pdf) , [E2](files/Study Guide for Final Exam AMATH350 - Theorems.pdf) }   
 {F14} [AMATH 442](files/amath442_CouseNotes_F14.pdf), Numerical Solutions of Partial Differential Equations  
-{W14} [AMATH 350](files/amath350_CouseNotes_W14.pdf), Differential Equations for Business  { [F](files/Study Guide for Midterm Exam AMATH350.pdf) , [M](files/Study Guide for Midterm Exam AMATH350.pdf) , [E1](files/Study Guide for Final Exam AMATH350 - Black Scholes.pdf) , [E2](files/Study Guide for Final Exam AMATH350 - Theorems.pdf) }  
 
 [Statistics]
 -----
