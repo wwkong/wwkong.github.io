@@ -25,7 +25,7 @@ Kong, W., Liaw, C., Mehta, A., & Sivakumar, D. (2018). A new dog learns old tric
 Kong, W., & Monteiro, R. D. C. (2021). An accelerated inexact proximal point method for solving nonconvex-concave min-max problems. *SIAM Journal on Optimization*, 31(4), 2558–2585.
 
 1. [**spectral_icg**](files/publications/spectral_icg.pdf)  
-Kong, W., & Monteiro, R. D. C. (2020). Accelerated Inexact Composite Gradient Methods for Nonconvex Spectral Optimization Problems. *Computational Optimization and Applications*.
+Kong, W., & Monteiro, R. D. C. (2022). Accelerated Inexact Composite Gradient Methods for Nonconvex Spectral Optimization Problems. *Computational Optimization and Applications*.
 
 1. [**nl_iapial**](files/publications/nl_iapial.pdf)  
 Kong, W., Melo, J. G., & Monteiro, R. D. C. (2020). Iteration-complexity of a proximal augmented Lagrangian method for solving nonconvex composite optimization problems with nonlinear convex constraints. *arXiv preprint arXiv:2008.07080*. Submitted to *Mathematics of Operations Research*.
