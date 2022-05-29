@@ -48,5 +48,5 @@ Kong, W., & Monteiro, R. D. C. (2021). An Accelerated Inexact Dampened Augmented
 1. [**dp_admm**](files/publications/dp_admm.pdf)  
 Kong, W., & Monteiro, R. D. C. (2021). Global Complexity Bound of a Proximal ADMM for Linearly-Constrained Nonseperable Nonconvex Composite Programming. *arXiv preprint arXiv:2110.12502*.
 
-1. [**apd**](files/publication/apd.pdf)  
+1. [**apd**](files/publications/apd.pdf)  
 Kong, W. (2021). Complexity-Optimal and Curvature-Free First-Order Methods for Finding Stationary Points of Composite Optimization Problems. *arXiv preprint arXiv:2205.13055*. Submitted to *SIAM Journal on Optimization*.
