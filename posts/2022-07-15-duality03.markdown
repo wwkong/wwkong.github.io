@@ -1,0 +1,38 @@
+---
+title: Abstract Duality in Optimization (Part III)
+author: William Kong
+description: Note about abstract duality in optimization.
+tags: mathematics, optimization, convex analysis
+---
+
+**Difficulty**: Experts & Advanced Graduate Students
+
+We now look at some conditions that imply at least one of ${\cal P}$ or ${\cal P^{*}}$ has solutions, as well as some nice properties that are a consequence of this fact. It is assumed that the reader is familiar with the notation in parts I--II of this series.
+
+## Existence of Solutions 
+
+Throughout our discussion, we will suppose that $\Phi\in\Gamma_{0}(V\times Y)$.
+
+For brevity, we say that ${\cal P}$ is stable if $h(0)$ and $h$ is subdifferentiable at $0$. The next result relates normality, stability, and the existence of solutions.
+
+**Proposition III.1.** *The following conditions are equivalent:*
+
+1.  *${\cal P}$ and ${\cal P}^{*}$ are normal and have some solutions.*
+
+2.  *${\cal P}$ and ${\cal P^{*}}$ are stable.*
+
+3.  *${\cal P}$ is stable and has some solutions.*
+
+A sufficient condition for stability is as follows.
+
+**Proposition III.2.** *Suppose (i) $\Phi$ is convex, (ii) $\inf\ {\cal P}$ is finite, and (iii) there exists $u_{0}\in V$ such that $\Phi(u_{0},\cdot)$ is finite and continuous at $0$. Then, ${\cal P}$ is stable.*
+
+**Remark III.3.** Condition (iii) in the above result immediately implies the existence of solutions of ${\cal P}^{*}$ and acts as a sort of *constraint qualification* for ${\cal P}$.
+
+## Extremal Relationships 
+
+The following result gives a nice property in the case where ${\cal P}$ and ${\cal P^{*}}$ both have solutions.
+
+**Proposition III.4.** *Suppose ${\cal P}$ and ${\cal P^{*}}$ have solutions, $\inf\ {\cal P}=\sup\ {\cal P}^{*}$, and this number is finite. Then all solutions $\bar{u}$ of ${\cal P}$ and all solutions $\bar{p}^{*}$ of ${\cal P}^{*}$ satisfy the extremality relation $$\Phi(\bar{u},0)+\Phi^{*}(0,\bar{p}^{*})=0,$$ or equivalently, $$(0,\bar{p}^{*})\in\partial\Phi(\bar{u},0).$$ Conversely, if $\bar{u}\in V$ and $\bar{p}^{*}\in Y^{*}$ satisfy the above extremality relation, then $\bar{u}$ is a solution of ${\cal P}$, $\bar{p}^{*}$ is a solution of ${\cal P}^{*}$, $\inf\ {\cal P}=\sup\ {\cal P}^{*}$, and this number is finite.*
+
+**Remark III.5.** The definition of the conjugate function implies that $$\Phi(u,0)+\Phi^{*}(0,p^{*})\geq\left\langle (u,0),(0,p^{*})\right\rangle =0$$ for every $u\in V$ and $p^{*}\in Y^{*}$. It is for this reason that $\Phi(\bar{u},0)+\Phi^{*}(0,\bar{p}^{*})=0$ is called an extremality relation.

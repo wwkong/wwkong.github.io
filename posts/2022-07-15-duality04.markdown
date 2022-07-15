@@ -1,0 +1,42 @@
+---
+title: Abstract Duality in Optimization (Part IV)
+author: William Kong
+description: Note about abstract duality in optimization.
+tags: mathematics, optimization, convex analysis
+---
+
+**Difficulty**: Experts & Advanced Graduate Students
+
+In this post, we look at the relationship between our previous developments and the classic Lagrangian of ${\cal P}$. It is assumed that the reader is familiar with the notation in parts I--III of this series.
+
+## Lagrangian of ${\cal P}$ 
+
+The Lagrangian $L:V\times Y^{*}\mapsto\overline{\mathbb{R}}$ of ${\cal P}$ relative to $\Phi$ is given by $$-L(u,p^{*}):=\sup_{p\in Y}\left\{ \left\langle p^{*},p\right\rangle -\Phi(u,p)\right\}$$ for every $u\in V$ and $p^{*}\in Y^{*}$.
+
+**Remark IV.1.** For a fixed $u\in V$, let $\Phi_{u}$ be the function $p\mapsto\Phi(u,p)$. It is straightforward to see that $-L(u,p^{*})=\Phi_{u}^{*}(p^{*})$.
+
+The result gives some basic properties of $L$.
+
+**Proposition IV.2.** For every $u\in V$, the function $p^{*}\mapsto L(u,p^{*})$ is an upper semicontinuous function of $Y^{*}$ into $\overline{\mathbb{R}}$. On the other hand, if $\Phi$ is convex then for every $p^{*}\in Y^{*}$ the function $u\mapsto L(u,p^{*})$ is convex from $V$ into $\overline{\mathbb{R}}$.
+
+**Remark IV.3.** Unfortunately, we cannot assert that $u\mapsto L(u,p^{*})$ is lower semicontinuous even if $\Phi\in\Gamma_{0}(V\times Y)$.
+
+**Remark IV.4.** Without any assumptions on $\Phi$, it can be shown that the following relationships hold: $$\begin{aligned}
+-\Phi^{*}(0,p^{*}) & =\inf_{u\in V}L(u,p^{*}),\\
+{\cal P}^{*} & \equiv\sup_{p^{*}\in Y^{*}}\inf_{u\in V}L(u,p^{*}).\end{aligned}$$ **Remark IV.5.** If $\Phi\in\Gamma_{0}(V\times Y)$, it can be shown that the following relationships hold: $$\begin{aligned}
+\Phi(u,0) & =\sup_{p^{*}\in Y^{*}}L(u,p^{*}),\\
+{\cal P} & \equiv\inf_{u\in V}\sup_{p^{*}\in Y^{*}}L(u,p^{*}).\end{aligned}$$
+
+## Saddle-point Duality 
+
+We can see from the previous results that there is a possible min-max saddle-point duality if $\Phi\in\Gamma_{0}(V\times Y)$. In this subsection, we give the precise relationships.
+
+For brevity, let us say that $(\bar{u},p^{*})\in V\times Y^{*}$ is a *saddle point* of $L$ if $$L(\bar{u},p^{*})\leq L(\bar{u},\bar{p}^{*})\leq L(u,\bar{p}^{*})$$ for every $u\in V$ and $p^{*}\in Y^{*}$.
+
+**Proposition IV.6.** If $\Phi\in\Gamma_{0}(V\times Y)$ then the following statements are equivalent:
+
+1.  $(\bar{u},\bar{p}^{*})$ is a saddle point of $L$.
+
+2.  $\bar{u}$ is a solution of ${\cal P}$, $\bar{p}^{*}$ is a solution of ${\cal P^{*}}$, and $\inf\ {\cal P}=\sup\ {\cal P}^{*}$.
+
+**Proposition IV.7.** Suppose $\Phi\in\Gamma_{0}(V\times Y)$ and ${\cal P}$ is stable. Then $\bar{u}\in V$ is a solution of ${\cal P}$ if and only if there exists $\bar{p}^{*}\in Y^{*}$ such that $(\bar{u},\bar{p}^{*})$ is a saddle point of $L$.

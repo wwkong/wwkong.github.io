@@ -1,0 +1,36 @@
+---
+title: Abstract Duality in Optimization (Part II)
+author: William Kong
+description: Note about abstract duality in optimization.
+tags: mathematics, optimization, convex analysis
+---
+
+**Difficulty**: Experts & Advanced Graduate Students
+
+Continuing from the previous post, we look at some consequences of assuming that the perturbation function $\Phi$ of the primal function $F$ is proper convex and lower semicontinuous. It is assumed that the reader is familiar with the notation in part I of this series.
+
+## Duality with "Nice" Perturbation Functions 
+
+Throughout our discussion, we will suppose that $\Phi\in\Gamma_{0}(V\times Y)$.
+
+In this post, we are concerned with the properties of the function $$h(p):=\inf_{u\in V}\Phi(u,p)\quad\forall p\in Y,$$ and how it relates to ${\cal P}$ and ${\cal P^{*}}$.
+
+**Remark II.1.** It can be shown that $h:Y\mapsto\overline{\mathbb{R}}$ is convex and, in general, $h$ is convex whenever $\Phi$ is convex.
+
+**Remark II.2.** In general, $h\notin\Gamma_{0}(Y)$.
+
+The negative of the conjugate function of $h$ is called the *dual function* of ${\cal P}$ and satisfies $$-h^{*}(p^{*})=-\Phi^{*}(0,p^{*})$$ and the biconjugate of $h$ satisfies $$\sup\ {\cal P}^{*}=\sup_{p^{*}\in Y^{*}}-h^{*}(p^{*})=h^{**}(0).$$
+
+**Remark II.3.** Weak duality is equivalent to the well-known inequality $h^{**}(0)\leq h(0)$. Moreover, it can be shown that the set of solutions of ${\cal P}^{*}$ is identical to $\partial h^{**}(0)$.
+
+We now present a regularity condition for strong duality in terms of $h$. For the sake of brevity, we will say ${\cal P}$ is *normal* with respect to $\Phi$ if $h(0)$ is finite and semicontinuous at $0$.
+
+**Proposition II.1.** *The following conditions are equivalent:*
+
+1.  *${\cal P}$ is normal*
+
+2.  *${\cal P}^{*}$ is normal*
+
+3.  *$\inf\ {\cal P}=\sup\ {\cal P}^{*}$ and this number is finite.*
+
+**Remark II.4.** It can be shown that 1 and 3 are equivalent under the condition that $h$ is convex, which holds if $\Phi$ is convex.

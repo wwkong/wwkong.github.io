@@ -1,0 +1,42 @@
+---
+title: Abstract Duality in Optimization (Part V)
+author: William Kong
+description: Note about abstract duality in optimization.
+tags: mathematics, optimization, convex analysis
+---
+
+**Difficulty**: Experts & Advanced Graduate Students
+
+We now look at some specialized applications of our previous results. This particular post covers the general framework of Rockafellar and Fenchel. It is assumed that the reader is familiar with the notation in parts I--IV of this series.
+
+## Coupled Composite Functions  
+
+Consider the specialization $$\begin{aligned}
+F(u) & :=J(u,Au),\\
+\Phi(u,p) & :=J(u,Au-p),\end{aligned}$$ where $J$ is a function of $V\times Y$ into $\overline{\mathbb{R}}$ and $A$ is a linear operator. It is straightforward to show that $$\Phi^{*}(0,p^{*})=J^{*}(A^{*}p^{*},-p^{*})$$ where $A^{*}$ is the adjoint of $A$. Furthermore, if $J$ is convex (resp. in $\Gamma_{0}(V\times Y)$) then $\Phi$ is convex (resp. in $\Gamma_{0}(V\times Y)$).
+
+**Remark V.1.** The Lagrangian associated with this specialization is $$L(u,p^{*})=J_{u}^{*}(-p^{*})-\left\langle p^{*},Au\right\rangle$$ where $J_{u}$ is the function $p\mapsto J(u,p)$ and $J_{u}^{*}$ is its conjugate function.
+
+The next result specializes the extremality conditions in part III.
+
+**Proposition V.2.** The following statements are equivalent:
+
+1.  $\bar{u}$ is a solution of ${\cal P}$, $\bar{p}^{*}$ is a solution of ${\cal P}^{*}$, and $\inf\ {\cal P}=\sup\ {\cal P}^{*}$.
+
+2.  $J(\bar{u},A\bar{u})+J^{*}(A^{*}\bar{p}^{*},-\bar{p}^{*})=0$.
+
+3.  $(A^{*}\bar{p}^{*},-\bar{p})\in\partial J(\bar{u},A\bar{u})$.
+
+## Decoupled Conjugate Functions  
+
+Let us further specialize $J$ as $$J(u,Au)=G(u)+H(Au).$$ It is easy to verify that $$\begin{aligned}
+J^{*}(u^{*},p^{*}) & =G^{*}(u^{*})+H^{*}(p^{*}),\\
+{\cal P}^{*} & \equiv\sup_{p^{*}\in Y^{*}}\left\{ -G^{*}(A^{*}p^{*})-H^{*}(-p^{*})\right\} .\end{aligned}$$ Furthermore, if $G$ and $H$ are convex (resp. convex and proper lower semicontinuous) then $J$ is convex (resp. convex and proper lower semicontinuous).
+
+**Remark V.3.** The extremality conditions for strong duality of ${\cal P}$ can be simplified to $$\begin{aligned}
+G(\bar{u})+G^{*}(A^{*}\bar{p}^{*})-\left\langle A^{*}\bar{p}^{*},\bar{u}\right\rangle  & =0,\\
+H(A\bar{u})+H^{*}(-\bar{p}^{*})+\left\langle \bar{p}^{*},A\bar{u}\right\rangle  & =0,\end{aligned}$$ or equivalently, $$\begin{aligned}
+A^{*}\bar{p}^{*} & \in\partial G(\bar{u}),\\
+-\bar{p}^{*} & \in\partial H(A\bar{u}).\end{aligned}$$
+
+**Remark V.4.** When $Y=\prod_{i=1}^{m}Y_{i}$ and $Y^{*}=\prod_{i=1}^{m}Y_{i}^{*}$ then the extremality conditions for $H$ can be further decoupled into $$H_{i}(A_{i}\bar{u})+H_{i}^{*}(-\bar{p}_{i}^{*})+\left\langle \bar{p}_{i}^{*},A_{i}\bar{u}\right\rangle =0,$$ and $$-\bar{p}_{i}^{*}\in\partial H_{i}(A_{i}\bar{u})$$ for $i=1,\ldots,m$.

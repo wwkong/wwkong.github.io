@@ -8,8 +8,56 @@
         <name>William Kong</name>
         <email>wwkong92@gmail.com</email>
     </author>
-    <updated>2016-06-02T00:00:00Z</updated>
+    <updated>2022-07-15T00:00:00Z</updated>
     <entry>
+    <title>Abstract Duality in Optimization (Part VI)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality06.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality06.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
+    <title>Abstract Duality in Optimization (Part V)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality05.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality05.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
+    <title>Abstract Duality in Optimization (Part IV)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality04.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality04.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
+    <title>Abstract Duality in Optimization (Part III)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality03.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality03.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
+    <title>Abstract Duality in Optimization (Part II)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality02.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality02.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
+    <title>Abstract Duality in Optimization (Part I)</title>
+    <link href="http://wwkong.github.io//posts/2022-07-15-duality01.html" />
+    <id>http://wwkong.github.io//posts/2022-07-15-duality01.html</id>
+    <published>2022-07-15T00:00:00Z</published>
+    <updated>2022-07-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Note about abstract duality in optimization.]]></summary>
+</entry>
+<entry>
     <title>Personal Experiences in University I</title>
     <link href="http://wwkong.github.io//posts/2016-06-02-uni1.html" />
     <id>http://wwkong.github.io//posts/2016-06-02-uni1.html</id>
@@ -40,22 +88,6 @@
     <published>2011-11-13T00:00:00Z</published>
     <updated>2011-11-13T00:00:00Z</updated>
     <summary type="html"><![CDATA[high school life, research topics, and advice for the young aspiring mathematician.]]></summary>
-</entry>
-<entry>
-    <title>High School Life (Part I)</title>
-    <link href="http://wwkong.github.io//posts/2011-11-07-hsl1.html" />
-    <id>http://wwkong.github.io//posts/2011-11-07-hsl1.html</id>
-    <published>2011-11-07T00:00:00Z</published>
-    <updated>2011-11-07T00:00:00Z</updated>
-    <summary type="html"><![CDATA[high school life, research topics, and advice for the young aspiring mathematician.]]></summary>
-</entry>
-<entry>
-    <title>On the Irrationality of Pi</title>
-    <link href="http://wwkong.github.io//posts/2011-11-03-pi.html" />
-    <id>http://wwkong.github.io//posts/2011-11-03-pi.html</id>
-    <published>2011-11-03T00:00:00Z</published>
-    <updated>2011-11-03T00:00:00Z</updated>
-    <summary type="html"><![CDATA[An in-depth look on one of the many proofs that Pi is irrational.]]></summary>
 </entry>
 
 </feed>
