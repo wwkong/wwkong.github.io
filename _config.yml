@@ -7,11 +7,11 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Personal Blog"
+title                    : "Personal Homepage"
 subtitle                 : "Version 1.0"
 title_separator          : "-"
 name                     : &name "William Kong"
-description              : &description "Software Engineer, Google Research"
+description              : &description "Research Software Engineer, Google Research"
 url                      : https://wwkong.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "wwkong/wwkong.github.io"
@@ -83,12 +83,12 @@ analytics:
 author:
   name             : "William Kong"
   avatar           : "profile.jpg"
-  bio              : "Software Engineer"
+  bio              : "Research Software Engineer"
   location         : "New York City, NY"
-  employer         :
+  employer         : 
   pubmed           : # "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
   googlescholar    : "https://scholar.google.com/citations?user=2YtN42MAAAAJ"
-  email            :
+  email            : wwkong92@gmail.com
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
@@ -179,6 +179,9 @@ collections:
   publications:
     output: true
     permalink: /:collection/:path/
+  software:
+    output: true
+    permalink: /:collection/:path/
 
 
 # Defaults
@@ -205,6 +208,15 @@ defaults:
   - scope:
       path: ""
       type: publications
+    values:
+      layout: single
+      author_profile: true
+      share: true
+      comments: true
+  # _software
+  - scope:
+      path: ""
+      type: software
     values:
       layout: single
       author_profile: true
