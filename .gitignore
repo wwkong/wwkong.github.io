@@ -3,9 +3,7 @@
 *.mp3
 etc/*
 images/*
-!images/haskell-logo.png
 _cache/*
 /_site
 /temp/*
-/dist-newstyle/*
 *.rar

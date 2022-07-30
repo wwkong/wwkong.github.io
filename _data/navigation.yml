@@ -1,0 +1,16 @@
+# main links links
+main:
+  - title: "Blog Posts"
+    url: /year-archive/
+
+  - title: "Publications"
+    url: /publications/
+
+  - title: "Software"
+    url: /software/    
+
+  - title: "Course Notes"
+    url: /notes/    
+
+  - title: "CV"
+    url: /cv/
