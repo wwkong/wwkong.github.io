@@ -2,8 +2,6 @@
 *.exe
 *.mp3
 etc/*
-images/*
-_cache/*
 /_site
 /temp/*
 *.rar
