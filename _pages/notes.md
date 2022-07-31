@@ -7,7 +7,7 @@ author_profile: true
 
 {% include base_path %}
 
-Here are some course notes that I have typesetted in the past. General links are through the course subjects and course codes below. Final exam and midterm review sheets are linked in brackets with the { F } and { M } denotations respectively. Additional errata will use the denotation { E[#] } where [#] is some integer. Note that some courses will only contain a review sheet for the midterm, the final, both, or neither.
+Here are some course notes that I have typeset in the past. Final exam and midterm review sheets are denoted by { F } and { M }, respectively. Additional errata is denoted by { E[#] } where [#] is some integer
 
 ---
 # **Georgia Institute of Technology** #
