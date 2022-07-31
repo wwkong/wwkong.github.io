@@ -29,8 +29,8 @@
     <h2 class="archive__item-title" itemprop="headline">
       {% if post.collection == 'publications' and post.filepath %}
         {{ forloop.index }}. <a href="{{ site.url }}{{ post.filepath }}" rel="permalink">{{ title }}</a>
-      {% elsif post.collection == 'software' and post.url %}
-        {{ forloop.index }}. <a href="{{ post.url }}" rel="permalink">{{ title }}</a>
+      {% elsif post.collection == 'software' and post.software_url %}
+        {{ forloop.index }}. <a href="{{ post.software_url }}" rel="permalink">{{ title }}</a>
       {% elsif post.link %}
         <a href="{{ post.link }}">{{ title }}</a> <a href="{{ base_path }}{{ post.url }}" rel="permalink"><i class="fa fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
       {% else %}
