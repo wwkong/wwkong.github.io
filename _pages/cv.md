@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-*\* Alternatively, you can check out [my resume](../files/resume_williamkong.pdf).*
+*\*Alternatively, you can check out [my resume](../files/resume_williamkong.pdf).*
 
 <object data="../files/cv_williamkong.pdf" width="100%" height="100%" type='application/pdf'>
   <p>It appears you don't have a PDF plugin for this browser.
