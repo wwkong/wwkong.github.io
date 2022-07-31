@@ -7,7 +7,7 @@ author_profile: true
 
 {% include base_path %}
 
-Here are some course notes that I have typeset in the past. Final exam and midterm review sheets are denoted by { F } and { M }, respectively. Additional errata is denoted by { E[#] } where [#] is some integer
+Here are some course notes that I have typeset in the past. Final and midterm review sheets are denoted by { F } and { M }, respectively. Additional errata is denoted by { E[#] }.
 
 ---
 # **Georgia Institute of Technology** #
