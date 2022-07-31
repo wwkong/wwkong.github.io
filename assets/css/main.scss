@@ -10,6 +10,9 @@
  *
 */
 
+
+@import "skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
+
 @import "vendor/breakpoint/breakpoint"; // media query mixins
 @import "variables";
 @import "mixins";
