@@ -34,6 +34,19 @@
     margin-left: -0.5em; /* override for hidden text*/
   }
 
+  /* button colors */
+  $buttoncolors:
+  (primary, $primary-color),
+  (inverse, #fff),
+  (light-outline, transparent),
+  (success, $success-color),
+  (warning, $warning-color),
+  (danger, $danger-color),
+  (info, $info-color),
+  (facebook, $facebook-color),
+  (twitter, $twitter-color),
+  (linkedin, $linkedin-color);
+
   /* fills width of parent container */
 
   &--block {
@@ -48,9 +61,9 @@
   /* for dark backgrounds */
 
   &--inverse {
-    color: $gray !important;
+    color: $text-color !important;
     border: 1px solid $light-gray !important; /* override*/
-    background-color: #fff;
+    background-color: $navicon-link-color-hover;
 
     &:hover {
       color: #fff !important;
