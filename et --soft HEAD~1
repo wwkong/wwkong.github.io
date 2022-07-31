@@ -1,0 +1,533 @@
+[33mcommit c874d7687918de2c040215558747ea3a2acbd89b[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 21:01:32 2022 -0400
+
+    Feature merging with Minimal Mistakes + small bio update
+
+[33mcommit 4f1427485c5deb758c09e7c859d3b8f640c89f13[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:51:46 2022 -0400
+
+    Small adjustments
+
+[33mcommit 4cfaba570d9e4936292924dac611d3c6f4bd91c0[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:50:10 2022 -0400
+
+    Add missing images
+
+[33mcommit 3becab900dc485cce08033ec6961fe55a82120b8[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:47:02 2022 -0400
+
+    Fix PDF embeddings
+
+[33mcommit 5f012f6d31bead4aa9dae6f6e5f7133436624904[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:35:38 2022 -0400
+
+    Config Jekyll
+
+[33mcommit 3615e52936e937a7b20dba423fb64e3c93477b68[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:31:59 2022 -0400
+
+    Delete README
+
+[33mcommit 5349cf0f61877651261b5c21e8333fef8d4bb78f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 18:29:28 2022 -0400
+
+    Additional clean-up
+
+[33mcommit 65335d695030f697206c82810574d343a297dae4[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Jul 30 17:23:24 2022 -0400
+
+    Migration to Jekyll
+
+[33mcommit 736e525f5151289142b26059d0b08785d4fb80ec[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Jul 17 22:04:47 2022 -0400
+
+    MathJax update
+
+[33mcommit 50c535f665ec70a2e29228716d50529082acae6a[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Jul 17 22:04:17 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 9b10448d7dedd1cf0c8a53fd0d2d24ada8f08210[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri Jul 15 19:44:09 2022 -0400
+
+    Add duality notes + small changes
+
+[33mcommit c39a92bd6d91db6ccfb6841da299b4a516ee79af[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 15:09:06 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 15ff854bb4dee8a5fd4de033a2139696e6ecb54e[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 15:08:55 2022 -0400
+
+    Small adjustments
+
+[33mcommit 558245e4a0fcd9b806f3aaf418997b952ee81588[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:39:10 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 2c748476a2f5de2a9571d8964c3360b39d7f2ca5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:38:59 2022 -0400
+
+    Order notes.
+
+[33mcommit e2bf37e639176dceb715fb25c2091fab9b1c6c52[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:38:04 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 065b3a0bb551e73f8540099a53e0fc066e367801[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:37:49 2022 -0400
+
+    Format paths.
+
+[33mcommit f82c71e79e041a0e04b4c141eaac26cdee2295bd[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:36:11 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 3ed10a6e48d1b456d392a902e6240ee558571f26[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:35:55 2022 -0400
+
+    Format notes.
+
+[33mcommit 5b7de1f816e20b6010accf4ab79d23238151a865[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:33:56 2022 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 396b73452de3fedca8e289bd5bf8f765af27d60d[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:31:28 2022 -0400
+
+    Formatting publications.
+
+[33mcommit 74d22142e385c12cb1ee6181c0abbbcb4f0c9345[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun May 29 10:30:00 2022 -0400
+
+    Add latest publications.
+
+[33mcommit b20bfdf8fbedacf25c1a4d49d4b26c6ecbb9a1d5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Oct 27 10:20:14 2021 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit a444083a329418663054b65859d76bb395b7c52f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Oct 27 10:18:05 2021 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 7012fbd2256be3bc38c6c13507968b1bae0c8ce5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Sep 20 11:43:49 2021 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 553bf797de3019387732f8625a4c824526034a9a[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Sep 20 11:31:48 2021 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 4283210ca33a7f14d280235763633ece907f2794[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Sep 20 11:19:43 2021 -0400
+
+    Changes to mesh with the latest version of Haskell.
+
+[33mcommit c8f3e21d2c1d7a931513e66e3a491920634cb6ff[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Sep 20 10:45:14 2021 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 08704a84b64777095469804da134174468110985[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Sep 19 16:08:07 2021 -0400
+
+    Modified some files.
+
+[33mcommit 33d17345bb3011b7cf61043826836dc419ce0b8f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Nov 17 14:37:17 2020 -0500
+
+    Added software.
+
+[33mcommit 09294492d7b6d264f9b0761b8c7ca7c38cf8a3b6[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Nov 17 12:31:57 2020 -0500
+
+    Deployed content using custom batch script.
+
+[33mcommit 34ef07ca607577d6eb040ebe1336a35db171f003[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Nov 17 12:06:10 2020 -0500
+
+    Deployed content using custom batch script.
+
+[33mcommit 1d2a564195a644a52658b4e83769b24c80631324[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Oct 7 11:38:35 2020 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit dc6088f26f02ad78675ca2960d4cd8ef1336ca63[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Oct 7 11:36:42 2020 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit f413417c7d0cf9c6e8d8314feb9f7a445918be90[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Oct 7 11:31:56 2020 -0400
+
+    Removed files.
+
+[33mcommit e1347f6c8b344797aa661d61b65d9bf58bc706ae[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Oct 6 23:04:05 2020 -0400
+
+    Added files to commit.
+
+[33mcommit cb0f7d9699f2335a0134f4901823a5f3df7067f3[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Oct 6 21:45:36 2020 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit f734de6849ae8905f9926d985673e52bac6f91c9[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Oct 6 21:44:06 2020 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 270f946b8234d443d085e8c9487056331f9b1df5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Aug 30 14:19:26 2020 -0400
+
+    Re-arranged the UI.
+
+[33mcommit 6333b13062e4cce114e397b1efbebb87aa7e66fa[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Aug 23 17:52:11 2020 -0400
+
+    Updated resume and publications.
+
+[33mcommit 94dc1618531e31fd1273a2b3c94a259bb92b5293[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Jul 6 14:24:19 2020 -0400
+
+    Deployed content using custom batch script.
+
+[33mcommit 0d11ec8dd63676a56113ffcc226a4a31d2c04fb7[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Jul 6 14:21:59 2020 -0400
+
+    Added publications.md.
+
+[33mcommit d4fde00c5ac0b356f4f69ae5f0d2e63336e03b6d[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Mon Jul 6 12:43:38 2020 -0400
+
+    Updated resume.md
+
+[33mcommit 06a4e03e6e7ea8c8ef18685949e59e0eb8fe6304[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Jan 24 16:16:03 2018 -0500
+
+    Updated some templates and resume.
+
+[33mcommit a01d3d716299a8a360528f570de4b666a1b58f9a[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Sep 13 15:22:53 2017 -0400
+
+    Added ISyE 6664
+
+[33mcommit 406b57713c59ee05bdb849ccfe21ed4e5d2db130[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Sep 13 15:20:05 2017 -0400
+
+    Updated with GaTech courses.
+
+[33mcommit b737af254f8abf7c54fff0da6dc60865b05b59d8[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Jun 5 14:57:37 2016 -0400
+
+    Corrected some typos.
+
+[33mcommit 1d52cffdbdc1b271703ea59a126c282d028b66f4[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Thu Jun 2 20:41:44 2016 -0400
+
+    Added a blog post
+    
+    Added a blog post
+
+[33mcommit dee49e9bbacf0b81a375f4933784e214e6b85982[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Apr 19 16:27:26 2015 -0400
+
+    Changed table formatting.
+
+[33mcommit 979bc7f1a9ba38448c454d8b538cce8db3f7b1d3[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sun Apr 19 16:23:09 2015 -0400
+
+    Added a new project.
+
+[33mcommit e5c5e888578cc63b87465938573b3a6f36b14ba0[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Dec 30 13:31:02 2014 -0500
+
+    Added a "Last Modified" feature and updated the format of posts.
+
+[33mcommit 3f79d70453d04cf5d2b50a3db1d9c9e48c2e43d5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Dec 23 13:00:51 2014 -0500
+
+    Fixed formatting issues for small devices.
+
+[33mcommit 78013b7d2dbba88b89a68fc36454843b53d86cd2[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Dec 23 12:57:22 2014 -0500
+
+    Resolved sidebar formatting issues.
+
+[33mcommit e6fdc2b07ae0c7907984410664169a0f9b9e3141[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Sat Sep 13 21:05:05 2014 -0400
+
+    Updated the look and feel of the site; added HS extended essay on set theory
+
+[33mcommit 7917fe562ac4dadc2c2eefe3b1c48110ddece108[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Sep 3 11:28:10 2014 -0400
+
+    Fixed resume links.
+
+[33mcommit dd3f36d48f13a1bfc0998ba08c6a0f82ac1cf3f9[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Sep 3 11:06:56 2014 -0400
+
+    Updated resume and some course notes and study guides.
+
+[33mcommit 9702fcc30f59ada7887f4bca24d934086d95a8c8[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 20:34:26 2014 -0400
+
+    Updated all paths to notes.
+
+[33mcommit 4738a52ab3749ff7de0575bf27fc407682089cd1[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 17:03:15 2014 -0700
+
+    Published with https://stackedit.io/
+
+[33mcommit 23974ea0117ba24c1f676a702d518ccf178c7c6f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 17:01:36 2014 -0700
+
+    Published with https://stackedit.io/
+
+[33mcommit cb894b2f49aa67132304105825c2afcc2fd8f218[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 20:01:11 2014 -0400
+
+    Fixed notes.md.
+
+[33mcommit 3f14e214604c265839024f60d682420ecb55b00b[m
+Merge: e2b7753 92f7077
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 20:00:10 2014 -0400
+
+    Merge branch 'master' of https://github.com/wwkong/blog
+    
+    Conflicts:
+            notes.md
+
+[33mcommit e2b77533070a5f84579910752af475e77cd7e57c[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 19:58:33 2014 -0400
+
+    Fixed UTF-8 encoding.
+
+[33mcommit 92f707785275e2aecb94e2989053c8be4cf343fa[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 9 16:57:41 2014 -0700
+
+    Published with https://stackedit.io/
+
+[33mcommit b5e82fe350f30254511b165ef4117d072c7ecea5[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Fri May 2 12:24:30 2014 -0400
+
+    Changed formatting. Added course notes.
+
+[33mcommit 01f1b1248810d44980f0b49088f336f438d88a00[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Thu May 1 19:08:29 2014 -0400
+
+    Finished migrating Wordpress posts. Added support for mobile devices.
+
+[33mcommit d7d90b682be73065f97ff5d89085eb06b559ec49[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Thu May 1 16:54:16 2014 -0400
+
+    Improved readability of site.hs.
+
+[33mcommit d0ed2c1ad516fd4bc7303db62573fef84511bd1f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Thu May 1 00:39:10 2014 -0400
+
+    Fixed archive generator.
+
+[33mcommit 953e6106b6d653b2f170329a245ecd9162923abf[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Thu May 1 00:01:57 2014 -0400
+
+    V1 Release.
+
+[33mcommit 8b40a1e6e95ef33f8f58a315fbccb7494e0c7826[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 23:51:08 2014 -0400
+
+    Moved posts from old blog to new blog.
+
+[33mcommit d8949df7a2af5c65fcbe15010ecf98696fd45a28[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 21:58:01 2014 -0400
+
+    Added the Project Euler and programming sections.
+
+[33mcommit 96309f53d047defcac80f752b7c564327479f85c[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 21:32:45 2014 -0400
+
+    Completed the resume and notes sections.
+
+[33mcommit 0070b81d86fadb6e69aec497bcda6b1dacd94f71[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 20:50:22 2014 -0400
+
+    Completed the resume section.
+
+[33mcommit 92d34ba161208d9a3a023a42d89d6c43ee4174a1[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 16:04:09 2014 -0400
+
+    Re-created the archives with tags.
+
+[33mcommit f6874c1c45a4079b5cde2361ffe0bdbda8786569[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 15:50:10 2014 -0400
+
+    Updated default template to exclude loading of titles automatically. Added a resume router.
+
+[33mcommit 6bb83d8d9294e4a2d0973cc440e7cf3402f351be[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 15:27:44 2014 -0400
+
+    Fonts were updated.
+
+[33mcommit c18027a96c1ce12e0550dd91ca50fa3a964c7e4b[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 15:07:55 2014 -0400
+
+    Cleaned up some redundant code.
+
+[33mcommit dc0dceeb84b1cccebc5fea82eac2e1ead82c1c4b[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 11:03:38 2014 -0400
+
+    Added Disqus and reformatted.
+
+[33mcommit 3a1560bae27b1a092738c7f839bf72fd652eac8f[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Wed Apr 30 00:39:37 2014 -0400
+
+    Removed the archives and replaced it with post.html. Added RSS feed (Atom) and MathJax support.
+
+[33mcommit 2b823479e525135e604f086caf28c3b99826aeca[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 21:08:46 2014 -0400
+
+    Added tags.
+
+[33mcommit c84ae92c2c18338f3082c686b1565ef9a7519425[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 19:18:11 2014 -0400
+
+    Improved formatting. Changed deployment behaviour to use "git add --all .".
+
+[33mcommit 15e017a8642af5a156c664bc8d68228430687f3d[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 18:02:12 2014 -0400
+
+    Improved the overall look of the site.
+
+[33mcommit 5c0a9f57d3240e0127d29fa2582000790b772e3d[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 15:41:01 2014 -0400
+
+    New layout and script.
+
+[33mcommit 4aa86970e6735fd7d079f7bf75c46abf47d3244d[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 12:38:40 2014 -0400
+
+    Added logic for an etc folder.
+
+[33mcommit 60b35694536d1ca4cab298d2202d94a6db45f060[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 12:27:51 2014 -0400
+
+    Finished deployment architecture.
+
+[33mcommit 4dd42fc9002a8aa1782d1c6d2b2a714cbfc0b425[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 09:28:52 2014 -0400
+
+    Updated batch script and removed temp directory.
+
+[33mcommit d60eba6432ddb107f5139ea8da98713e728932e8[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 02:06:06 2014 -0400
+
+    Test commit.
+
+[33mcommit 44a4e89d1aa99d4deb76c241b9b6b48e5adebe36[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 02:05:53 2014 -0400
+
+    Added temp folder.
+
+[33mcommit b2172a4ceb6bf1a13c139ed17bc80ae28dc1f0c2[m
+Author: William Kong <wwkong92@gmail.com>
+Date:   Tue Apr 29 02:02:29 2014 -0400
+
+    First commit of progress.
