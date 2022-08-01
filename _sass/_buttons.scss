@@ -37,7 +37,7 @@
   /* button colors */
   $buttoncolors:
   (primary, $primary-color),
-  (inverse, #fff),
+  (inverse, $background-color),
   (light-outline, transparent),
   (success, $success-color),
   (warning, $warning-color),
@@ -63,7 +63,7 @@
   &--inverse {
     color: $text-color !important;
     border: 1px solid $light-gray !important; /* override*/
-    background-color: $navicon-link-color-hover;
+    background-color: $background-color;
 
     &:hover {
       color: #fff !important;
@@ -75,7 +75,7 @@
 
   &--light-outline {
     border: 1px solid #fff !important; /* override*/
-    background-color: transparent;
+    background-color: $background-color;
   }
 
   /* information */

@@ -196,7 +196,7 @@
     padding: 0 0.5rem;
     border: 0;
     outline: none;
-    background-color: $primary-color;
+    background-color: mix(#fff, $primary-color, 50%);
     color: #fff;
     cursor: pointer;
   }
@@ -514,7 +514,7 @@
     border-bottom: 1px solid $border-color;
 
     &:hover {
-      color: #000;
+      color: $background-color;
       background: $lighter-gray;
     }
   }

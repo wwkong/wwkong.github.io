@@ -1,7 +1,7 @@
 ---
 title: "ProximalAlgorithms"
 collection: software
-software_url: "https://github.com/JuliaFirstOrder/ProximalAlgorithms.jl"
+software_url: "https://juliafirstorder.github.io/ProximalAlgorithms.jl/stable/"
 description: "A Julia package for non-smooth optimization algorithms. This package provides algorithms for the minimization of objective functions that include non-smooth terms, such as constraints or non-differentiable penalties. Implemented algorithms include: 
 
 
