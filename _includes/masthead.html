@@ -15,6 +15,14 @@
             {% endif %}
             <li class="masthead__menu-item"><a href="{{ domain }}{{ link.url }}">{{ link.title }}</a></li>
           {% endfor %}
+          {% if site.search == true %}
+            {% if link.url contains 'http' %}
+            {% assign domain = '' %}
+            {% else %}
+            {% assign domain = base_path %}
+            {% endif %}
+            <li class="masthead__menu-item"><a href="{{ domain }}/search/"><i class="fas fa-search"></i></a></li>
+          {% endif %}
         </ul>
         <ul class="hidden-links hidden"></ul>
       </nav>
