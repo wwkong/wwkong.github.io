@@ -5,3 +5,4 @@ etc/*
 /_site
 /temp/*
 *.rar
+.Gemlock
