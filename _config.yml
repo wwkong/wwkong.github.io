@@ -8,6 +8,9 @@
 # Theme Settings
 minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
+# Do you want to group your publications by year? {true/false}
+group_pub_by_year: true
+
 # Site Settings
 locale                   : "en-US"
 title                    : "Personal Homepage"

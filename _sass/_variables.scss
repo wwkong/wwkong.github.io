@@ -7,6 +7,8 @@
    ========================================================================== */
 
 $doc-font-size              : 16;
+$font-size-large            : ceil(($doc-font-size * 1.25)) !default; // ~18px
+$font-size-small            : ceil(($doc-font-size * 0.85)) !default; // ~12px
 
 /* paragraph indention */
 $paragraph-indent           : false; // true, false (default)
@@ -159,3 +161,102 @@ $navicon-width              : 28px !default;
 $navicon-height             : 4px !default;
 $global-transition          : all 0.2s ease-in-out !default;
 $intro-transition           : intro 0.3s both !default;
+
+// Components
+//
+//## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
+
+$padding-base-vertical:     7px !default;
+$padding-base-horizontal:   12px !default;
+
+$padding-large-vertical:    13px !default;
+$padding-large-horizontal:  16px !default;
+
+$padding-small-vertical:    4px !default;
+$padding-small-horizontal:  10px !default;
+
+$padding-xs-vertical:       1px !default;
+$padding-xs-horizontal:     5px !default;
+
+$line-height-large:         1.3333333 !default; // extra decimals for Win 8.1 Chrome
+$line-height-small:         1.5 !default;
+
+$border-radius-base:        4px !default;
+$border-radius-large:       5px !default;
+$border-radius-small:       2px !default;
+
+//** Unit-less `line-height` for use in components like buttons.
+$line-height-base:        1.428571429 !default; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+$line-height-computed:    floor(($doc-font-size * $line-height-base)) !default; // ~20px
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+$brand-primary:         #1ca6db !default;
+$brand-success:         #1a701c !default;
+$brand-info:            #104358 !default;
+$brand-warning:         #964103 !default;
+$brand-danger:          #870b02 !default;
+
+$btn-font-weight:                normal !default;
+
+$btn-default-color:              $gray !default;
+$btn-default-bg:                 $lighter-gray !default;
+$btn-default-border:             lighten($btn-default-bg, 5%) !default;
+
+$btn-primary-color:              $gray !default;
+$btn-primary-bg:                 $brand-primary !default;
+$btn-primary-border:             lighten($btn-primary-bg, 5%) !default;
+
+$btn-success-color:              $gray !default;
+$btn-success-bg:                 $brand-success !default;
+$btn-success-border:             lighten($btn-success-bg, 5%) !default;
+
+$btn-info-color:                 $gray !default;
+$btn-info-bg:                    $brand-info !default;
+$btn-info-border:                lighten($btn-info-bg, 5%) !default;
+
+$btn-warning-color:              $gray !default;
+$btn-warning-bg:                 $brand-warning !default;
+$btn-warning-border:             lighten($btn-warning-bg, 5%) !default;
+
+$btn-danger-color:               $gray !default;
+$btn-danger-bg:                  $brand-danger !default;
+$btn-danger-border:              lighten($btn-danger-bg, 5%) !default;
+
+$btn-link-disabled-color:        $light-gray !default;
+
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius-base:         $border-radius-base !default;
+$btn-border-radius-large:        $border-radius-large !default;
+$btn-border-radius-small:        $border-radius-small !default;
+
+// Drop shadows
+//
+// Note: Deprecated `.box-shadow()` as of v3.1.0 since all of Bootstrap's
+// supported browsers that have box shadow capabilities now support it.
+
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
+          box-shadow: $shadow;
+}
+
+//== Jumbotron
+//
+//##
+
+$jumbotron-padding:              30px !default;
+$jumbotron-color:                inherit !default;
+$jumbotron-bg:                   #302f2f !default;
+$jumbotron-heading-color:        inherit !default;
+$jumbotron-font-size:            ceil(($doc-font-size * 1.5)) !default;
+$jumbotron-heading-font-size:    ceil(($doc-font-size * 4.5)) !default;
+
+//== Wells
+//
+//##
+
+$well-bg:                     $jumbotron-bg !default;
+$well-border:                 darken($well-bg, 7%) !default;

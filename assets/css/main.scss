@@ -43,3 +43,25 @@
 @import "vendor/font-awesome/brands";
 @import "vendor/magnific-popup/magnific-popup";
 @import "print";
+
+@import "wells";
+
+/* Fluxbox: Added for publication page columns. */
+.flex-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.flex-item1 {
+  padding: 5px;
+  width: 10%;
+}
+
+.flex-item2 {
+  padding: 5px;
+  width: 90%;
+}
