@@ -94,7 +94,6 @@ $vine-color                 : #00bf8f !default;
 $youtube-color              : #bb0000 !default;
 $xing-color                 : #006567 !default;
 
-
 /* links */
 $link-color                 : $info-color !default;
 $link-color-hover           : mix(#000, $link-color, 25%) !default;
@@ -249,7 +248,7 @@ $btn-border-radius-small:        $border-radius-small !default;
 
 $jumbotron-padding:              30px !default;
 $jumbotron-color:                inherit !default;
-$jumbotron-bg:                   #302f2f !default;
+$jumbotron-bg:                   #132115 !default;
 $jumbotron-heading-color:        inherit !default;
 $jumbotron-font-size:            ceil(($doc-font-size * 1.5)) !default;
 $jumbotron-heading-font-size:    ceil(($doc-font-size * 4.5)) !default;

@@ -1,8 +1,92 @@
 - title: Complexity of a quadratic penalty accelerated inexact proximal point method for solving linearly constrained nonconvex composite programs
-  authors:
-    Weiwei Kong, Jefferson G. Melo, Renato D. C. Monteiro
-  url: aipp-SIAM-19
-  display: SIAM Journal on Optimization 29
+  authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
+  url: aipp
+  display: <i>SIAM Journal on Optimization 29</i>
   year: 2019
   arxiv: 1802.03504
   doi: https://doi.org/10.1137/18M1171011
+
+- title: An efficient adaptive accelerated inexact proximal point method for solving linearly constrained nonconvex composite problems
+  authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
+  url: r_aipp
+  display: <i>Computational Optimization and Applications 76</i>
+  year: 2020
+  arxiv: 1812.06352
+  doi: https://doi.org/10.1007/s10589-020-00188-w
+
+- title: 'A new dog learns old tricks: RL finds classic optimization algorithms'
+  authors: Weiwei Kong, Christopher Liaw, Aranyak Mehta, & D. Sivakumar
+  url: rl_opt
+  display: <i>International Conference on Learning Representations 7</i>
+  year: 2019
+
+- title: An accelerated inexact proximal point method for solving nonconvex-concave min-max problems.
+  authors: Weiwei Kong & Renato D. C. Monteiro
+  url: aipp_s
+  display: <i>SIAM Journal on Optimization 31</i>
+  year: 2021
+  arxiv: 1905.13433
+  doi: https://doi.org/10.1137/20M1313222
+
+- title: Accelerated Inexact Composite Gradient Methods for Nonconvex Spectral Optimization Problems
+  authors: Weiwei Kong & Renato D. C. Monteiro
+  url: spectral_icg
+  display: <i>Computational Optimization and Applications 82</i>
+  year: 2022
+  arxiv: 2007.11772
+  doi: https://doi.org/10.1007/s10589-022-00377-9
+
+- title: Iteration-complexity of a proximal augmented Lagrangian method for solving nonconvex composite optimization problems with nonlinear convex constraints
+  authors: Weiwei Kong & Renato D. C. Monteiro
+  url: nl_iapial
+  display: <b>Accepted</b> for publication in <i>Mathematics of Operations Research</i>
+  year: 2022
+  arxiv: 2008.07080
+
+- title: 'Rankmax: An Adaptive Projection Alternative to the Softmax Function'
+  authors: Weiwei Kong, Walid Krichene, Nicolas Mayoraz, Steffen Rendle, & Li Zhang
+  url: rankmax
+  display: <i>Advances in Neural Information Processing Systems 33</i>
+  year: 2020
+
+- title: Iteration-complexity of an inner accelerated inexact proximal augmented Lagrangian method based on the classical Lagrangian function
+  authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
+  url: iaipal
+  display: <b>Submitted</b> to <i>SIAM Journal on Optimization</i>
+  year: 2021
+  arxiv: 2008.00562
+
+- title: FISTA and Extensions - Review and New Insights
+  authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
+  url: fista
+  display: <i>Technical Report</i>
+  year: 2021
+  arxiv: 2107.012671
+
+- title: An Accelerated Inexact Dampened Augmented Lagrangian Method for Linearly-Constrained Nonconvex Composite Optimization Problems
+  authors: Weiwei Kong & Renato D. C. Monteiro
+  url: aidal
+  display: <i>Computational Optimization and Applications</i>
+  year: 2021
+  arxiv: 2110.11151
+
+- title: Accelerated inexact first-order methods for solving nonconvex composite optimization problems
+  authors: Weiwei Kong
+  url: thesis_william_kong
+  display: <i>Doctoral Thesis</i>
+  year: 2021
+  arxiv: 2104.09685
+
+- title: Global Complexity Bound of a Proximal ADMM for Linearly-Constrained Nonseperable Nonconvex Composite Programming
+  authors: Weiwei Kong & Renato D. C. Monteiro
+  url: dp_admm
+  display: <b>Submitted</b> to <i>SIAM Journal on Optimization</i>
+  year: 2022
+  arxiv: 2110.12502
+
+- title: Accelerated inexact first-order methods for solving nonconvex composite optimization problems
+  authors: Weiwei Kong
+  url: apd
+  display: <b>Submitted</b> to <i>SIAM Journal on Optimization</i>
+  year: 2022
+  arxiv: 2205.13055
