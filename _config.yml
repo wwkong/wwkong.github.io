@@ -198,10 +198,7 @@ kramdown:
 
 # Collections
 collections:
-  publications:
-    output: true
-    permalink: /:collection/:path/
-  software:
+  Software:
     output: true
     permalink: /:collection/:path/
 
