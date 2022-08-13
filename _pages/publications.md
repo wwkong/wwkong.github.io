@@ -3,6 +3,7 @@ layout: archive
 title: "Publications"
 permalink: /publications/
 author_profile: true
+use_math: true
 ---
 
 {% if site.author.googlescholar %}
@@ -41,6 +42,15 @@ author_profile: true
   {% if publi.url %}<a href="{{ site.url }}{{ site.baseurl }}/files/publications/{{ publi.url }}.pdf" target="_blank"><button class="btn-pdf">PDF</button></a>{% endif %}
   {% if publi.doi %}<a href="http://dx.doi.org/{{ publi.doi }}" target="_blank"><button class="btn-doi">DOI</button></a> {% endif %}
   {% if publi.arxiv %}<a href="https://arxiv.org/abs/{{ publi.arxiv }}" target="_blank"><button class="btn-arxiv">ARXIV</button></a> {% endif %}
+  {% if publi.abstract %} <a data-bs-toggle="collapse" href="#{{publi.url}}" class="btn-abstract" style="text-decoration:none; color:#ebebeb; hover:#ebebeb;" role="button" aria-expanded="false" aria-controls="{{publi.url}}">ABSTRACT</a>{% endif %}
+
+{% if publi.abstract %}
+<br/>
+<div class="collapse" id="{{publi.url}}"><div class="well-abstract">
+ {{publi.abstract}}
+</div></div>
+{% endif %}
+
 </li>
 </ul>
 
