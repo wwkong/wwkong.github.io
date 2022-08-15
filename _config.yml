@@ -198,7 +198,7 @@ kramdown:
 
 # Collections
 collections:
-  Software:
+  software:
     output: true
     permalink: /:collection/:path/
 
