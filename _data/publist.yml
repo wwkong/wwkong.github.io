@@ -44,10 +44,10 @@
 - title: Iteration-complexity of a proximal augmented Lagrangian method for solving nonconvex composite optimization problems with nonlinear convex constraints
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: nl_iapial
-  display: <b>Accepted</b> for publication in <i>Mathematics of Operations Research</i>
+  display: <i>Mathematics of Operations Research</i>
   year: 2022
   arxiv: 2008.07080
-  doi: https://doi.org/10.48550/arXiv.2008.07080
+  doi: https://doi.org/10.1287/moor.2022.1301
   abstract: This paper proposes and analyzes a proximal augmented Lagrangian (NL-IAPIAL) method for solving smooth nonconvex composite optimization problems with nonlinear ${\cal K}$-convex constraints, i.e., the constraints are convex with respect to the order given by a closed convex cone ${\cal K}$. Each NL-IAPIAL iteration consists of inexactly solving a proximal augmented Lagrangian subproblem by an accelerated composite gradient (ACG) method followed by a Lagrange multiplier update. Under some mild assumptions, it is shown that NL-IAPIAL generates an approximate stationary solution of the constrained problem in $O(\log(1/\rho)/\rho^{3})$ inner iterations, where $ρ>0$ is a given tolerance. Numerical experiments are also given to illustrate the computational efficiency of the proposed method.
 
 - title: 'Rankmax: An Adaptive Projection Alternative to the Softmax Function'
