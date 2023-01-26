@@ -58,12 +58,12 @@
   abstract: Several machine learning models involve mapping a score vector to a probability vector. Usually, this is done by projecting the score vector onto a probability simplex, and such projections are often characterized as Lipschitz continuous approximations of the argmax function, whose Lipschitz constant is controlled by a parameter that is similar to a softmax temperature. The aforementioned parameter has been observed to affect the quality of these models and is typically either treated as a constant or decayed over time. In this work, we propose a method that adapts this parameter to individual training examples. The resulting method exhibits desirable properties, such as sparsity of its support and numerically efficient implementation, and we find that it significantly outperforms competing non-adaptive projection methods. In our analysis, we also derive the general solution of (Bregman) projections onto the $(n, k)$-simplex, a result which may be of independent interest.
 
 - title: Iteration-complexity of an inner accelerated inexact proximal augmented Lagrangian method based on the classical Lagrangian function
-  authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
+  authors: Weiwei Kong, Renato D. C. Monteiro, & Jefferson G. Melo,
   url: iaipal
-  display: <b>Submitted</b> to <i>SIAM Journal on Optimization</i>
-  year: 2021
+  display: <i>SIAM Journal on Optimization 33</i>
+  year: 2023
   arxiv: 2008.00562
-  doi: https://doi.org/10.48550/arXiv.2008.00562
+  doi: https://doi.org/10.1137/20M136147X
   abstract: This paper establishes the iteration-complexity of an inner accelerated inexact proximal augmented Lagrangian (IAIPAL) method for solving linearly-constrained smooth nonconvex composite optimization problems that is based on the classical augmented Lagrangian (AL) function. More specifically, each IAIPAL iteration consists of inexactly solving a proximal AL subproblem by an accelerated composite gradient (ACG) method followed by a classical Lagrange multiplier update. Under the assumption that the domain of the composite function is bounded and the problem has a Slater point, it is shown that IAIPAL generates an approximate stationary solution in $O(\varepsilon^{−5/2}\log^2 \varepsilon^{−1})$ ACG iterations where $\varepsilon>0$ is a tolerance for both stationarity and feasibility. Moreover, the above bound is derived without assuming that the initial point is feasible. Finally, numerical results are presented to demonstrate the strong practical performance of IAIPAL.
 
 - title: FISTA and Extensions - Review and New Insights
