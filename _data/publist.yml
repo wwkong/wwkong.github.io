@@ -23,7 +23,7 @@
   year: 2019
   abstract: This paper introduces a novel framework for learning algorithms to solve online combinatorial optimization problems. Towards this goal, we introduce a number of key ideas from traditional algorithms and complexity theory. First, we draw a new connection between primal-dual methods and reinforcement learning. Next, we introduce the concept of adversarial distributions (universal and high-entropy training sets), which are distributions that encourage the learner to find algorithms that work well in the worst case. We test our new ideas on a number of optimization problem such as the AdWords problem, the online knapsack problem, and the secretary problem. Our results indicate that the models have learned behaviours that are consistent with the traditional optimal algorithms for these problems.
 
-- title: An accelerated inexact proximal point method for solving nonconvex-concave min-max problems.
+- title: An accelerated inexact proximal point method for solving nonconvex-concave min-max problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: aipp_s
   display: <i>SIAM Journal on Optimization 31</i>
