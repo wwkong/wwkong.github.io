@@ -78,8 +78,8 @@
 - title: An Accelerated Inexact Dampened Augmented Lagrangian Method for Linearly-Constrained Nonconvex Composite Optimization Problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: aidal
-  display: <b>Submitted</b> to <i>Computational Optimization and Applications</i>
-  year: 2021
+  display: <b>Accepted</b> in <i>Computational Optimization and Applications</i>
+  year: 2023
   arxiv: 2110.11151
   doi: https://doi.org/10.48550/arXiv.2110.11151
   abstract: 'This paper proposes and analyzes an accelerated inexact dampened augmented Lagrangian (AIDAL) method for solving linearly-constrained nonconvex composite optimization problems. Each iteration of the AIDAL method consists of: (i) inexactly solving a dampened proximal augmented Lagrangian (AL) subproblem by calling an accelerated composite gradient (ACG) subroutine; (ii) applying a dampened and under-relaxed Lagrange multiplier update; and (iii) using a novel test to check whether the penalty parameter of the AL function should be increased. Under several mild assumptions involving the dampening factor and the under-relaxation constant, it is shown that the AIDAL method generates an approximate stationary point of the constrained problem in  $O(\varepsilon^{ −5/2 } \log^2 \varepsilon^{−1})$ iterations of the ACG subroutine, for a given tolerance $\varepsilon>0$. Numerical experiments are also given to show the computational efficiency of the proposed method.'
