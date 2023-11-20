@@ -1,0 +1,1642 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin "C:/Users/William Kong/Documents/GitHub/wwkong.github.io/_lyx/"
+\textclass article
+\begin_preamble
+% ----- Necessary Packages -----
+
+\usepackage{babel} %Allow labeling of TOC
+\usepackage{blindtext}
+\usepackage{amsmath,amssymb,amsthm} 
+\usepackage{url} 
+\usepackage{enumerate} 
+\usepackage{setspace}
+\usepackage{algorithm,algpseudocode}
+\usepackage{xcolor}
+
+% ----- Fonts -----
+
+\usepackage[T1]{fontenc}
+%\usepackage[onlytext,lf]{MinionPro}
+%\usepackage{mnsymbol}
+\usepackage{lmodern}
+
+% ----- Special Setups -----
+
+\usepackage{caption}
+\usepackage{multicol}
+\captionsetup{labelfont=bf,indention=0cm}
+\usepackage{hyperref}
+%\hypersetup{
+%    colorlinks,
+%    citecolor=blue,
+%    filecolor=blue,
+%    linkcolor=black,
+%    urlcolor=purple
+%}
+\definecolor{green}{rgb}{0,0.6,0.0} % Darken the default green
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+theorems-sec
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement !tbh
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+\series bold
+Difficulty
+\series default
+: Undergraduate Students
+\end_layout
+
+\begin_layout Standard
+Multivariate calculus has always been a core part of any mathematics degree,
+ but is often taught through computation or simplified assumptions instead
+ of foundational abstractions.
+ In this series of posts, I describe 
+\emph on
+a few
+\emph default
+ of the key concepts that were glanced over in my undergraduate studies,
+ but carefully scrutinized during my graduate studies.
+ I will assume that readers are familiar with the material in an introductory
+ multivariate calculus class.
+\end_layout
+
+\begin_layout Standard
+A good portion of the material below can be found in Chapter 3 of 
+\emph on
+Iterative solution of nonlinear equations in several variables
+\emph default
+ by J.
+ M.
+ Ortega and W.
+ C.
+ Rheinboldt.
+ A more in-depth presentation can be found in Appendix A of 
+\emph on
+Lectures on Modern Convex Optimization 
+\emph default
+by A.
+ Ben-Tal and A.
+ Nemirovski
+\end_layout
+
+\begin_layout Section*
+The 
+\series bold
+Fréchet
+\series default
+ derivative: a robust standard
+\end_layout
+
+\begin_layout Standard
+We start our series with the 
+\begin_inset Quotes eld
+\end_inset
+
+canonical
+\begin_inset Quotes erd
+\end_inset
+
+ definition of a derivative in higher dimensions.
+ A function 
+\begin_inset Formula $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+ is said to have a 
+\series bold
+Fréchet
+\series default
+ (or 
+\series bold
+F-
+\series default
+) 
+\series bold
+derivative
+\series default
+ 
+\series bold
+at 
+\series default
+
+\begin_inset Formula $x\in\mathbb{R}^{n}$
+\end_inset
+
+ for a given norm 
+\begin_inset Formula $\|\cdot\|$
+\end_inset
+
+ if there exists a (unique) linear operator 
+\begin_inset Formula ${\cal A}_{x}^{f}:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+, called the F-derivative, that satisfies the relation 
+\begin_inset Formula 
+\[
+(\alpha)\qquad\lim_{\Delta\to0}\frac{\left\Vert f(x+\Delta)-\left[f(x)+{\cal A}_{x}^{f}(\Delta)\right]\right\Vert }{\|\Delta\|}=0
+\]
+
+\end_inset
+
+where the limit is taken over all subsequences 
+\begin_inset Formula $\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$
+\end_inset
+
+ tending to zero.
+ Notice that this is a natural generalization of the one-dimensional case
+ where we replace absolute value errors with norm errors.
+\end_layout
+
+\begin_layout Standard
+Before giving more definitions, let us discuss some nuances and implications
+ of the above definition.
+\end_layout
+
+\begin_layout Itemize
+In general, the definition of 
+\begin_inset Formula ${\cal A}_{x}^{f}$
+\end_inset
+
+ is non-constructive.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula ${\cal A}_{x}^{f}$
+\end_inset
+
+ is linear in its 
+\begin_inset Formula $f$
+\end_inset
+
+ parameter, i.e., 
+\begin_inset Formula ${\cal A}_{x}^{\lambda(f_{1}+f_{2})}=\lambda({\cal A}_{x}^{f_{1}}+{\cal A}_{x}^{f_{2}})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+In the one-dimensional case (
+\begin_inset Formula $n=m=1$
+\end_inset
+
+), the F-derivative and derivative coincide in the sense that 
+\begin_inset Formula ${\cal A}_{x}^{f}(\delta)=\delta f'(x)$
+\end_inset
+
+ for 
+\begin_inset Formula $\delta\in\mathbb{R}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+The F-derivative is independent of different choices of the norm 
+\begin_inset Formula $\|\cdot\|$
+\end_inset
+
+.
+ This follows from the fact that for two norms 
+\begin_inset Formula $\|\cdot\|$
+\end_inset
+
+ and 
+\begin_inset Formula $\|\cdot\|'$
+\end_inset
+
+ in 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+, there always exist constants 
+\begin_inset Formula $c_{1}>0$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{2}\geq c_{1}$
+\end_inset
+
+ such that 
+\begin_inset Formula 
+\[
+c_{1}\|x\|\leq\|x\|'\leq c_{2}\|x\|\quad\forall x\in\mathbb{R}^{n}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In other works of literature, we might see the following variations and
+ applications.
+\end_layout
+
+\begin_layout Itemize
+The definition in 
+\begin_inset Formula $(\alpha)$
+\end_inset
+
+ may be equivalently written as 
+\begin_inset Formula 
+\[
+\lim_{y\to x}\frac{\left\Vert f(y)-\left[f(x)+{\cal A}_{x}^{f}(y-x)\right]\right\Vert }{\|y-x\|}=0
+\]
+
+\end_inset
+
+where the limit is over all subsequences 
+\begin_inset Formula $\{y_{n}\}$
+\end_inset
+
+ going to 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ (
+\emph on
+Prove this as a simple exercise
+\emph default
+!)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula ${\cal A}_{x}^{f}(\Delta)$
+\end_inset
+
+ may be written as 
+\begin_inset Formula $Df(x)[\Delta]$
+\end_inset
+
+, 
+\begin_inset Formula $Df_{x}(\Delta)$
+\end_inset
+
+, or 
+\begin_inset Formula $f'(x)\Delta$
+\end_inset
+
+ to emphasize the dependence on 
+\begin_inset Formula $f$
+\end_inset
+
+ and 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+In optimization theory, the term 
+\begin_inset Formula $f(x)+{\cal A}_{x}^{f}(\Delta)$
+\end_inset
+
+ is often called the 
+\series bold
+first-order approximation of 
+\begin_inset Formula $f$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Once we have the above definition of a derivative, we can make the several
+ follow-up definitions.
+ The function 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+Fréchet
+\series default
+ (or 
+\series bold
+F-
+\series default
+)
+\series bold
+ differentiable at 
+\begin_inset Formula $x$
+\end_inset
+
+ 
+\series default
+if its F-derivative 
+\begin_inset Formula ${\cal A}_{x}^{f}$
+\end_inset
+
+ exists.
+ Consequently, the function 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+Fréchet
+\series default
+ (or 
+\series bold
+F-
+\series default
+) 
+\series bold
+differentiable
+\series default
+ or has 
+\series bold
+Fréchet 
+\series default
+(or 
+\series bold
+F-
+\series default
+)
+\series bold
+ differentiability
+\series default
+ if it is F-differentiable at all points in 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Some important properties that are unique to F-differentiability are as
+ follows.
+\end_layout
+
+\begin_layout Itemize
+If 
+\begin_inset Formula $f$
+\end_inset
+
+ is F-differentiable at 
+\begin_inset Formula $x$
+\end_inset
+
+ then 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+continuous
+\series default
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+, i.e., 
+\begin_inset Formula $\lim_{\bar{x}\to x}f(\bar{x})=f(x)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The set 
+\begin_inset Formula $\{f(x)+{\cal A}_{x}^{f}(\Delta):\Delta\in\mathbb{R}^{n}\}$
+\end_inset
+
+ is a tangent plane of 
+\begin_inset Formula $f$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, some important anti-properties of F-derivatives and F-differentiability
+ are as follows.
+\end_layout
+
+\begin_layout Itemize
+The subsequences 
+\begin_inset Formula $\{\Delta_{n}\}$
+\end_inset
+
+ 
+\series bold
+need not
+\series default
+ lie on a line, e.g., like in the definition of a 
+\series bold
+partial derivative
+\series default
+ 
+\begin_inset Formula $\partial f_{i}/\partial x_{j}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+In fact, the existence of the partial derivatives at 
+\begin_inset Formula $x$
+\end_inset
+
+ 
+\series bold
+is generally not
+\series default
+ sufficient to conclude F-differentiability at 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Consider the function
+\begin_inset Formula 
+\[
+(\gamma_{1})\qquad f(x_{1},x_{2})=\begin{cases}
+x_{1}, & \text{if }x_{2}=0,\\
+x_{2}, & \text{if }x_{1}=0,\\
+1, & \text{otherwise},
+\end{cases}
+\]
+
+\end_inset
+
+at zero.
+ Show that the partial derivatives of 
+\begin_inset Formula $f$
+\end_inset
+
+ exist at zero, but the function itself is not F-differentiable.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Difficulty
+\series default
+: Undergraduate Students
+\end_layout
+
+\begin_layout Standard
+Often, we do not need full F-differentiability of a multivariate function
+ 
+\begin_inset Formula $f:\mathbb{R}^{n}\mapsto\mathbb{R}$
+\end_inset
+
+ to derive interesting results about 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ Below, we describe a weaker notion of differentiability and its intriguing
+ properties.
+\end_layout
+
+\begin_layout Section*
+The Gateaux derivative: provably weaker, but more flexible
+\end_layout
+
+\begin_layout Standard
+The next stop on our journey is a weaker, but related notion of a derivative.
+ A function 
+\begin_inset Formula $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+ is said to have a 
+\series bold
+Gateaux
+\series default
+ (or 
+\series bold
+G-
+\series default
+) 
+\series bold
+derivative
+\series default
+ 
+\series bold
+at
+\series default
+ 
+\begin_inset Formula $x\in\mathbb{R}^{n}$
+\end_inset
+
+ for a given norm 
+\begin_inset Formula $\|\cdot\|$
+\end_inset
+
+ if there exists a (unique) linear operator 
+\begin_inset Formula ${\cal B}_{x}^{f}:\mathbb{R}_{+}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+, called the G-derivative, that satisfies the relation 
+\begin_inset Formula 
+\[
+(\beta)\qquad\lim_{t\downarrow0}\frac{\left\Vert f(x+t\Delta)-\left[f(x)+{\cal B}_{x}^{f}(\Delta)\right]\right\Vert }{t}=0\quad\forall\Delta\in\mathbb{R}^{n}
+\]
+
+\end_inset
+
+where the limit is taken over all positive subsequences 
+\begin_inset Formula $\{t_{n}\}\subseteq\mathbb{R}_{+}$
+\end_inset
+
+ tending to zero.
+ 
+\end_layout
+
+\begin_layout Standard
+Like in the previous post, let us discuss a few nuances and implications
+ of the above definition.
+\end_layout
+
+\begin_layout Itemize
+In general, the definition of 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ is non-constructive.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ is linear in its 
+\begin_inset Formula $f$
+\end_inset
+
+ parameter, i.e., 
+\begin_inset Formula ${\cal B}_{x}^{\lambda(f_{1}+f_{2})}=\lambda({\cal B}_{x}^{f_{1}}+{\cal B}_{x}^{f_{2}})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Compared to the F-derivative, the subsequences in the G-derivative are restricte
+d to subsequences 
+\begin_inset Formula $\{t_{n}d\}$
+\end_inset
+
+ which lie on a line emanating from the origin.
+\end_layout
+
+\begin_layout Itemize
+In the one-dimensional case (
+\begin_inset Formula $n=m=1$
+\end_inset
+
+), the F-derivative and G-derivative coincide.
+\end_layout
+
+\begin_layout Itemize
+Similar to the F-derivative, the G-derivative is independent of different
+ choices of the norm 
+\begin_inset Formula $\|\cdot\|$
+\end_inset
+
+ (for the same reasons).
+\end_layout
+
+\begin_layout Standard
+Some works may have the same notation for the Fréchet and Gateaux derivatives,
+ while others may prefer 
+\begin_inset Formula $D_{x}f(x)[\Delta]$
+\end_inset
+
+ for Fréchet and 
+\begin_inset Formula $Df(x)[\Delta]$
+\end_inset
+
+ for Gateaux.
+ The two notions may be related as follows.
+\end_layout
+
+\begin_layout Itemize
+If 
+\begin_inset Formula $f$
+\end_inset
+
+ has an F-derivative 
+\begin_inset Formula ${\cal A}_{x}^{f}$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+ then (i) it also has a G-derivative 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+, and (ii) 
+\begin_inset Formula ${\cal A}_{x}^{f}={\cal B}_{x}^{f}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+If 
+\begin_inset Formula $f$
+\end_inset
+
+ is convex, then the F-derivative 
+\begin_inset Formula ${\cal A}_{x}^{f}$
+\end_inset
+
+ exists at 
+\begin_inset Formula $x$
+\end_inset
+
+ if and only if the G-derivative 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ exists at 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We now make the corresponding follow-up definitions.
+ The function 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+Gateaux
+\series default
+ (or 
+\series bold
+G-
+\series default
+)
+\series bold
+ differentiable at 
+\begin_inset Formula $x$
+\end_inset
+
+ 
+\series default
+if its G-derivative 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ exists.
+ Consequently, the function 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+Gateaux
+\series default
+ (or 
+\series bold
+G-
+\series default
+) 
+\series bold
+differentiable
+\series default
+ or has 
+\series bold
+Gateaux 
+\series default
+(or 
+\series bold
+F-
+\series default
+)
+\series bold
+ differentiability
+\series default
+ if it is G-differentiable at all points in 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+With the above definitions in mind, we give a few properties that merely
+ require G-differentiability (instead of F-differentiability).
+\end_layout
+
+\begin_layout Itemize
+If 
+\begin_inset Formula $f$
+\end_inset
+
+ is G-differentiable at 
+\begin_inset Formula $x$
+\end_inset
+
+, then 
+\begin_inset Formula $f$
+\end_inset
+
+ is 
+\series bold
+hemicontinuous
+\series default
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+, i.e., for any 
+\begin_inset Formula $\varepsilon>0$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta\in\mathbb{R}^{n}$
+\end_inset
+
+ there exists 
+\begin_inset Formula $\delta=\delta(\varepsilon,\Delta)$
+\end_inset
+
+ such that whenever 
+\begin_inset Formula $|t|<\delta$
+\end_inset
+
+ then 
+\begin_inset Formula $\|f(x+t\Delta)-f(x)\|<\varepsilon$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Consider the function 
+\begin_inset Formula 
+\[
+(\gamma_{2})\qquad f(x_{1},x_{2})=\begin{cases}
+0, & \text{if }x=0,\\
+\dfrac{x_{2}(x_{1}^{2}+x_{2}^{2})^{3/2}}{(x_{1}^{2}+x_{2}^{2})^{2}+x_{2}^{2}}, & \text{otherwise}.
+\end{cases}
+\]
+
+\end_inset
+
+Show that 
+\begin_inset Formula $f$
+\end_inset
+
+ has a G-derivative at zero, but not an F-derivative at zero.
+ Show, moreover, that the G-derivative is hemicontinuous at zero.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+If 
+\begin_inset Formula $f$
+\end_inset
+
+ is G-differentiable at 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $\|x\|=x^{T}x$
+\end_inset
+
+ for every 
+\begin_inset Formula $x\in\mathbb{R}^{n}$
+\end_inset
+
+, then the partial derivatives of 
+\begin_inset Formula $f$
+\end_inset
+
+ exist at 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Furthermore, the matrix representation of 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ is given by the 
+\series bold
+Jacobian
+\series default
+ 
+\begin_inset Formula 
+\[
+{\cal B}_{x}^{f}\equiv\left(\begin{array}{ccc}
+\frac{\partial f_{1}}{\partial x_{1}}(x) & \cdots & \frac{\partial f_{1}}{\partial x_{m}}(x)\\
+\vdots &  & \vdots\\
+\frac{\partial f_{n}}{\partial x_{1}}(x) & \cdots & \frac{\partial f_{n}}{\partial x_{m}}(x)
+\end{array}\right)\in\mathbb{R}^{n\times m};
+\]
+
+\end_inset
+
+its transpose in the case of 
+\begin_inset Formula $m=1$
+\end_inset
+
+ is called the 
+\series bold
+gradient of 
+\begin_inset Formula $f$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+
+\series default
+, and is denoted by 
+\begin_inset Formula $\nabla f(x)\in\mathbb{R}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+More general versions of the Jacobian and gradient exist for other inner
+ product spaces through the use the 
+\series bold
+Riesz-Fréchet representation
+\series default
+ theorem.
+ The (generalized) gradient is specifically defined as the unique element
+ 
+\begin_inset Formula $\nabla f(x)\in\mathbb{R}^{n\times m}$
+\end_inset
+
+ satisfying 
+\begin_inset Formula 
+\[
+\left\langle ({\cal B}_{x}^{f})^{*}\tau,\Delta\right\rangle =\left\langle \nabla f(x)\tau,\Delta\right\rangle 
+\]
+
+\end_inset
+
+for every 
+\begin_inset Formula $\tau\in\mathbb{R}^{m}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta\in\mathbb{R}^{n}$
+\end_inset
+
+, where 
+\begin_inset Formula $({\cal B}_{x}^{f})^{*}$
+\end_inset
+
+ is the adjoint operator of 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+[Chain Rule]
+\series default
+ If 
+\begin_inset Formula $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+ has a G-derivative at 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $g:\mathbb{R}^{m}\mapsto\mathbb{R}^{p}$
+\end_inset
+
+ has an F-derivative at 
+\begin_inset Formula $f(x)$
+\end_inset
+
+, then the composite function 
+\begin_inset Formula $h:=g\circ f$
+\end_inset
+
+ has a G-derivative at 
+\begin_inset Formula $x$
+\end_inset
+
+ where 
+\begin_inset Formula 
+\[
+{\cal B}_{x}^{h}={\cal A}_{f(x)}^{g}{\cal B}_{x}^{f}.
+\]
+
+\end_inset
+
+If, in addition, 
+\begin_inset Formula ${\cal B}_{x}^{f}$
+\end_inset
+
+ is an F-derivative then 
+\begin_inset Formula ${\cal B}_{x}^{h}$
+\end_inset
+
+ is an F-derivative as well.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Let 
+\begin_inset Formula $f$
+\end_inset
+
+ be as in 
+\begin_inset Formula $(\gamma_{2})$
+\end_inset
+
+ and let 
+\begin_inset Formula $g:\mathbb{R}^{2}\mapsto\mathbb{R}$
+\end_inset
+
+ be given by 
+\begin_inset Formula $g(x)=(x_{1},x_{2}^{2})^{T}$
+\end_inset
+
+.
+ Show that the composite function 
+\begin_inset Formula $h=f\circ g$
+\end_inset
+
+ does not have a G-derivative at zero.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Finally, some important anti-properties of G-derivatives and G-differentiability
+ are as follows.
+\end_layout
+
+\begin_layout Itemize
+Surprisingly, just like the F-derivative, the existence of the partial derivativ
+es at 
+\begin_inset Formula $x$
+\end_inset
+
+ 
+\series bold
+do not
+\series default
+ imply that the G-derivative exists at 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Consider the same function in equation 
+\begin_inset Formula $(\gamma_{1})$
+\end_inset
+
+ of the previous post.
+ Show that 
+\begin_inset Formula $f$
+\end_inset
+
+ is not G-differentiable at zero.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The G-differentiability of 
+\begin_inset Formula $f$
+\end_inset
+
+ 
+\series bold
+does not
+\series default
+ imply that 
+\begin_inset Formula $f$
+\end_inset
+
+ is continuous (unlike for F-differentiability).
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Consider the function 
+\begin_inset Formula 
+\[
+f(x_{1},x_{2})=\begin{cases}
+0, & \text{if }x_{1}=0,\\
+\dfrac{2x_{2}\exp(-x_{1}^{-2})}{x_{2}^{2}+\exp(-2x_{1}^{-2})}, & \text{otherwise},
+\end{cases}
+\]
+
+\end_inset
+
+at zero.
+ Show that the G-derivative of 
+\begin_inset Formula $f$
+\end_inset
+
+ exists at zero, but 
+\begin_inset Formula $f$
+\end_inset
+
+ is not continuous.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Difficulty
+\series default
+: Undergraduate Students
+\end_layout
+
+\begin_layout Standard
+Sometimes notions in one-dimensional spaces are not easy to generalize to
+ multi-dimensional spaces.
+ I believe the notion of a differential (or the derivative in one-dimensional
+ space) is one of them.
+\end_layout
+
+\begin_layout Section*
+Differentials: a useful, but naive surrogate
+\end_layout
+
+\begin_layout Standard
+In one-dimensional calculus, students are typically introduced to the definition
+ of the derivative of a function 
+\begin_inset Formula $f:\mathbb{R}\mapsto\mathbb{R}$
+\end_inset
+
+ by constructive means.
+ Specifically, if 
+\begin_inset Formula 
+\[
+(\theta)\qquad\lim_{t\downarrow0}\frac{f(x+t)-f(x)}{t}=\lim_{t\uparrow0}\frac{f(x+t)-f(x)}{t}=\lim_{t\to0}\frac{f(x+t)-f(x)}{t}=f'(x)
+\]
+
+\end_inset
+
+then 
+\begin_inset Formula $f'(x)$
+\end_inset
+
+ is called the (univariate) 
+\series bold
+derivative of 
+\begin_inset Formula $f$
+\end_inset
+
+ at 
+\begin_inset Formula $x$
+\end_inset
+
+
+\series default
+.
+ In this special setting, the existence of 
+\begin_inset Formula $f'(x)$
+\end_inset
+
+ enjoys all the nice properties of the F-derivative (e.g., continuity and
+ tangency) and G-derivative (e.g., chain rule) 
+\emph on
+without the issues of construction
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+It is then natural to ask whether 
+\begin_inset Formula $(\theta)$
+\end_inset
+
+ could be extended to the multivariate setting while simultaneously keeping
+ (i) its constructive nature 
+\emph on
+and
+\emph default
+ (ii) the nice properties of the F-derivative (and G-derivative).
+ Below, we show an approach of obtaining (i) which partially obtains (ii).
+\end_layout
+
+\begin_layout Standard
+A function 
+\begin_inset Formula $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$
+\end_inset
+
+ is said to have a 
+\series bold
+Gateaux 
+\series default
+(or 
+\series bold
+G-
+\series default
+) 
+\series bold
+differential
+\series default
+ 
+\series bold
+at
+\series default
+ 
+\begin_inset Formula $x\in\mathbb{R}^{n}$
+\end_inset
+
+ in the direction 
+\begin_inset Formula $\Delta\in\mathbb{R}^{n}$
+\end_inset
+
+ if the function 
+\begin_inset Formula 
+\[
+(\pi_{1})\qquad V^{f}(x,\Delta)=\lim_{t\to0}\frac{f(x+t\Delta)-f(x)}{t},
+\]
+
+\end_inset
+
+called the G-differential, is well-defined.
+ Here, the limit is taken over all subsequences 
+\begin_inset Formula $\{t_{n}\}\subseteq\mathbb{R}$
+\end_inset
+
+.
+ If, in addition, 
+\begin_inset Formula 
+\[
+(\pi_{2})\qquad\lim_{\Delta\to0}\frac{\|f(x+t\Delta)-f(x)-V^{f}(x,\Delta)\|}{\|\Delta\|}=0
+\]
+
+\end_inset
+
+where the limit is taken over all subsequences 
+\begin_inset Formula $\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$
+\end_inset
+
+, then 
+\begin_inset Formula $f$
+\end_inset
+
+ is also said to have a 
+\series bold
+Fréchet
+\series default
+ (or 
+\series bold
+F-
+\series default
+)
+\series bold
+ differential at 
+\series default
+
+\begin_inset Formula $x\in\mathbb{R}^{n}$
+\end_inset
+
+ (also denoted by 
+\begin_inset Formula $V^{f}(x,\Delta)$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Let us now make a few glancing remarks.
+\end_layout
+
+\begin_layout Itemize
+Unlike the definitions of an F-derivative or G-derivative, the definition
+ of 
+\begin_inset Formula $V^{f}$
+\end_inset
+
+ in 
+\begin_inset Formula $(\pi_{1})$
+\end_inset
+
+ is constructive.
+ 
+\end_layout
+
+\begin_layout Itemize
+Similar to the one-dimensional case, the well-definedness of 
+\begin_inset Formula $V^{f}(x,\Delta)$
+\end_inset
+
+ equivalent to the left and right limits (in terms of 
+\begin_inset Formula $t$
+\end_inset
+
+) being equal.
+\end_layout
+
+\begin_layout Itemize
+In the one-dimensional case of 
+\begin_inset Formula $n=m=1$
+\end_inset
+
+, we have 
+\begin_inset Formula 
+\[
+V^{f}(x,1)=f'(x)=-V^{f}(x,-1).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+It is straightforward to see that if 
+\begin_inset Formula $V^{f}(x,\Delta)$
+\end_inset
+
+ exists for 
+\begin_inset Formula $\Delta\in\mathbb{R}^{n}$
+\end_inset
+
+ and is linear in 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ then 
+\begin_inset Formula $V^{f}(x,\Delta)={\cal B}_{x}^{f}(\Delta)$
+\end_inset
+
+.
+ Furthermore, if 
+\begin_inset Formula $(\pi_{2})$
+\end_inset
+
+ holds then 
+\begin_inset Formula $V^{f}(x,\Delta)={\cal A}_{x}^{f}(\Delta)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+While we have fulfilled property (i), the following anti-properties (given
+ as exercises) show that property (ii) cannot be fully realized.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Exercise
+\emph default
+.
+ Consider the function 
+\begin_inset Formula 
+\[
+f(x_{1},x_{2})=\begin{cases}
+0, & \text{if }x=0,\\
+\dfrac{x_{1}x_{2}^{2}}{x_{1}^{2}+x_{2}^{4}}, & \text{otherwise}.
+\end{cases}
+\]
+
+\end_inset
+
+Show that 
+\begin_inset Formula $V^{f}(0,\Delta)$
+\end_inset
+
+ exists for every 
+\begin_inset Formula $\Delta\in\mathbb{R}^{2}$
+\end_inset
+
+, but 
+\begin_inset Formula $f$
+\end_inset
+
+ does not have a G-derivative at zero.
+ As a bonus, show that 
+\begin_inset Formula $f$
+\end_inset
+
+ is not continuous at zero.
+\end_layout
+
+\begin_layout Itemize
+Consider the function 
+\begin_inset Formula 
+\[
+f(x_{1},x_{2})={\rm sgn}(x_{2})\min(|x_{1}|,|x_{2}|)
+\]
+
+\end_inset
+
+which is clearly continuous at zero.
+ Show that 
+\begin_inset Formula $V^{f}(0,\Delta)$
+\end_inset
+
+ exists for every 
+\begin_inset Formula $\Delta\in\mathbb{R}^{2}$
+\end_inset
+
+, but 
+\begin_inset Formula $f$
+\end_inset
+
+ does not have a G-derivative at zero.
+\end_layout
+
+\begin_layout Standard
+On the other hand, the nice property about the G-differential (resp.
+ F-differential) is that it gives a good initial estimate for the G-derivative
+ (or F-derivative) if one can extract the appropriate linear form from it
+ (and verify property 
+\begin_inset Formula $(\pi_{2})$
+\end_inset
+
+ in the case of the F-derivative) or we know that 
+\begin_inset Formula $f$
+\end_inset
+
+ is G-differentiable (resp.
+ F-differentiable).
+ A classic example of the utility of the differential is in deriving the
+ derivative of the log determinant of a matrix, which we show below.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $f:{\cal S}_{++}^{n}\mapsto\mathbb{R}$
+\end_inset
+
+ be given by 
+\begin_inset Formula $f(M)=\log\det M$
+\end_inset
+
+, where 
+\begin_inset Formula ${\cal S}_{++}^{n}$
+\end_inset
+
+ denotes the space of positive definite matrices.
+ Since 
+\begin_inset Formula $\log(\cdot)$
+\end_inset
+
+ is differentiable on 
+\begin_inset Formula $\mathbb{R}_{++}$
+\end_inset
+
+ and 
+\begin_inset Formula $h(M)=\det(M)$
+\end_inset
+
+ is a polynomial function of the components of 
+\begin_inset Formula $M$
+\end_inset
+
+ (and, hence differentiable) we can obtain the derivative of 
+\begin_inset Formula $f$
+\end_inset
+
+ by differentials and the chain rule.
+ Using some standard linear algebra techniques, the F-differential of 
+\begin_inset Formula $h$
+\end_inset
+
+ (and, hence, the F-derivative of 
+\begin_inset Formula $h$
+\end_inset
+
+) is then given by
+\begin_inset Formula 
+\begin{align*}
+V^{h}(M,\Delta) & =\lim_{t\to0}\frac{\det(M+t\Delta)-\det(M)}{t}\\
+ & =\lim_{t\to0}\frac{\det(M[I+tM^{-1}\Delta])-\det(M)}{t}\\
+ & =\det(M)\lim_{t\to0}\frac{\det(I+tM^{-1}\Delta)-1}{t}\\
+ & =\det(M){\rm tr}(M^{-1}\Delta)={\cal A}_{M}^{h}(\Delta),
+\end{align*}
+
+\end_inset
+
+Hence, by the chain rule, we have 
+\begin_inset Formula 
+\[
+{\cal A}_{M}^{f}(\Delta)={\cal A}_{\det M}^{\log(\cdot)}{\cal {\cal A}}_{M}^{h}(\Delta)=\frac{\det(M){\rm tr}(M^{-1}\Delta)}{\det(M)}={\rm tr}(M^{-1}\Delta).
+\]
+
+\end_inset
+
+One can even obtain the gradient 
+\begin_inset Formula $\nabla f(x)=M^{-T}$
+\end_inset
+
+ by using the fact that 
+\begin_inset Formula 
+\[
+{\cal A}_{M}^{f}(\Delta)={\rm tr}(M^{-1}\Delta)=\left\langle M^{-T},\Delta\right\rangle .
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To close, let us present this nice schematic of the various relations between
+ G/F-derivatives and G/F-differentials in terms of the displacement variable
+ 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ that shows up in 
+\begin_inset Formula ${\cal A}_{x}^{f}(\Delta)$
+\end_inset
+
+, 
+\begin_inset Formula ${\cal B}_{x}^{f}(\Delta)$
+\end_inset
+
+, and 
+\begin_inset Formula $V^{f}(x,\Delta)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename derivatives.drawio.png
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
