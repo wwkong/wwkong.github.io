@@ -15,7 +15,7 @@ Often, we do not need full F-differentiability of a multivariate function $f:\ma
 
 The next stop on our journey is a weaker, but related notion of a derivative. A function $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$ is said to have a **Gateaux** (or **G-**) **derivative** **at** $x\in\mathbb{R}^{n}$ for a given norm $$\|\cdot\|$$ if there exists a (unique) linear operator $${\cal B}_{x}^{f}:\mathbb{R}_{+}\mapsto\mathbb{R}^{m}$$, called the G-derivative, that satisfies the relation 
 
-$$(\beta)\qquad\lim_{t\downarrow0}\frac{\left\Vert f(x+t\Delta)-[f(x)+{\cal B}_{x}^{f}(\Delta)]\right\Vert }{t}=0\quad\forall\Delta\in\mathbb{R}^{n}$$ 
+$$(\beta)\qquad\lim_{t\downarrow0}\frac{\left\Vert f(x+t\Delta)-[f(x)+{\cal B}_{x}^{f}(t\Delta)]\right\Vert }{t}=0\quad\forall\Delta\in\mathbb{R}^{n}$$ 
 
 where the limit is taken over all positive subsequences $$\{t_{n}\}\subseteq\mathbb{R}_{+}$$ tending to zero.
 
