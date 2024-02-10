@@ -81,7 +81,7 @@
   display: <i>Computational Optimization and Applications</i>
   year: 2023
   arxiv: 2110.11151
-  doi: https://doi.org/10.48550/arXiv.2110.11151
+  doi: https://doi.org/10.1007/s10589-023-00464-5
   abstract: 'This paper proposes and analyzes an accelerated inexact dampened augmented Lagrangian (AIDAL) method for solving linearly-constrained nonconvex composite optimization problems. Each iteration of the AIDAL method consists of: (i) inexactly solving a dampened proximal augmented Lagrangian (AL) subproblem by calling an accelerated composite gradient (ACG) subroutine; (ii) applying a dampened and under-relaxed Lagrange multiplier update; and (iii) using a novel test to check whether the penalty parameter of the AL function should be increased. Under several mild assumptions involving the dampening factor and the under-relaxation constant, it is shown that the AIDAL method generates an approximate stationary point of the constrained problem in  $O(\varepsilon^{ −5/2 } \log^2 \varepsilon^{−1})$ iterations of the ACG subroutine, for a given tolerance $\varepsilon>0$. Numerical experiments are also given to show the computational efficiency of the proposed method.'
 
 - title: Accelerated inexact first-order methods for solving nonconvex composite optimization problems
@@ -96,10 +96,10 @@
 - title: Global Complexity Bound of a Proximal ADMM for Linearly-Constrained Nonseperable Nonconvex Composite Programming
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: dp_admm
-  display: <b>Accepted</b> in <i>SIAM Journal on Optimization</i>
-  year: 2023
+  display: <i>SIAM Journal on Optimization 34</i>
+  year: 2024
   arxiv: 2110.12502
-  doi: https://doi.org/10.48550/arXiv.2110.12502
+  doi: https://doi.org/10.1137/22M1503129
   abstract: 'This paper proposes and analyzes a dampened proximal alternating direction method of multipliers (DP.ADMM) for solving linearly-constrained nonconvex optimization problems where the smooth part of the objective function is nonseparable. Each iteration of DP.ADMM consists of: (i) a sequence of partial proximal augmented Lagrangian (AL) updates, (ii) an under-relaxed Lagrange multiplier update, and (iii) a novel test to check whether the penalty parameter of the AL function should be updated. Under a basic Slater condition and some requirements related to the dampening factor and under-relaxation parameter, it is shown that DP.ADMM obtains a first-order stationary point of the constrained problem in $O(\varepsilon^{−3})$ iterations for a given numerical tolerance $\varepsilon>0$. One of the main novelties of the paper is that convergence of the method is obtained without requiring any rank assumptions on the constraint matrices.'
 
 - title: Complexity-optimal and Curvature-free First-order Methods for Finding Stationary Points of Composite Optimization Problems
@@ -110,3 +110,10 @@
   arxiv: 2205.13055
   doi: https://doi.org/10.48550/arXiv.2205.13055
   abstract: This paper develops and analyzes an accelerated proximal descent method for finding stationary points of nonconvex composite optimization problems. The objective function is of the form $f+h$ where $h$ is a proper closed convex function, $f$ is a differentiable function on the domain of $h$, and $\nabla f$ is Lipschitz continuous on the domain of $h$. The main advantage of this method is that it is "curvature-free" in the sense that it does not require knowledge of the Lipschitz constant of $\nabla f$ or of any global topological properties of $f$. It is shown that the proposed method can obtain a $\rho$-approximate stationary point with iteration complexity bounds that are optimal, up to logarithmic terms over $\rho$, in both the convex and nonconvex settings. Some discussion is also given about how the proposed method can be leveraged in other existing optimization frameworks, such as min-max smoothing and penalty frameworks for constrained programming, to create more specialized curvature-free methods. Finally, numerical experiments on a set of nonconvex quadratic semidefinite programming problems are given to support the practical viability of the method.
+
+- title: 'A Unified Fast Gradient Clipping Framework for DP-SGD'
+  authors: Weiwei Kong & Andres Muñoz Medina
+  url: unified_fast_clipping
+  display: <i>Advances in Neural Information Processing Systems 37</i>
+  year: 2023
+  abstract: A well-known numerical bottleneck in the differentially-private stochastic gradient descent (DP-SGD) algorithm is the computation of the gradient norm for each example in a large input batch. When the loss function in DP-SGD consists of an intermediate linear operation, existing methods in the literature have proposed decompositions of gradients that are amenable to fast norm computations. In this paper, we present a framework that generalizes the above approach to arbitrary (possibly nonlinear) intermediate operations. Moreover, we show that for certain operations, such as fully-connected and embedding layer computations, further improvements to the runtime and storage costs of existing decompositions can be deduced using certain components of our framework. Finally, preliminary numerical experiments are given to demonstrate the substantial effects of the aforementioned improvements.
