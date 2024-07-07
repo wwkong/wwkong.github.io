@@ -32,7 +32,7 @@
   doi: https://doi.org/10.1137/20M1313222
   abstract: This paper presents smoothing schemes for obtaining approximate stationary points of unconstrained or linearly constrained composite nonconvex-concave min-max (and hence nonsmooth) problems by applying well-known algorithms to composite smooth approximations of the original problems. More specifically, in the unconstrained (resp., constrained) case, approximate stationary points of the original problem are obtained by applying, to its composite smooth approximation, an accelerated inexact proximal point (resp., quadratic penalty) method presented in a previous paper by the authors. Iteration complexity bounds for both smoothing schemes are also established. Finally, numerical results are given to demonstrate the efficiency of the unconstrained smoothing scheme.
 
-- title: Accelerated Inexact Composite Gradient Methods for Nonconvex Spectral Optimization Problems
+- title: Accelerated inexact composite gradient methods for nonconvex spectral optimization problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: spectral_icg
   display: <i>Computational Optimization and Applications 82</i>
@@ -50,7 +50,7 @@
   doi: https://doi.org/10.1287/moor.2022.1301
   abstract: This paper proposes and analyzes a proximal augmented Lagrangian (NL-IAPIAL) method for solving smooth nonconvex composite optimization problems with nonlinear ${\cal K}$-convex constraints, i.e., the constraints are convex with respect to the order given by a closed convex cone ${\cal K}$. Each NL-IAPIAL iteration consists of inexactly solving a proximal augmented Lagrangian subproblem by an accelerated composite gradient (ACG) method followed by a Lagrange multiplier update. Under some mild assumptions, it is shown that NL-IAPIAL generates an approximate stationary solution of the constrained problem in $O(\log(1/\rho)/\rho^{3})$ inner iterations, where $ρ>0$ is a given tolerance. Numerical experiments are also given to illustrate the computational efficiency of the proposed method.
 
-- title: 'Rankmax: An Adaptive Projection Alternative to the Softmax Function'
+- title: 'Rankmax: An adaptive projection alternative to the Softmax function'
   authors: Weiwei Kong, Walid Krichene, Nicolas Mayoraz, Steffen Rendle, & Li Zhang
   url: rankmax
   display: <i>Advances in Neural Information Processing Systems 33</i>
@@ -66,7 +66,7 @@
   doi: https://doi.org/10.1137/20M136147X
   abstract: This paper establishes the iteration-complexity of an inner accelerated inexact proximal augmented Lagrangian (IAIPAL) method for solving linearly-constrained smooth nonconvex composite optimization problems that is based on the classical augmented Lagrangian (AL) function. More specifically, each IAIPAL iteration consists of inexactly solving a proximal AL subproblem by an accelerated composite gradient (ACG) method followed by a classical Lagrange multiplier update. Under the assumption that the domain of the composite function is bounded and the problem has a Slater point, it is shown that IAIPAL generates an approximate stationary solution in $O(\varepsilon^{−5/2}\log^2 \varepsilon^{−1})$ ACG iterations where $\varepsilon>0$ is a tolerance for both stationarity and feasibility. Moreover, the above bound is derived without assuming that the initial point is feasible. Finally, numerical results are presented to demonstrate the strong practical performance of IAIPAL.
 
-- title: FISTA and Extensions - Review and New Insights
+- title: FISTA and extensions - Review and new insights
   authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
   url: fista
   display: <i>Technical Report</i>
@@ -75,7 +75,7 @@
   doi: https://doi.org/10.48550/arXiv.2107.01267
   abstract: The purpose of this technical report is to review the main properties of an accelerated composite gradient (ACG) method commonly referred to as the Fast Iterative Shrinkage-Thresholding Algorithm (FISTA). In addition, we state a version of FISTA for solving both convex and strongly convex composite minimization problems and derive its iteration complexities to generate iterates satisfying various stopping criteria, including one which arises in the course of solving other composite optimization problems via inexact proximal point schemes. This report also discusses different reformulations of the convex version of FISTA and how they relate to other formulations in the literature.
 
-- title: An Accelerated Inexact Dampened Augmented Lagrangian Method for Linearly-Constrained Nonconvex Composite Optimization Problems
+- title: An accelerated inexact dampened augmented Lagrangian method for linearly-constrained nonconvex composite optimization problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: aidal
   display: <i>Computational Optimization and Applications</i>
@@ -93,7 +93,7 @@
   doi: https://doi.org/10.48550/arXiv.2104.09685
   abstract: This thesis focuses on developing and analyzing accelerated and inexact first-order methods for solving or finding stationary points of various nonconvex composite optimization (NCO) problems. The main tools mainly come from variational and convex analysis, and the key results are in the form of iteration complexity bounds and how these bounds compare to other ones in the literature.
 
-- title: Global Complexity Bound of a Proximal ADMM for Linearly-Constrained Nonseperable Nonconvex Composite Programming
+- title: Global complexity bound of a proximal ADMM for linearly-constrained nonseperable nonconvex composite programming
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: dp_admm
   display: <i>SIAM Journal on Optimization 34</i>
@@ -102,16 +102,16 @@
   doi: https://doi.org/10.1137/22M1503129
   abstract: 'This paper proposes and analyzes a dampened proximal alternating direction method of multipliers (DP.ADMM) for solving linearly-constrained nonconvex optimization problems where the smooth part of the objective function is nonseparable. Each iteration of DP.ADMM consists of: (i) a sequence of partial proximal augmented Lagrangian (AL) updates, (ii) an under-relaxed Lagrange multiplier update, and (iii) a novel test to check whether the penalty parameter of the AL function should be updated. Under a basic Slater condition and some requirements related to the dampening factor and under-relaxation parameter, it is shown that DP.ADMM obtains a first-order stationary point of the constrained problem in $O(\varepsilon^{−3})$ iterations for a given numerical tolerance $\varepsilon>0$. One of the main novelties of the paper is that convergence of the method is obtained without requiring any rank assumptions on the constraint matrices.'
 
-- title: Complexity-optimal and Curvature-free First-order Methods for Finding Stationary Points of Composite Optimization Problems
+- title: Complexity-optimal and parameter-free first-order methods for finding stationary points of composite optimization problems
   authors: Weiwei Kong
   url: apd
-  display: <b>Submitted</b> to <i>SIAM Journal on Optimization</i>
+  display: <b>Accepted</b> for publication in <i>SIAM Journal on Optimization</i>
   year: 2022
   arxiv: 2205.13055
   doi: https://doi.org/10.48550/arXiv.2205.13055
   abstract: This paper develops and analyzes an accelerated proximal descent method for finding stationary points of nonconvex composite optimization problems. The objective function is of the form $f+h$ where $h$ is a proper closed convex function, $f$ is a differentiable function on the domain of $h$, and $\nabla f$ is Lipschitz continuous on the domain of $h$. The main advantage of this method is that it is "curvature-free" in the sense that it does not require knowledge of the Lipschitz constant of $\nabla f$ or of any global topological properties of $f$. It is shown that the proposed method can obtain a $\rho$-approximate stationary point with iteration complexity bounds that are optimal, up to logarithmic terms over $\rho$, in both the convex and nonconvex settings. Some discussion is also given about how the proposed method can be leveraged in other existing optimization frameworks, such as min-max smoothing and penalty frameworks for constrained programming, to create more specialized curvature-free methods. Finally, numerical experiments on a set of nonconvex quadratic semidefinite programming problems are given to support the practical viability of the method.
 
-- title: 'A Unified Fast Gradient Clipping Framework for DP-SGD'
+- title: 'A unified fast gradient clipping framework for DP-SGD'
   authors: Weiwei Kong & Andres Muñoz Medina
   url: unified_fast_clipping
   display: <i>Advances in Neural Information Processing Systems 37</i>
