@@ -105,10 +105,10 @@
 - title: Complexity-optimal and parameter-free first-order methods for finding stationary points of composite optimization problems
   authors: Weiwei Kong
   url: apd
-  display: <b>Accepted</b> for publication in <i>SIAM Journal on Optimization</i>
-  year: 2022
+  display: <i>SIAM Journal on Optimization 34</i>
+  year: 2024
   arxiv: 2205.13055
-  doi: https://doi.org/10.48550/arXiv.2205.13055
+  doi: https://doi.org/10.1137/22M1498826
   abstract: This paper develops and analyzes an accelerated proximal descent method for finding stationary points of nonconvex composite optimization problems. The objective function is of the form $f+h$ where $h$ is a proper closed convex function, $f$ is a differentiable function on the domain of $h$, and $\nabla f$ is Lipschitz continuous on the domain of $h$. The main advantage of this method is that it is "curvature-free" in the sense that it does not require knowledge of the Lipschitz constant of $\nabla f$ or of any global topological properties of $f$. It is shown that the proposed method can obtain a $\rho$-approximate stationary point with iteration complexity bounds that are optimal, up to logarithmic terms over $\rho$, in both the convex and nonconvex settings. Some discussion is also given about how the proposed method can be leveraged in other existing optimization frameworks, such as min-max smoothing and penalty frameworks for constrained programming, to create more specialized curvature-free methods. Finally, numerical experiments on a set of nonconvex quadratic semidefinite programming problems are given to support the practical viability of the method.
 
 - title: 'A unified fast gradient clipping framework for DP-SGD'
