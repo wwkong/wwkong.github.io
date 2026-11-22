@@ -10,7 +10,7 @@ const kHimmTitle = tex('f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2
 const kL1Title = tex('\\phi(x) = \\tfrac{1}{2}x^{\\top}Qx - c^{\\top}x + \\lambda\\|x\\|_1');
 const kChainedTitle = tex('f(x) = \\sum_{i=1}^{49}\\bigl[(1-x_i)^2 + b(x_{i+1}-x_i^2)^2\\bigr]');
 const kSparseTitle = tex('\\phi(x) = \\tfrac{1}{2}\\|Ax - y\\|_2^2 + \\lambda\\|x\\|_1 \\;(d=64)');
-const kSpecTitle = tex('f(x) = \\tfrac{1}{2}\\sum_{i=1}^{100} \\lambda_i (x_i - x_i^*)^2,\\; \\lambda_i \\in [1, \\kappa]');
+const kSpecTitle = tex('f(x) = \\tfrac{1}{2}(x - x^*)^{\\top} Q \\Lambda Q^{\\top} (x - x^*),\\; \\lambda_i \\in [1, \\kappa]');
 
 const kParamRosen = tex('b');
 const kParamQuad = tex('\\kappa = L/\\mu');
@@ -613,6 +613,59 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       sparseY[i] = sum;
     }
 
+    // Deterministic dense orthogonal rotation Q = H_r ... H_1 for Spectrum Quad (d = 100)
+    const SPEC_D = 100;
+    const SPEC_REFL = 12;
+    const specHouseholder = [];
+    {
+      let seed = 987654321;
+      const rand = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      const randn = () => {
+        const u1 = Math.max(1e-9, rand());
+        const u2 = rand();
+        return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      };
+      for (let r = 0; r < SPEC_REFL; r++) {
+        const u = new Float64Array(SPEC_D);
+        let n2 = 0;
+        for (let i = 0; i < SPEC_D; i++) {
+          const v = randn();
+          u[i] = v;
+          n2 += v * v;
+        }
+        const inv = 1.0 / Math.sqrt(n2);
+        for (let i = 0; i < SPEC_D; i++) u[i] *= inv;
+        specHouseholder.push(u);
+      }
+    }
+    function applySpecQT(v) {
+      // Q = H_{r-1} ... H_0  =>  Q^T = H_0 ... H_{r-1}
+      const out = Float64Array.from(v);
+      for (let r = SPEC_REFL - 1; r >= 0; r--) {
+        const u = specHouseholder[r];
+        let dot = 0;
+        for (let i = 0; i < SPEC_D; i++) dot += u[i] * out[i];
+        const twoDot = 2.0 * dot;
+        for (let i = 0; i < SPEC_D; i++) out[i] -= twoDot * u[i];
+      }
+      return out;
+    }
+    function applySpecQ(v) {
+      const out = new Array(SPEC_D);
+      for (let i = 0; i < SPEC_D; i++) out[i] = v[i];
+      for (let r = 0; r < SPEC_REFL; r++) {
+        const u = specHouseholder[r];
+        let dot = 0;
+        for (let i = 0; i < SPEC_D; i++) dot += u[i] * out[i];
+        const twoDot = 2.0 * dot;
+        for (let i = 0; i < SPEC_D; i++) out[i] -= twoDot * u[i];
+      }
+      return out;
+    }
+
     // ---- Problem Factory (unified N-dim interface) ----
     function buildProblem(prob, param) {
       if (prob === 'rosenbrock') {
@@ -831,11 +884,19 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           lam: param,
         };
       }
-      // spec_quad: d = 100, log-spaced eigenvalues [1, kappa], non-zero target x*
-      const d = 100;
+      // spec_quad: d = 100, dense rotated quadratic Q Λ Q^T with log-spaced eigenvalues [1, kappa]
+      const d = SPEC_D;
       const eigs = Array.from({ length: d }, (_, i) => Math.pow(param, i / (d - 1)));
       const opt = Array.from({ length: d }, (_, i) => 0.5 * Math.sin(0.25 * (i + 1)) + (i % 2 === 0 ? 0.25 : -0.25));
       const x0 = new Array(d).fill(0);
+      const diffBuf = new Float64Array(d);
+      const evalQuad = (x) => {
+        for (let i = 0; i < d; i++) diffBuf[i] = x[i] - opt[i];
+        const z = applySpecQT(diffBuf);
+        let s = 0;
+        for (let i = 0; i < d; i++) s += eigs[i] * z[i] * z[i];
+        return 0.5 * s;
+      };
       return {
         dim: d,
         maxK: 800,
@@ -848,26 +909,13 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         adamLr: 0.02,
         lbfgsMem: 5,
         Linit: param * 0.5,
-        fSmooth: (x) => {
-          let s = 0;
-          for (let i = 0; i < d; i++) {
-            const diff = x[i] - opt[i];
-            s += eigs[i] * diff * diff;
-          }
-          return 0.5 * s;
-        },
-        fTotal: (x) => {
-          let s = 0;
-          for (let i = 0; i < d; i++) {
-            const diff = x[i] - opt[i];
-            s += eigs[i] * diff * diff;
-          }
-          return 0.5 * s;
-        },
+        fSmooth: evalQuad,
+        fTotal: evalQuad,
         grad: (x) => {
-          const g = new Array(d);
-          for (let i = 0; i < d; i++) g[i] = eigs[i] * (x[i] - opt[i]);
-          return g;
+          for (let i = 0; i < d; i++) diffBuf[i] = x[i] - opt[i];
+          const z = applySpecQT(diffBuf);
+          for (let i = 0; i < d; i++) z[i] *= eigs[i];
+          return applySpecQ(z);
         },
         prox: null,
         Lref: 1,
@@ -1460,13 +1508,16 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         }
 
         const drawSpec = (vec, color, width, dashed) => {
+          const diff = new Float64Array(d);
+          for (let i = 0; i < d; i++) diff[i] = vec[i] - opt[i];
+          const z = applySpecQT(diff);
           cCtx.strokeStyle = color;
           cCtx.lineWidth = width;
           cCtx.setLineDash(dashed ? [6, 3] : []);
           cCtx.beginPath();
           for (let i = 0; i < d; i++) {
             const px = sx(i),
-              py = sy(vec[i] - opt[i]);
+              py = sy(z[i]);
             if (i === 0) cCtx.moveTo(px, py);
             else cCtx.lineTo(px, py);
           }
