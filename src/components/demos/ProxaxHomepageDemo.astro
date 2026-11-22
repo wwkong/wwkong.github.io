@@ -6,34 +6,47 @@ const tex = (expr: string) =>
 
 const kRosenTitle = tex('f(x_1, x_2) = (1 - x_1)^2 + b(x_2 - x_1^2)^2');
 const kQuadTitle = tex('f(x_1, x_2) = \\tfrac{1}{2}(x_1^2 + \\kappa x_2^2)');
+const kHimmTitle = tex('f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2');
+const kL1Title = tex('\\phi(x) = \\tfrac{1}{2}x^{\\top}Qx - c^{\\top}x + \\lambda\\|x\\|_1');
+
 const kParamRosen = tex('b');
 const kParamQuad = tex('\\kappa = L/\\mu');
+const kParamHimm = tex('\\theta_0');
+const kParamL1 = tex('\\lambda');
+
 const kIterK = tex('k');
 const kObjMetric = tex('f(x_k) - f^*');
 const kGradMetric = tex('\\|\\nabla f(x_k)\\|');
+const kDistMetric = tex('\\|x_k - x^*\\|');
+
 const kCurveObj = tex('\\log_{10}(f(x_k) - f^*)');
 const kCurveGrad = tex('\\log_{10}\\|\\nabla f(x_k)\\|');
-const kQuadBtn = tex('\\kappa = 500');
-const kXStar = tex('x^* = (1, 1)');
-const kB100 = tex('b = 100');
-const kKappa2500 = tex('\\kappa \\approx 2500');
+const kCurveDist = tex('\\log_{10}\\|x_k - x^*\\|');
+
+const kL1Btn = tex('\\ell_1');
+const kXStar = tex('x^*');
 const kL = tex('L');
 const kMu = tex('\\mu');
 
 const rosenSnippet = `import jax.numpy as jnp
 from proxax import px
 
-b = 100.0  # Rosenbrock valley steepness (nonconvex, kappa ≈ 2500 at x*)
+# Example 1: Nonconvex Rosenbrock (b = 100)
 def rosenbrock(x):
-  return (1.0 - x[0]) ** 2 + b * (x[1] - x[0] ** 2) ** 2
+  return (1.0 - x[0]) ** 2 + 100.0 * (x[1] - x[0] ** 2) ** 2
 
-problem = px.CompositeProblem(smooth=rosenbrock)
 sol = px.solve(
-    problem=problem,
+    problem=px.CompositeProblem(smooth=rosenbrock),
     x0=jnp.array([-1.2, 1.0]),
     solver=px.solvers.APD(opt_tol=1e-6),
 )
-print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
+
+# Example 2: Nonsmooth Composite L1 (proximal soft-thresholding)
+problem_l1 = px.CompositeProblem(
+    smooth=smooth_quadratic,
+    proximal=px.prox.L1(weight=1.0),
+)
+sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(opt_tol=1e-6))`;
 ---
 
 <div id="proxax-home-demo" class="card overflow-hidden shadow-sm">
@@ -56,25 +69,40 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         </span>
       </div>
       <h3 class="mt-1 text-base font-semibold text-[var(--text)]">
-        Nonconvex Banana Valley: Why Adaptive Acceleration Matters
+        Comparing First-Order Solvers Across Convex, Nonconvex &amp; Composite Landscapes
       </h3>
     </div>
 
     <div class="flex flex-wrap items-center gap-2">
-      <div class="inline-flex rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
+      <!-- Problem Presets -->
+      <div class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
         <button
           type="button"
           data-home-problem="rosenbrock"
           class="home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white"
         >
-          Rosenbrock (Nonconvex)
+          Rosenbrock
         </button>
         <button
           type="button"
           data-home-problem="quadratic"
           class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
         >
-          Quadratic (<span set:html={kQuadBtn} />)
+          Quadratic
+        </button>
+        <button
+          type="button"
+          data-home-problem="himmelblau"
+          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          Himmelblau
+        </button>
+        <button
+          type="button"
+          data-home-problem="lasso"
+          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          Composite <span set:html={kL1Btn} />
         </button>
       </div>
 
@@ -112,8 +140,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     </div>
   </div>
 
-  <!-- Sliders -->
-  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 sm:grid-cols-3">
+  <!-- Sliders & Metric Selector -->
+  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 md:grid-cols-[1fr_1fr_auto]">
     <label class="flex flex-col gap-1.5 text-xs">
       <div class="flex items-center justify-between">
         <span id="home-param-label-rosen" class="font-medium text-[var(--text)]">
@@ -121,6 +149,12 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         </span>
         <span id="home-param-label-quad" class="hidden font-medium text-[var(--text)]">
           Condition number <span set:html={kParamQuad} />
+        </span>
+        <span id="home-param-label-himm" class="hidden font-medium text-[var(--text)]">
+          Start angle <span set:html={kParamHimm} /> (°)
+        </span>
+        <span id="home-param-label-lasso" class="hidden font-medium text-[var(--text)]">
+          Sparsity weight <span set:html={kParamL1} />
         </span>
         <span id="home-param-val" class="font-mono font-semibold text-[var(--accent)]">100</span>
       </div>
@@ -155,20 +189,27 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 
     <div class="flex flex-col justify-center gap-1 text-xs">
       <span class="font-medium text-[var(--text)]">Y-Axis Metric</span>
-      <div class="inline-flex w-fit rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-[11px] font-medium">
+      <div class="inline-flex w-fit flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-[11px] font-medium">
         <button
           type="button"
           data-home-metric="obj"
           class="home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs"
         >
-          Objective <span set:html={kObjMetric} />
+          <span set:html={kObjMetric} />
         </button>
         <button
           type="button"
           data-home-metric="grad"
           class="home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
         >
-          Stationarity <span set:html={kGradMetric} />
+          <span set:html={kGradMetric} />
+        </button>
+        <button
+          type="button"
+          data-home-metric="dist"
+          class="home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          <span set:html={kDistMetric} />
         </button>
       </div>
     </div>
@@ -180,7 +221,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       type="button"
       data-home-method="gd"
       aria-pressed="true"
-      title="Click to toggle Fixed-Step GD"
+      title="Click to toggle Fixed-Step GD / PG"
       class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
     >
       <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
@@ -190,7 +231,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       type="button"
       data-home-method="agd"
       aria-pressed="true"
-      title="Click to toggle Backtracking GD"
+      title="Click to toggle Backtracking GD / PG"
       class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
     >
       <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
@@ -241,10 +282,16 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       <div id="home-contour-title-quad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         Ill-Conditioned Quadratic: <span class="text-[var(--text)]" set:html={kQuadTitle} />
       </div>
+      <div id="home-contour-title-himm" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Himmelblau (4 Global Minima): <span class="text-[var(--text)]" set:html={kHimmTitle} />
+      </div>
+      <div id="home-contour-title-lasso" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Nonsmooth Composite (<span set:html={kL1Btn} /> Prox): <span class="text-[var(--text)]" set:html={kL1Title} />
+      </div>
       <canvas
         id="home-contour-canvas"
-        width="440"
-        height="310"
+        width="480"
+        height="320"
         class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
       ></canvas>
     </div>
@@ -256,10 +303,13 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       <div id="home-curve-title-grad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         <span class="text-[var(--text)]" set:html={kCurveGrad} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
       </div>
+      <div id="home-curve-title-dist" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        <span class="text-[var(--text)]" set:html={kCurveDist} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
+      </div>
       <canvas
         id="home-curve-canvas"
-        width="440"
-        height="310"
+        width="480"
+        height="320"
         class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
       ></canvas>
     </div>
@@ -268,16 +318,16 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
   <!-- Footer / Proxax Snippet -->
   <details class="border-t border-[var(--border)] bg-[var(--surface-subtle)]/50">
     <summary class="cursor-pointer select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
-      Solve this nonconvex problem in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
+      Solve these problems in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
       <a href="/accel04/" class="text-[var(--accent)] underline" onclick="event.stopPropagation()">Acceleration blog series</a>
     </summary>
     <div class="border-t border-[var(--border)] px-5 py-4">
       <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
       <p class="mt-2.5 text-xs leading-relaxed text-[var(--text-muted)]">
-        The live plot above runs directly in your browser in JavaScript (no backend server). Because the Rosenbrock
-        valley is nonconvex and severely ill-conditioned (local condition number <span set:html={kKappa2500} /> at{' '}
-        <span set:html={kXStar} /> when <span set:html={kB100} />), fixed-step GD crawls along the curved trough.
-        Adaptive curvature estimation combined with accelerated extrapolation and restart—as implemented in{' '}
+        The live plot above runs directly in your browser in JavaScript (no backend server). On{' '}
+        <strong>Himmelblau</strong>, distance to <span set:html={kXStar} /> measures distance to the nearest of the 4
+        global minima; on <strong>Composite <span set:html={kL1Btn} /></strong>, all 5 solvers apply exact
+        soft-thresholding proximal steps and stationarity is measured via the proximal gradient mapping.{' '}
         <a
           href="https://proxax.readthedocs.io/en/latest/"
           target="_blank"
@@ -285,8 +335,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           class="font-semibold text-[var(--accent)] underline"
           >Proxax</a
         >{' '}
-        (<code class="font-mono">px.solvers.APD</code>)—reaches machine precision orders of magnitude faster without
-        tuning <span set:html={kL} /> or <span set:html={kMu} />.
+        (<code class="font-mono">px.solvers.APD</code>) handles smooth, nonsmooth, and nonconvex composite problems in
+        JAX without tuning <span set:html={kL} /> or <span set:html={kMu} />.
       </p>
     </div>
   </details>
@@ -295,8 +345,23 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 <script is:inline>
   (function () {
     const paramSlider = document.getElementById('home-param-slider');
-    const paramLabelRosen = document.getElementById('home-param-label-rosen');
-    const paramLabelQuad = document.getElementById('home-param-label-quad');
+    const paramLabels = {
+      rosenbrock: document.getElementById('home-param-label-rosen'),
+      quadratic: document.getElementById('home-param-label-quad'),
+      himmelblau: document.getElementById('home-param-label-himm'),
+      lasso: document.getElementById('home-param-label-lasso'),
+    };
+    const contourTitles = {
+      rosenbrock: document.getElementById('home-contour-title-rosen'),
+      quadratic: document.getElementById('home-contour-title-quad'),
+      himmelblau: document.getElementById('home-contour-title-himm'),
+      lasso: document.getElementById('home-contour-title-lasso'),
+    };
+    const curveTitles = {
+      obj: document.getElementById('home-curve-title-obj'),
+      grad: document.getElementById('home-curve-title-grad'),
+      dist: document.getElementById('home-curve-title-dist'),
+    };
     const paramVal = document.getElementById('home-param-val');
     const iterSlider = document.getElementById('home-iter-slider');
     const iterVal = document.getElementById('home-iter-val');
@@ -304,10 +369,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     const resetBtn = document.getElementById('home-demo-reset');
     const playBtn = document.getElementById('home-demo-play');
     const gapBadge = document.getElementById('home-demo-gap');
-    const contourTitleRosen = document.getElementById('home-contour-title-rosen');
-    const contourTitleQuad = document.getElementById('home-contour-title-quad');
-    const curveTitleObj = document.getElementById('home-curve-title-obj');
-    const curveTitleGrad = document.getElementById('home-curve-title-grad');
     const contourCanvas = document.getElementById('home-contour-canvas');
     const curveCanvas = document.getElementById('home-curve-canvas');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
@@ -325,13 +386,63 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     let cachedBgKey = '';
     let cachedBgImg = null;
 
-    function fEval(x, param) {
+    // Precomputed rotated quadratic Q for Composite L1: R(28 deg) diag(1, 80) R(28 deg)^T
+    const thL1 = (28 * Math.PI) / 180;
+    const cL1 = Math.cos(thL1);
+    const sL1 = Math.sin(thL1);
+    const q00 = cL1 * cL1 * 1.0 + sL1 * sL1 * 80.0;
+    const q01 = cL1 * sL1 * (1.0 - 80.0);
+    const q11 = sL1 * sL1 * 1.0 + cL1 * cL1 * 80.0;
+    const cVecL1 = [2.4, -0.3];
+
+    const himmOptima = [
+      [3.0, 2.0],
+      [-2.805118086952745, 3.131312518250573],
+      [-3.779310253377747, -3.28318599128617],
+      [3.584428340330492, -1.848126526964404],
+    ];
+
+    function softThresh(x, alpha) {
+      return [
+        Math.sign(x[0]) * Math.max(Math.abs(x[0]) - alpha, 0),
+        Math.sign(x[1]) * Math.max(Math.abs(x[1]) - alpha, 0),
+      ];
+    }
+
+    function proxStep(v, L, param) {
+      if (problem === 'lasso') return softThresh(v, param / L);
+      return v;
+    }
+
+    // Smooth part f(x)
+    function fSmooth(x, param) {
       if (problem === 'rosenbrock') {
         const a = 1 - x[0];
         const c = x[1] - x[0] * x[0];
         return a * a + param * c * c;
       }
-      return 0.5 * (x[0] * x[0] + param * x[1] * x[1]);
+      if (problem === 'quadratic') {
+        return 0.5 * (x[0] * x[0] + param * x[1] * x[1]);
+      }
+      if (problem === 'himmelblau') {
+        const a = x[0] * x[0] + x[1] - 11;
+        const b = x[0] + x[1] * x[1] - 7;
+        return a * a + b * b;
+      }
+      // lasso smooth part
+      return (
+        0.5 * (q00 * x[0] * x[0] + 2 * q01 * x[0] * x[1] + q11 * x[1] * x[1]) -
+        cVecL1[0] * x[0] -
+        cVecL1[1] * x[1]
+      );
+    }
+
+    // Total objective phi(x) = f(x) + h(x)
+    function fTotal(x, param) {
+      if (problem === 'lasso') {
+        return fSmooth(x, param) + param * (Math.abs(x[0]) + Math.abs(x[1]));
+      }
+      return fSmooth(x, param);
     }
 
     function gEval(x, param) {
@@ -339,60 +450,148 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         const c = x[1] - x[0] * x[0];
         return [-2 * (1 - x[0]) - 4 * param * x[0] * c, 2 * param * c];
       }
-      return [x[0], param * x[1]];
+      if (problem === 'quadratic') {
+        return [x[0], param * x[1]];
+      }
+      if (problem === 'himmelblau') {
+        const a = x[0] * x[0] + x[1] - 11;
+        const b = x[0] + x[1] * x[1] - 7;
+        return [4 * x[0] * a + 2 * b, 2 * a + 4 * x[1] * b];
+      }
+      return [q00 * x[0] + q01 * x[1] - cVecL1[0], q01 * x[0] + q11 * x[1] - cVecL1[1]];
     }
 
-    function gradNorm(x, param) {
+    function stationarityRes(x, param) {
       const g = gEval(x, param);
+      if (problem === 'lasso') {
+        const Lref = 80.0;
+        const xp = softThresh([x[0] - g[0] / Lref, x[1] - g[1] / Lref], param / Lref);
+        return Lref * Math.hypot(x[0] - xp[0], x[1] - xp[1]);
+      }
       return Math.hypot(g[0], g[1]);
     }
 
-    function getBounds() {
+    function getBounds(param) {
       if (problem === 'rosenbrock') {
-        return { xMin: -1.65, xMax: 1.55, yMin: -0.4, yMax: 1.8, x0: [-1.2, 1.0], xStar: [1.0, 1.0] };
+        return { xMin: -1.65, xMax: 1.55, yMin: -0.4, yMax: 1.8, x0: [-1.2, 1.0], optima: [[1.0, 1.0]] };
       }
-      return { xMin: -2.4, xMax: 1.2, yMin: -1.1, yMax: 1.1, x0: [-2.1, 0.85], xStar: [0.0, 0.0] };
+      if (problem === 'quadratic') {
+        return { xMin: -2.4, xMax: 1.2, yMin: -1.1, yMax: 1.1, x0: [-2.1, 0.85], optima: [[0.0, 0.0]] };
+      }
+      if (problem === 'himmelblau') {
+        const rad = (param * Math.PI) / 180;
+        return {
+          xMin: -5.0,
+          xMax: 5.0,
+          yMin: -5.0,
+          yMax: 5.0,
+          x0: [1.5 * Math.cos(rad), 1.5 * Math.sin(rad)],
+          optima: himmOptima,
+        };
+      }
+      return { xMin: -2.2, xMax: 2.2, yMin: -1.4, yMax: 1.8, x0: [-1.8, 1.4], optima: null };
+    }
+
+    function computeLassoOptimum(param) {
+      // High-precision reference optimum via 600 steps of adaptive accelerated proximal descent
+      let xp = [0.0, 0.0];
+      let y = [0.0, 0.0];
+      let t = 1.0;
+      let L = 40.0;
+      for (let k = 0; k < 600; k++) {
+        const fy = fSmooth(y, param);
+        const gy = gEval(y, param);
+        L = Math.max(1.0, L * 0.85);
+        let xn = y;
+        for (let tries = 0; tries < 30; tries++) {
+          xn = softThresh([y[0] - gy[0] / L, y[1] - gy[1] / L], param / L);
+          const dx0 = xn[0] - y[0];
+          const dx1 = xn[1] - y[1];
+          if (fSmooth(xn, param) <= fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * L * (dx0 * dx0 + dx1 * dx1) + 1e-15)
+            break;
+          L *= 2.0;
+        }
+        if ((y[0] - xn[0]) * (xn[0] - xp[0]) + (y[1] - xn[1]) * (xn[1] - xp[1]) > 0) {
+          t = 1.0;
+          y = [...xn];
+        } else {
+          const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * t * t));
+          const beta = (t - 1.0) / tn;
+          y = [xn[0] + beta * (xn[0] - xp[0]), xn[1] + beta * (xn[1] - xp[1])];
+          t = tn;
+        }
+        xp = xn;
+      }
+      return { xStar: xp, fStar: fTotal(xp, param) };
     }
 
     function simulate(param, K) {
-      const { x0 } = getBounds();
+      const bounds = getBounds(param);
+      const x0 = bounds.x0;
+      let optima = bounds.optima;
+      let fStar = 0.0;
+      if (problem === 'lasso') {
+        const ref = computeLassoOptimum(param);
+        optima = [ref.xStar];
+        fStar = ref.fStar;
+      }
 
-      // 1. Fixed-Step GD
-      const eta = problem === 'rosenbrock' ? 1.0 / (6.0 * param + 12.0) : 1.0 / param;
+      // Fixed step sizes
+      const eta =
+        problem === 'rosenbrock'
+          ? 1.0 / (6.0 * param + 12.0)
+          : problem === 'quadratic'
+            ? 1.0 / param
+            : problem === 'himmelblau'
+              ? 0.005
+              : 1.0 / 80.0;
+
+      const etaNag =
+        problem === 'rosenbrock'
+          ? 1.0 / (10.0 * param + 20.0)
+          : problem === 'himmelblau'
+            ? 0.003
+            : eta;
+
+      // 1. Fixed-Step GD / PG
       const gd = [[...x0]];
       for (let k = 0; k < K; k++) {
         const x = gd[gd.length - 1];
         const g = gEval(x, param);
-        gd.push([x[0] - eta * g[0], x[1] - eta * g[1]]);
+        gd.push(proxStep([x[0] - eta * g[0], x[1] - eta * g[1]], 1.0 / eta, param));
       }
 
-      // 2. Adaptive Backtracking GD (unaccelerated)
+      // 2. Adaptive Backtracking GD / PG
       const agd = [[...x0]];
-      let L1 = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      let L1 = problem === 'quadratic' ? param * 0.5 : 20.0;
       for (let k = 0; k < K; k++) {
         const x = agd[agd.length - 1];
-        const fx = fEval(x, param);
+        const fx = fSmooth(x, param);
         const g = gEval(x, param);
-        const gn2 = g[0] * g[0] + g[1] * g[1];
         L1 = Math.max(1.0, L1 * 0.7);
         let xn = x;
         for (let tries = 0; tries < 40; tries++) {
-          xn = [x[0] - g[0] / L1, x[1] - g[1] / L1];
-          if (fEval(xn, param) <= fx - (0.5 * gn2) / L1 + 1e-15 || L1 > 1e8) break;
+          xn = proxStep([x[0] - g[0] / L1, x[1] - g[1] / L1], L1, param);
+          const dx0 = xn[0] - x[0];
+          const dx1 = xn[1] - x[1];
+          if (
+            fSmooth(xn, param) <= fx + g[0] * dx0 + g[1] * dx1 + 0.5 * L1 * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
+            L1 > 1e8
+          )
+            break;
           L1 *= 2.0;
         }
         agd.push(xn);
       }
 
-      // 3. Fixed-Step Nesterov's Accelerated Gradient (NAG, no restart/adaptation)
-      const etaNag = problem === 'rosenbrock' ? 1.0 / (10.0 * param + 20.0) : 1.0 / param;
+      // 3. Fixed-Step Nesterov AGD / FISTA
       const nag = [[...x0]];
       let xNagPrev = [...x0];
       let yNag = [...x0];
       let tNag = 1.0;
       for (let k = 0; k < K; k++) {
         const g = gEval(yNag, param);
-        const xn = [yNag[0] - etaNag * g[0], yNag[1] - etaNag * g[1]];
+        const xn = proxStep([yNag[0] - etaNag * g[0], yNag[1] - etaNag * g[1]], 1.0 / etaNag, param);
         const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tNag * tNag));
         const beta = (tNag - 1.0) / tNew;
         yNag = [xn[0] + beta * (xn[0] - xNagPrev[0]), xn[1] + beta * (xn[1] - xNagPrev[1])];
@@ -401,28 +600,27 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         nag.push([...xn]);
       }
 
-      // 4. Adaptive Nesterov's Accelerated Gradient (adaptive L, no restart)
+      // 4. Adaptive Nesterov (adaptive L, no restart)
       const anag = [[...x0]];
       let xAnagPrev = [...x0];
       let yAnag = [...x0];
       let tAnag = 1.0;
-      let LAnag = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      let LAnag = problem === 'quadratic' ? param * 0.5 : 20.0;
       for (let k = 0; k < K; k++) {
-        const fy = fEval(yAnag, param);
+        const fy = fSmooth(yAnag, param);
         const gy = gEval(yAnag, param);
         LAnag = Math.max(1.0, LAnag * 0.85);
         let xn = yAnag;
         for (let tries = 0; tries < 40; tries++) {
-          xn = [yAnag[0] - gy[0] / LAnag, yAnag[1] - gy[1] / LAnag];
+          xn = proxStep([yAnag[0] - gy[0] / LAnag, yAnag[1] - gy[1] / LAnag], LAnag, param);
           const dx0 = xn[0] - yAnag[0];
           const dx1 = xn[1] - yAnag[1];
           if (
-            fEval(xn, param) <=
+            fSmooth(xn, param) <=
               fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * LAnag * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
             LAnag > 1e8
-          ) {
+          )
             break;
-          }
           LAnag *= 2.0;
         }
         const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tAnag * tAnag));
@@ -438,23 +636,22 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       let xPrev = [...x0];
       let y = [...x0];
       let t = 1.0;
-      let L2 = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      let L2 = problem === 'quadratic' ? param * 0.5 : 20.0;
       for (let k = 0; k < K; k++) {
-        const fy = fEval(y, param);
+        const fy = fSmooth(y, param);
         const gy = gEval(y, param);
         L2 = Math.max(1.0, L2 * 0.85);
         let xn = y;
         for (let tries = 0; tries < 40; tries++) {
-          xn = [y[0] - gy[0] / L2, y[1] - gy[1] / L2];
+          xn = proxStep([y[0] - gy[0] / L2, y[1] - gy[1] / L2], L2, param);
           const dx0 = xn[0] - y[0];
           const dx1 = xn[1] - y[1];
           if (
-            fEval(xn, param) <=
+            fSmooth(xn, param) <=
               fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * L2 * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
             L2 > 1e8
-          ) {
+          )
             break;
-          }
           L2 *= 2.0;
         }
         if ((y[0] - xn[0]) * (xn[0] - xPrev[0]) + (y[1] - xn[1]) * (xn[1] - xPrev[1]) > 0) {
@@ -470,14 +667,15 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         apd.push([...xn]);
       }
 
-      return { gd, agd, nag, anag, apd };
+      return { gd, agd, nag, anag, apd, optima, fStar };
     }
 
-    function renderHeatmapBg(W, H, param, isDark) {
-      const key = `${problem}:${param}:${isDark ? 'd' : 'l'}`;
+    function renderHeatmapBg(W, H, param, fStar, isDark) {
+      const bgParam = problem === 'himmelblau' ? 0 : param;
+      const key = `${problem}:${bgParam}:${isDark ? 'd' : 'l'}`;
       if (cachedBgKey === key && cachedBgImg) return cachedBgImg;
 
-      const { xMin, xMax, yMin, yMax } = getBounds();
+      const { xMin, xMax, yMin, yMax } = getBounds(param);
       const img = cCtx.createImageData(W, H);
       const data = img.data;
 
@@ -485,7 +683,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         const wy = yMax - (py / (H - 1)) * (yMax - yMin);
         for (let px = 0; px < W; px++) {
           const wx = xMin + (px / (W - 1)) * (xMax - xMin);
-          const v = fEval([wx, wy], param);
+          const v = Math.max(0, fTotal([wx, wy], param) - fStar);
           const lv = Math.log10(v + 1e-3);
           const norm = Math.max(0, Math.min(1, (lv + 2.5) / 5.5));
           const ring = Math.abs((((lv * 2.2) % 1) + 1) % 1 - 0.5) < 0.045;
@@ -528,7 +726,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     function draw() {
       const param = Number(paramSlider.value);
       const K = Number(iterSlider.value);
-      paramVal.textContent = String(param);
+      paramVal.textContent = problem === 'lasso' ? param.toFixed(1) : String(param);
       iterVal.textContent = String(K);
 
       const isDark = document.documentElement.classList.contains('dark');
@@ -536,8 +734,16 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       const axisColor = isDark ? 'rgba(147,175,160,0.45)' : 'rgba(75,95,82,0.45)';
       const textColor = isDark ? '#93afa0' : '#4b5f52';
 
-      const { gd, agd, nag, anag, apd } = simulate(param, K);
-      const metricFn = (pt) => (metric === 'obj' ? fEval(pt, param) : gradNorm(pt, param));
+      const { gd, agd, nag, anag, apd, optima, fStar } = simulate(param, K);
+
+      const distToOpt = (pt) =>
+        Math.min(...optima.map((opt) => Math.hypot(pt[0] - opt[0], pt[1] - opt[1])));
+
+      const metricFn = (pt) => {
+        if (metric === 'obj') return Math.max(0, fTotal(pt, param) - fStar);
+        if (metric === 'grad') return stationarityRes(pt, param);
+        return distToOpt(pt);
+      };
 
       const vGd = metricFn(gd[K]);
       const vApd = metricFn(apd[K]);
@@ -546,21 +752,33 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       if (gapBadge) {
         gapBadge.textContent =
           orders >= 1
-            ? `APD is ~10^${orders.toFixed(1)}× more accurate (k=${K})`
+            ? `APD is ~10^${orders.toFixed(1)}× better than GD (k=${K})`
             : `k=${K}: APD=${vApd.toExponential(1)}`;
       }
 
       // ---- 1. 2D Contour Heatmap + Trajectories ----
       const W = contourCanvas.width;
       const H = contourCanvas.height;
-      const bg = renderHeatmapBg(W, H, param, isDark);
+      const bg = renderHeatmapBg(W, H, param, fStar, isDark);
       cCtx.putImageData(bg, 0, 0);
 
-      const { xMin, xMax, yMin, yMax, x0, xStar } = getBounds();
+      const { xMin, xMax, yMin, yMax, x0 } = getBounds(param);
       const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
       const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
 
-      if (problem === 'rosenbrock') {
+      // Subtle coordinate axes for Composite L1 (shows sparsity snapping to axes!)
+      if (problem === 'lasso') {
+        cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.25)';
+        cCtx.setLineDash([4, 4]);
+        cCtx.lineWidth = 1.2;
+        cCtx.beginPath();
+        cCtx.moveTo(0, toY(0));
+        cCtx.lineTo(W, toY(0));
+        cCtx.moveTo(toX(0), 0);
+        cCtx.lineTo(toX(0), H);
+        cCtx.stroke();
+        cCtx.setLineDash([]);
+      } else if (problem === 'rosenbrock') {
         cCtx.strokeStyle = isDark ? 'rgba(52,211,153,0.35)' : 'rgba(21,128,61,0.28)';
         cCtx.setLineDash([4, 4]);
         cCtx.lineWidth = 1.2;
@@ -606,23 +824,29 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       if (visibleMethods.anag) drawTrail(anag, '#0ea5e9', 2);
       if (visibleMethods.apd) drawTrail(apd, '#10b981', 2.4);
 
+      // Start & Optima markers
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
       cCtx.beginPath();
       cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
       cCtx.fill();
 
-      cCtx.fillStyle = isDark ? '#34d399' : '#15803d';
-      cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
-      cCtx.lineWidth = 1.5;
-      cCtx.beginPath();
-      cCtx.arc(toX(xStar[0]), toY(xStar[1]), 5.5, 0, Math.PI * 2);
-      cCtx.fill();
-      cCtx.stroke();
-
-      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
       cCtx.font = 'bold 11px JetBrains Mono, monospace';
+      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
       cCtx.fillText('x₀', toX(x0[0]) + 7, toY(x0[1]) - 6);
-      cCtx.fillText('x*', toX(xStar[0]) + 8, toY(xStar[1]) - 6);
+
+      optima.forEach((opt, idx) => {
+        cCtx.fillStyle = isDark ? '#34d399' : '#15803d';
+        cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+        cCtx.lineWidth = 1.5;
+        cCtx.beginPath();
+        cCtx.arc(toX(opt[0]), toY(opt[1]), 5, 0, Math.PI * 2);
+        cCtx.fill();
+        cCtx.stroke();
+        if (optima.length === 1 || idx === 0) {
+          cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
+          cCtx.fillText('x*', toX(opt[0]) + 8, toY(opt[1]) - 6);
+        }
+      });
 
       // ---- 2. Log-Scale Convergence Curve ----
       const GW = curveCanvas.width;
@@ -661,9 +885,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       gCtx.lineTo(GW - pad.r, GH - pad.b);
       gCtx.stroke();
       gCtx.fillText('0', pad.l - 2, GH - 10);
-      gCtx.fillText(`k = ${K}`, GW - pad.r - 52, GH - 10);
+      gCtx.fillText(`k = ${K}`, GW - pad.r - 56, GH - 10);
 
-      // Stride plotting gently when K is large so canvas stays crisp & fast
       const stride = Math.max(1, Math.floor(K / 450));
       function drawCurve(pts, color) {
         gCtx.strokeStyle = color;
@@ -687,6 +910,11 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       if (visibleMethods.apd) drawCurve(apd, '#10b981');
     }
 
+    function getAnimStep() {
+      const raw = Number(animStepInput?.value);
+      return Number.isFinite(raw) && raw >= 1 ? Math.round(raw) : 100;
+    }
+
     function updateProblemUI() {
       probBtns.forEach((btn) => {
         const active = btn.dataset.homeProblem === problem;
@@ -694,13 +922,10 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           ? 'home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white'
           : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
       });
-      const isRosen = problem === 'rosenbrock';
-      paramLabelRosen?.classList.toggle('hidden', !isRosen);
-      paramLabelQuad?.classList.toggle('hidden', isRosen);
-      contourTitleRosen?.classList.toggle('hidden', !isRosen);
-      contourTitleQuad?.classList.toggle('hidden', isRosen);
+      Object.entries(paramLabels).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
+      Object.entries(contourTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
 
-      if (isRosen) {
+      if (problem === 'rosenbrock') {
         paramSlider.min = '15';
         paramSlider.max = '180';
         paramSlider.step = '5';
@@ -708,7 +933,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         iterSlider.min = '0';
         iterSlider.max = '14000';
         iterSlider.value = '10000';
-      } else {
+        animStepInput.value = '100';
+      } else if (problem === 'quadratic') {
         paramSlider.min = '50';
         paramSlider.max = '1000';
         paramSlider.step = '25';
@@ -716,6 +942,26 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         iterSlider.min = '0';
         iterSlider.max = '10000';
         iterSlider.value = '4800';
+        animStepInput.value = '100';
+      } else if (problem === 'himmelblau') {
+        paramSlider.min = '0';
+        paramSlider.max = '360';
+        paramSlider.step = '5';
+        paramSlider.value = '210';
+        iterSlider.min = '0';
+        iterSlider.max = '600';
+        iterSlider.value = '200';
+        animStepInput.value = '5';
+      } else {
+        // lasso
+        paramSlider.min = '0.2';
+        paramSlider.max = '2.0';
+        paramSlider.step = '0.1';
+        paramSlider.value = '1.0';
+        iterSlider.min = '0';
+        iterSlider.max = '1200';
+        iterSlider.value = '400';
+        animStepInput.value = '10';
       }
       iterSlider.step = String(getAnimStep());
       cachedBgKey = '';
@@ -738,8 +984,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
             ? 'home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs'
             : 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
         });
-        curveTitleObj?.classList.toggle('hidden', metric !== 'obj');
-        curveTitleGrad?.classList.toggle('hidden', metric === 'obj');
+        Object.entries(curveTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== metric));
         draw();
       })
     );
@@ -764,11 +1009,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       draw();
     });
 
-    function getAnimStep() {
-      const raw = Number(animStepInput?.value);
-      return Number.isFinite(raw) && raw >= 1 ? Math.round(raw) : 100;
-    }
-
     animStepInput?.addEventListener('input', () => {
       iterSlider.step = String(getAnimStep());
     });
@@ -792,7 +1032,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       }
       const targetMax = Number(iterSlider.max);
       const startVal = Number(iterSlider.value);
-      // Start from 0 if already at/near max, otherwise play forward from current k
       if (startVal >= targetMax) {
         iterSlider.value = '0';
       }
