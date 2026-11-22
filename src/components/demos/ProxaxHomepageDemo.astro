@@ -50,98 +50,62 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
 ---
 
 <div id="proxax-home-demo" class="card overflow-hidden shadow-sm">
-  <!-- Header -->
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-4">
-    <div>
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]">
-          Interactive Optimization Sandbox
-        </span>
-        <span class="text-xs text-[var(--text-muted)]">
-          Inspired by{' '}
-          <a
-            href="https://proxax.readthedocs.io/en/latest/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="font-semibold text-[var(--accent)] underline underline-offset-2"
-            >Proxax</a
-          >
-        </span>
-      </div>
-      <h3 class="mt-1 text-base font-semibold text-[var(--text)]">
-        Comparing First-Order Solvers Across Convex, Nonconvex &amp; Composite Landscapes
-      </h3>
+  <!-- Row 1: Title + Problem Presets -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
+    <div class="flex flex-wrap items-center gap-2.5">
+      <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]">
+        Optimization Sandbox
+      </span>
+      <span class="text-xs text-[var(--text-muted)]">
+        Inspired by{' '}
+        <a
+          href="https://proxax.readthedocs.io/en/latest/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold text-[var(--accent)] underline underline-offset-2"
+          >Proxax</a
+        >
+      </span>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2">
-      <!-- Problem Presets -->
-      <div class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
-        <button
-          type="button"
-          data-home-problem="rosenbrock"
-          class="home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white"
-        >
-          Rosenbrock
-        </button>
-        <button
-          type="button"
-          data-home-problem="quadratic"
-          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
-        >
-          Quadratic
-        </button>
-        <button
-          type="button"
-          data-home-problem="himmelblau"
-          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
-        >
-          Himmelblau
-        </button>
-        <button
-          type="button"
-          data-home-problem="lasso"
-          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
-        >
-          Composite <span set:html={kL1Btn} />
-        </button>
-      </div>
-
-      <label
-        class="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-xs text-[var(--text-muted)]"
-        title="Iterations added per animation frame (and slider step)"
-      >
-        <span>Step</span>
-        <input
-          id="home-anim-step"
-          type="number"
-          min="1"
-          max="2000"
-          value="100"
-          class="w-16 rounded border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 text-right font-mono text-xs font-semibold text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
-        />
-      </label>
-
+    <div
+      class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium"
+      role="tablist"
+      aria-label="Test problems"
+    >
       <button
-        id="home-demo-reset"
         type="button"
-        title="Reset iterations to 0"
-        class="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--text)]"
+        data-home-problem="rosenbrock"
+        class="home-prob-btn rounded-md bg-[var(--accent)] px-3 py-1 text-white transition-colors"
       >
-        Reset
+        Rosenbrock
       </button>
-
       <button
-        id="home-demo-play"
         type="button"
-        class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+        data-home-problem="quadratic"
+        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
       >
-        Play
+        Quadratic
+      </button>
+      <button
+        type="button"
+        data-home-problem="himmelblau"
+        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+      >
+        Himmelblau
+      </button>
+      <button
+        type="button"
+        data-home-problem="lasso"
+        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+      >
+        Composite <span set:html={kL1Btn} />
       </button>
     </div>
   </div>
 
-  <!-- Sliders & Metric Selector -->
-  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 md:grid-cols-[1fr_1fr_auto]">
+  <!-- Row 2: Control Deck (Sliders + Metric + Playback) -->
+  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 lg:grid-cols-[1fr_1fr_auto_auto] lg:items-end">
     <label class="flex flex-col gap-1.5 text-xs">
       <div class="flex items-center justify-between">
         <span id="home-param-label-rosen" class="font-medium text-[var(--text)]">
@@ -187,9 +151,10 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       />
     </label>
 
-    <div class="flex flex-col justify-center gap-1 text-xs">
-      <span class="font-medium text-[var(--text)]">Y-Axis Metric</span>
-      <div class="inline-flex w-fit flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-[11px] font-medium">
+    <!-- Metric Selector -->
+    <div class="flex flex-col gap-1 text-xs">
+      <span class="font-medium text-[var(--text-muted)]">Y-Axis Metric</span>
+      <div class="inline-flex w-fit rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-[11px] font-medium">
         <button
           type="button"
           data-home-metric="obj"
@@ -213,67 +178,130 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         </button>
       </div>
     </div>
+
+    <!-- Playback Controls -->
+    <div class="flex flex-col gap-1 text-xs">
+      <span class="font-medium text-[var(--text-muted)]">Animation</span>
+      <div class="flex items-center gap-1.5">
+        <label
+          class="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] px-2 py-1 text-[11px] text-[var(--text-muted)]"
+          title="Iterations added per animation frame (and slider step)"
+        >
+          <span>Δk</span>
+          <input
+            id="home-anim-step"
+            type="number"
+            min="1"
+            max="2000"
+            value="100"
+            class="w-14 rounded border border-[var(--border)] bg-[var(--surface)] px-1 py-0.5 text-right font-mono text-[11px] font-semibold text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+          />
+        </label>
+        <button
+          id="home-demo-reset"
+          type="button"
+          title="Reset iterations to 0"
+          class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--text)]"
+        >
+          Reset
+        </button>
+        <button
+          id="home-demo-play"
+          type="button"
+          class="rounded-lg bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+        >
+          Play
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Interactive Legend (click to show/hide methods) + Live Disparity Readout -->
-  <div class="flex flex-wrap items-center gap-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
+  <!-- Row 3: Solver Toggle Pills -->
+  <div class="flex flex-wrap items-center gap-1.5 border-b border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2.5 text-xs">
+    <span class="mr-1 text-[11px] font-semibold tracking-wide text-[var(--text-muted)] uppercase">
+      Solvers
+    </span>
+
     <button
       type="button"
       data-home-method="gd"
       aria-pressed="true"
-      title="Click to toggle Fixed-Step GD / PG"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
     >
-      <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
-      Fixed-Step GD
+      <span class="h-2 w-2 rounded-full bg-[#ef4444]"></span>
+      Fixed GD
     </button>
+
     <button
       type="button"
       data-home-method="agd"
       aria-pressed="true"
-      title="Click to toggle Backtracking GD / PG"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
     >
-      <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
+      <span class="h-2 w-2 rounded-full bg-[#f59e0b]"></span>
       Backtracking GD
     </button>
+
     <button
       type="button"
       data-home-method="nag"
       aria-pressed="true"
-      title="Click to toggle Nesterov AGD (Fixed)"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
     >
-      <span class="h-2.5 w-2.5 rounded-full bg-[#8b5cf6]"></span>
-      Nesterov AGD (Fixed)
+      <span class="h-2 w-2 rounded-full bg-[#8b5cf6]"></span>
+      Nesterov (Fixed)
     </button>
+
     <button
       type="button"
       data-home-method="anag"
       aria-pressed="true"
-      title="Click to toggle Adaptive Nesterov"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#0ea5e9]"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#0ea5e9]"
     >
-      <span class="h-2.5 w-2.5 rounded-full bg-[#0ea5e9]"></span>
+      <span class="h-2 w-2 rounded-full bg-[#0ea5e9]"></span>
       Adaptive Nesterov
     </button>
+
     <button
       type="button"
       data-home-method="apd"
       aria-pressed="true"
-      title="Click to toggle Adaptive Accelerated (Proxax APD)"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#10b981]"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent)] transition-opacity"
     >
-      <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
-      Adaptive Accelerated (<code class="font-mono">Proxax APD</code>)
+      <span class="h-2 w-2 rounded-full bg-[#10b981]"></span>
+      Proxax <code class="font-mono">APD</code>
     </button>
+
+    <button
+      type="button"
+      data-home-method="adam"
+      aria-pressed="true"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ec4899]"
+    >
+      <span class="h-2 w-2 rounded-full bg-[#ec4899]"></span>
+      Adam
+    </button>
+
+    <button
+      type="button"
+      id="home-method-lbfgs"
+      data-home-method="lbfgs"
+      aria-pressed="true"
+      title="Quasi-Newton L-BFGS (smooth problems only)"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[var(--text)]"
+    >
+      <span class="inline-block h-0.5 w-3 border-t-2 border-dashed border-[var(--text)]"></span>
+      <span>L-BFGS</span>
+      <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smooth only)</span>
+    </button>
+
     <span
       id="home-demo-gap"
       class="ml-auto rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
     ></span>
   </div>
 
-  <!-- Canvases -->
+  <!-- Row 4: Canvases -->
   <div class="grid gap-4 p-5 md:grid-cols-2">
     <div>
       <div id="home-contour-title-rosen" class="mb-2 text-xs font-medium text-[var(--text-muted)]">
@@ -288,12 +316,41 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       <div id="home-contour-title-lasso" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         Nonsmooth Composite (<span set:html={kL1Btn} /> Prox): <span class="text-[var(--text)]" set:html={kL1Title} />
       </div>
-      <canvas
-        id="home-contour-canvas"
-        width="480"
-        height="320"
-        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
-      ></canvas>
+      <div class="relative">
+        <canvas
+          id="home-contour-canvas"
+          width="520"
+          height="330"
+          title="Drag to pan · Double-click or use +/- to zoom"
+          class="w-full cursor-grab rounded-xl border border-[var(--border)] bg-[var(--bg)] active:cursor-grabbing"
+        ></canvas>
+        <div class="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)]/90 p-0.5 text-[11px] font-semibold text-[var(--text)] shadow-xs backdrop-blur-xs">
+          <button
+            id="home-zoom-in"
+            type="button"
+            title="Zoom in"
+            class="h-6 w-6 rounded hover:bg-[var(--surface-subtle)] hover:text-[var(--accent)]"
+          >
+            +
+          </button>
+          <button
+            id="home-zoom-out"
+            type="button"
+            title="Zoom out"
+            class="h-6 w-6 rounded hover:bg-[var(--surface-subtle)] hover:text-[var(--accent)]"
+          >
+            −
+          </button>
+          <button
+            id="home-zoom-reset"
+            type="button"
+            title="Reset zoom & pan"
+            class="rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]"
+          >
+            Fit
+          </button>
+        </div>
+      </div>
     </div>
 
     <div>
@@ -308,14 +365,20 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       </div>
       <canvas
         id="home-curve-canvas"
-        width="480"
-        height="320"
+        width="520"
+        height="330"
         class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
       ></canvas>
     </div>
   </div>
 
-  <!-- Footer / Proxax Snippet -->
+  <!-- Row 5: Live Numeric Readout Strip -->
+  <div
+    id="home-demo-readout"
+    class="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2 font-mono text-[11px] text-[var(--text-muted)]"
+  ></div>
+
+  <!-- Row 6: Collapsible Proxax Snippet -->
   <details class="border-t border-[var(--border)] bg-[var(--surface-subtle)]/50">
     <summary class="cursor-pointer select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
       Solve these problems in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
@@ -324,10 +387,12 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     <div class="border-t border-[var(--border)] px-5 py-4">
       <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
       <p class="mt-2.5 text-xs leading-relaxed text-[var(--text-muted)]">
-        The live plot above runs directly in your browser in JavaScript (no backend server). On{' '}
+        The live plot above runs directly in your browser in JavaScript (no backend server).{' '}
+        <strong>L-BFGS</strong> (dashed quasi-Newton reference) is shown on smooth problems and disabled on{' '}
+        <strong>Composite <span set:html={kL1Btn} /></strong>, where all first-order solvers apply exact
+        soft-thresholding proximal steps and stationarity is measured via the proximal gradient mapping. On{' '}
         <strong>Himmelblau</strong>, distance to <span set:html={kXStar} /> measures distance to the nearest of the 4
-        global minima; on <strong>Composite <span set:html={kL1Btn} /></strong>, all 5 solvers apply exact
-        soft-thresholding proximal steps and stationarity is measured via the proximal gradient mapping.{' '}
+        global minima.{' '}
         <a
           href="https://proxax.readthedocs.io/en/latest/"
           target="_blank"
@@ -369,8 +434,14 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     const resetBtn = document.getElementById('home-demo-reset');
     const playBtn = document.getElementById('home-demo-play');
     const gapBadge = document.getElementById('home-demo-gap');
+    const readoutEl = document.getElementById('home-demo-readout');
+    const lbfgsBtn = document.getElementById('home-method-lbfgs');
+    const lbfgsNote = document.getElementById('lbfgs-smooth-note');
     const contourCanvas = document.getElementById('home-contour-canvas');
     const curveCanvas = document.getElementById('home-curve-canvas');
+    const zoomInBtn = document.getElementById('home-zoom-in');
+    const zoomOutBtn = document.getElementById('home-zoom-out');
+    const zoomResetBtn = document.getElementById('home-zoom-reset');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
     const metricBtns = Array.from(document.querySelectorAll('.home-metric-btn'));
     const methodBtns = Array.from(document.querySelectorAll('.home-method-btn'));
@@ -381,12 +452,23 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
 
     let problem = 'rosenbrock';
     let metric = 'obj';
-    const visibleMethods = { gd: true, agd: true, nag: true, anag: true, apd: true };
+    const visibleMethods = {
+      gd: true,
+      agd: true,
+      nag: true,
+      anag: true,
+      apd: true,
+      adam: true,
+      lbfgs: true,
+    };
     let animId = null;
     let cachedBgKey = '';
     let cachedBgImg = null;
+    let viewBox = null; // { xMin, xMax, yMin, yMax } when zoomed/panned
+    let isDragging = false;
+    let dragStart = null;
 
-    // Precomputed rotated quadratic Q for Composite L1: R(28 deg) diag(1, 80) R(28 deg)^T
+    // Rotated quadratic Q for Composite L1: R(28 deg) diag(1, 80) R(28 deg)^T
     const thL1 = (28 * Math.PI) / 180;
     const cL1 = Math.cos(thL1);
     const sL1 = Math.sin(thL1);
@@ -414,7 +496,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       return v;
     }
 
-    // Smooth part f(x)
     function fSmooth(x, param) {
       if (problem === 'rosenbrock') {
         const a = 1 - x[0];
@@ -429,7 +510,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         const b = x[0] + x[1] * x[1] - 7;
         return a * a + b * b;
       }
-      // lasso smooth part
       return (
         0.5 * (q00 * x[0] * x[0] + 2 * q01 * x[0] * x[1] + q11 * x[1] * x[1]) -
         cVecL1[0] * x[0] -
@@ -437,7 +517,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       );
     }
 
-    // Total objective phi(x) = f(x) + h(x)
     function fTotal(x, param) {
       if (problem === 'lasso') {
         return fSmooth(x, param) + param * (Math.abs(x[0]) + Math.abs(x[1]));
@@ -493,7 +572,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     }
 
     function computeLassoOptimum(param) {
-      // High-precision reference optimum via 600 steps of adaptive accelerated proximal descent
       let xp = [0.0, 0.0];
       let y = [0.0, 0.0];
       let t = 1.0;
@@ -536,7 +614,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         fStar = ref.fStar;
       }
 
-      // Fixed step sizes
       const eta =
         problem === 'rosenbrock'
           ? 1.0 / (6.0 * param + 12.0)
@@ -600,7 +677,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         nag.push([...xn]);
       }
 
-      // 4. Adaptive Nesterov (adaptive L, no restart)
+      // 4. Adaptive Nesterov (no restart)
       const anag = [[...x0]];
       let xAnagPrev = [...x0];
       let yAnag = [...x0];
@@ -631,7 +708,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         anag.push([...xn]);
       }
 
-      // 5. Adaptive Accelerated Proximal Descent (Proxax APD-style: adaptive L + restart)
+      // 5. Proxax APD (Adaptive L + Adaptive Restart)
       const apd = [[...x0]];
       let xPrev = [...x0];
       let y = [...x0];
@@ -667,15 +744,138 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         apd.push([...xn]);
       }
 
-      return { gd, agd, nag, anag, apd, optima, fStar };
+      // 6. Adam (with prox step on Composite L1)
+      const adamLr =
+        problem === 'rosenbrock' ? 0.02 : problem === 'himmelblau' ? 0.08 : problem === 'lasso' ? 0.03 : 0.04;
+      const adam = [[...x0]];
+      let m0 = 0,
+        m1 = 0,
+        v0 = 0,
+        v1 = 0;
+      let b1p = 1,
+        b2p = 1;
+      for (let k = 1; k <= K; k++) {
+        const x = adam[adam.length - 1];
+        const g = gEval(x, param);
+        m0 = 0.9 * m0 + 0.1 * g[0];
+        m1 = 0.9 * m1 + 0.1 * g[1];
+        v0 = 0.999 * v0 + 0.001 * g[0] * g[0];
+        v1 = 0.999 * v1 + 0.001 * g[1] * g[1];
+        b1p *= 0.9;
+        b2p *= 0.999;
+        const mh0 = m0 / (1 - b1p);
+        const mh1 = m1 / (1 - b1p);
+        const vh0 = v0 / (1 - b2p);
+        const vh1 = v1 / (1 - b2p);
+        let xn = [
+          x[0] - (adamLr * mh0) / (Math.sqrt(vh0) + 1e-8),
+          x[1] - (adamLr * mh1) / (Math.sqrt(vh1) + 1e-8),
+        ];
+        if (problem === 'lasso') {
+          xn = softThresh(xn, adamLr * param);
+        }
+        adam.push(xn);
+      }
+
+      // 7. L-BFGS (m = 10, Armijo backtracking — smooth problems only)
+      const lbfgs = [[...x0]];
+      if (problem !== 'lasso') {
+        const S = [];
+        const Y = [];
+        const mem = 10;
+        let x = [...x0];
+        let converged = false;
+        for (let k = 0; k < K; k++) {
+          if (converged) {
+            lbfgs.push([...x]);
+            continue;
+          }
+          const g = gEval(x, param);
+          const gn = Math.hypot(g[0], g[1]);
+          if (gn < 1e-13) {
+            converged = true;
+            lbfgs.push([...x]);
+            continue;
+          }
+          // Two-loop recursion
+          let q0 = g[0],
+            q1 = g[1];
+          const alphas = new Array(S.length);
+          const rhos = new Array(S.length);
+          for (let i = S.length - 1; i >= 0; i--) {
+            const sy = S[i][0] * Y[i][0] + S[i][1] * Y[i][1];
+            const rho = 1.0 / sy;
+            rhos[i] = rho;
+            const a = rho * (S[i][0] * q0 + S[i][1] * q1);
+            alphas[i] = a;
+            q0 -= a * Y[i][0];
+            q1 -= a * Y[i][1];
+          }
+          let gamma = 1.0 / Math.max(gn, 1.0);
+          if (S.length > 0) {
+            const ls = S[S.length - 1];
+            const ly = Y[Y.length - 1];
+            gamma = (ls[0] * ly[0] + ls[1] * ly[1]) / Math.max(ly[0] * ly[0] + ly[1] * ly[1], 1e-30);
+          }
+          let r0 = gamma * q0,
+            r1 = gamma * q1;
+          for (let i = 0; i < S.length; i++) {
+            const b = rhos[i] * (Y[i][0] * r0 + Y[i][1] * r1);
+            r0 += S[i][0] * (alphas[i] - b);
+            r1 += S[i][1] * (alphas[i] - b);
+          }
+          let d0 = -r0,
+            d1 = -r1;
+          let dg = d0 * g[0] + d1 * g[1];
+          if (dg >= 0 || !Number.isFinite(dg)) {
+            d0 = -g[0];
+            d1 = -g[1];
+            dg = -(g[0] * g[0] + g[1] * g[1]);
+          }
+          const fx = fSmooth(x, param);
+          let step = 1.0;
+          let xn = x;
+          for (let tries = 0; tries < 30; tries++) {
+            xn = [x[0] + step * d0, x[1] + step * d1];
+            if (fSmooth(xn, param) <= fx + 1e-4 * step * dg) break;
+            step *= 0.5;
+          }
+          const gnVec = gEval(xn, param);
+          const sv = [xn[0] - x[0], xn[1] - x[1]];
+          const yv = [gnVec[0] - g[0], gnVec[1] - g[1]];
+          const sy = sv[0] * yv[0] + sv[1] * yv[1];
+          if (sy > 1e-12 * Math.hypot(sv[0], sv[1]) * Math.hypot(yv[0], yv[1])) {
+            S.push(sv);
+            Y.push(yv);
+            if (S.length > mem) {
+              S.shift();
+              Y.shift();
+            }
+          }
+          x = xn;
+          lbfgs.push([...x]);
+        }
+      }
+
+      return { gd, agd, nag, anag, apd, adam, lbfgs, optima, fStar };
+    }
+
+    function getViewBounds(param) {
+      const base = getBounds(param);
+      if (viewBox) {
+        return { ...base, ...viewBox };
+      }
+      return base;
     }
 
     function renderHeatmapBg(W, H, param, fStar, isDark) {
       const bgParam = problem === 'himmelblau' ? 0 : param;
-      const key = `${problem}:${bgParam}:${isDark ? 'd' : 'l'}`;
+      const vb = getViewBounds(param);
+      const vbKey = `${vb.xMin.toFixed(4)},${vb.xMax.toFixed(4)},${vb.yMin.toFixed(4)},${vb.yMax.toFixed(4)}`;
+      const key = `${problem}:${bgParam}:${isDark ? 'd' : 'l'}:${vbKey}`;
       if (cachedBgKey === key && cachedBgImg) return cachedBgImg;
 
-      const { xMin, xMax, yMin, yMax } = getBounds(param);
+      const { xMin, xMax, yMin, yMax } = vb;
       const img = cCtx.createImageData(W, H);
       const data = img.data;
 
@@ -733,8 +933,10 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       const gridColor = isDark ? 'rgba(147,175,160,0.18)' : 'rgba(75,95,82,0.16)';
       const axisColor = isDark ? 'rgba(147,175,160,0.45)' : 'rgba(75,95,82,0.45)';
       const textColor = isDark ? '#93afa0' : '#4b5f52';
+      const lbfgsColor = isDark ? '#f8fafc' : '#0f172a';
 
-      const { gd, agd, nag, anag, apd, optima, fStar } = simulate(param, K);
+      const { gd, agd, nag, anag, apd, adam, lbfgs, optima, fStar } = simulate(param, K);
+      const lbfgsActive = problem !== 'lasso' && visibleMethods.lbfgs;
 
       const distToOpt = (pt) =>
         Math.min(...optima.map((opt) => Math.hypot(pt[0] - opt[0], pt[1] - opt[1])));
@@ -752,8 +954,36 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       if (gapBadge) {
         gapBadge.textContent =
           orders >= 1
-            ? `APD is ~10^${orders.toFixed(1)}× better than GD (k=${K})`
+            ? `APD ~10^${orders.toFixed(1)}× better than GD`
             : `k=${K}: APD=${vApd.toExponential(1)}`;
+      }
+
+      // Live numeric readout strip
+      if (readoutEl) {
+        const entries = [
+          { key: 'gd', name: 'GD', color: '#ef4444', val: metricFn(gd[K]), show: visibleMethods.gd },
+          { key: 'agd', name: 'BT-GD', color: '#f59e0b', val: metricFn(agd[K]), show: visibleMethods.agd },
+          { key: 'nag', name: 'NAG', color: '#8b5cf6', val: metricFn(nag[K]), show: visibleMethods.nag },
+          { key: 'anag', name: 'Adapt-NAG', color: '#0ea5e9', val: metricFn(anag[K]), show: visibleMethods.anag },
+          { key: 'apd', name: 'Proxax APD', color: '#10b981', val: metricFn(apd[K]), show: visibleMethods.apd },
+          { key: 'adam', name: 'Adam', color: '#ec4899', val: metricFn(adam[K]), show: visibleMethods.adam },
+          {
+            key: 'lbfgs',
+            name: 'L-BFGS',
+            color: lbfgsColor,
+            val: lbfgsActive ? metricFn(lbfgs[K]) : null,
+            show: lbfgsActive,
+          },
+        ].filter((e) => e.show);
+
+        readoutEl.innerHTML =
+          `<span class="font-semibold text-[var(--text)]">k = ${K}:</span>` +
+          entries
+            .map(
+              (e) =>
+                `<span class="inline-flex items-center gap-1.5"><span style="background:${e.color}" class="inline-block h-2 w-2 rounded-full"></span>${e.name}: <strong class="text-[var(--text)]">${e.val.toExponential(1)}</strong></span>`
+            )
+            .join('');
       }
 
       // ---- 1. 2D Contour Heatmap + Trajectories ----
@@ -762,11 +992,10 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       const bg = renderHeatmapBg(W, H, param, fStar, isDark);
       cCtx.putImageData(bg, 0, 0);
 
-      const { xMin, xMax, yMin, yMax, x0 } = getBounds(param);
+      const { xMin, xMax, yMin, yMax, x0 } = getViewBounds(param);
       const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
       const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
 
-      // Subtle coordinate axes for Composite L1 (shows sparsity snapping to axes!)
       if (problem === 'lasso') {
         cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.25)';
         cCtx.setLineDash([4, 4]);
@@ -793,11 +1022,12 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         cCtx.setLineDash([]);
       }
 
-      function drawTrail(pts, color, width) {
+      function drawTrail(pts, color, width, dashed) {
         const tStride = Math.max(1, Math.floor(pts.length / 1500));
         cCtx.strokeStyle = color;
         cCtx.lineWidth = width;
         cCtx.lineJoin = 'round';
+        cCtx.setLineDash(dashed ? [6, 3] : []);
         cCtx.beginPath();
         for (let i = 0; i < pts.length; i += tStride) {
           const px = toX(pts[i][0]);
@@ -808,6 +1038,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         const last = pts[pts.length - 1];
         cCtx.lineTo(toX(last[0]), toY(last[1]));
         cCtx.stroke();
+        cCtx.setLineDash([]);
 
         cCtx.fillStyle = color;
         cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
@@ -818,11 +1049,13 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         cCtx.stroke();
       }
 
-      if (visibleMethods.gd) drawTrail(gd, '#ef4444', 2);
-      if (visibleMethods.agd) drawTrail(agd, '#f59e0b', 2);
-      if (visibleMethods.nag) drawTrail(nag, '#8b5cf6', 2);
-      if (visibleMethods.anag) drawTrail(anag, '#0ea5e9', 2);
-      if (visibleMethods.apd) drawTrail(apd, '#10b981', 2.4);
+      if (visibleMethods.gd) drawTrail(gd, '#ef4444', 1.9, false);
+      if (visibleMethods.agd) drawTrail(agd, '#f59e0b', 1.9, false);
+      if (visibleMethods.nag) drawTrail(nag, '#8b5cf6', 1.9, false);
+      if (visibleMethods.anag) drawTrail(anag, '#0ea5e9', 1.9, false);
+      if (visibleMethods.adam) drawTrail(adam, '#ec4899', 1.9, false);
+      if (visibleMethods.apd) drawTrail(apd, '#10b981', 2.6, false);
+      if (lbfgsActive) drawTrail(lbfgs, lbfgsColor, 2.0, true);
 
       // Start & Optima markers
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
@@ -888,9 +1121,10 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       gCtx.fillText(`k = ${K}`, GW - pad.r - 56, GH - 10);
 
       const stride = Math.max(1, Math.floor(K / 450));
-      function drawCurve(pts, color) {
+      function drawCurve(pts, color, width, dashed) {
         gCtx.strokeStyle = color;
-        gCtx.lineWidth = 2.25;
+        gCtx.lineWidth = width;
+        gCtx.setLineDash(dashed ? [6, 3] : []);
         gCtx.beginPath();
         for (let k = 0; k < pts.length; k += stride) {
           const px = gx(k);
@@ -901,13 +1135,16 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         const lastIdx = pts.length - 1;
         gCtx.lineTo(gx(lastIdx), gy(metricFn(pts[lastIdx])));
         gCtx.stroke();
+        gCtx.setLineDash([]);
       }
 
-      if (visibleMethods.gd) drawCurve(gd, '#ef4444');
-      if (visibleMethods.agd) drawCurve(agd, '#f59e0b');
-      if (visibleMethods.nag) drawCurve(nag, '#8b5cf6');
-      if (visibleMethods.anag) drawCurve(anag, '#0ea5e9');
-      if (visibleMethods.apd) drawCurve(apd, '#10b981');
+      if (visibleMethods.gd) drawCurve(gd, '#ef4444', 2.0, false);
+      if (visibleMethods.agd) drawCurve(agd, '#f59e0b', 2.0, false);
+      if (visibleMethods.nag) drawCurve(nag, '#8b5cf6', 2.0, false);
+      if (visibleMethods.anag) drawCurve(anag, '#0ea5e9', 2.0, false);
+      if (visibleMethods.adam) drawCurve(adam, '#ec4899', 2.0, false);
+      if (visibleMethods.apd) drawCurve(apd, '#10b981', 2.6, false);
+      if (lbfgsActive) drawCurve(lbfgs, lbfgsColor, 2.0, true);
     }
 
     function getAnimStep() {
@@ -915,12 +1152,23 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       return Number.isFinite(raw) && raw >= 1 ? Math.round(raw) : 100;
     }
 
+    function syncLbfgsState() {
+      const disabled = problem === 'lasso';
+      if (lbfgsBtn) {
+        lbfgsBtn.disabled = disabled;
+        lbfgsBtn.classList.toggle('cursor-not-allowed', disabled);
+        lbfgsBtn.classList.toggle('opacity-35', disabled || !visibleMethods.lbfgs);
+        lbfgsBtn.classList.toggle('line-through', !disabled && !visibleMethods.lbfgs);
+      }
+      lbfgsNote?.classList.toggle('hidden', !disabled);
+    }
+
     function updateProblemUI() {
       probBtns.forEach((btn) => {
         const active = btn.dataset.homeProblem === problem;
         btn.className = active
-          ? 'home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white'
-          : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
+          ? 'home-prob-btn rounded-md bg-[var(--accent)] px-3 py-1 text-white transition-colors'
+          : 'home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
       });
       Object.entries(paramLabels).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
       Object.entries(contourTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
@@ -953,7 +1201,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         iterSlider.value = '200';
         animStepInput.value = '5';
       } else {
-        // lasso
         paramSlider.min = '0.2';
         paramSlider.max = '2.0';
         paramSlider.step = '0.1';
@@ -964,9 +1211,84 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         animStepInput.value = '10';
       }
       iterSlider.step = String(getAnimStep());
+      viewBox = null;
+      cachedBgKey = '';
+      syncLbfgsState();
+      draw();
+    }
+
+    function zoomAt(factor, cxFrac, cyFrac) {
+      const param = Number(paramSlider.value);
+      const vb = getViewBounds(param);
+      const curW = vb.xMax - vb.xMin;
+      const curH = vb.yMax - vb.yMin;
+      const newW = curW * factor;
+      const newH = curH * factor;
+      const cx = vb.xMin + cxFrac * curW;
+      const cy = vb.yMax - cyFrac * curH;
+      viewBox = {
+        xMin: cx - cxFrac * newW,
+        xMax: cx + (1 - cxFrac) * newW,
+        yMin: cy - (1 - cyFrac) * newH,
+        yMax: cy + cyFrac * newH,
+      };
       cachedBgKey = '';
       draw();
     }
+
+    zoomInBtn?.addEventListener('click', () => zoomAt(0.6, 0.5, 0.5));
+    zoomOutBtn?.addEventListener('click', () => zoomAt(1.6, 0.5, 0.5));
+    zoomResetBtn?.addEventListener('click', () => {
+      viewBox = null;
+      cachedBgKey = '';
+      draw();
+    });
+
+    contourCanvas.addEventListener('dblclick', (e) => {
+      const rect = contourCanvas.getBoundingClientRect();
+      const fx = (e.clientX - rect.left) / rect.width;
+      const fy = (e.clientY - rect.top) / rect.height;
+      zoomAt(0.55, fx, fy);
+    });
+
+    contourCanvas.addEventListener('pointerdown', (e) => {
+      const param = Number(paramSlider.value);
+      const vb = getViewBounds(param);
+      isDragging = true;
+      dragStart = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        xMin: vb.xMin,
+        xMax: vb.xMax,
+        yMin: vb.yMin,
+        yMax: vb.yMax,
+      };
+      contourCanvas.setPointerCapture(e.pointerId);
+    });
+
+    contourCanvas.addEventListener('pointermove', (e) => {
+      if (!isDragging || !dragStart) return;
+      const rect = contourCanvas.getBoundingClientRect();
+      const dxFrac = (e.clientX - dragStart.clientX) / rect.width;
+      const dyFrac = (e.clientY - dragStart.clientY) / rect.height;
+      const spanX = dragStart.xMax - dragStart.xMin;
+      const spanY = dragStart.yMax - dragStart.yMin;
+      viewBox = {
+        xMin: dragStart.xMin - dxFrac * spanX,
+        xMax: dragStart.xMax - dxFrac * spanX,
+        yMin: dragStart.yMin + dyFrac * spanY,
+        yMax: dragStart.yMax + dyFrac * spanY,
+      };
+      cachedBgKey = '';
+      draw();
+    });
+
+    const endDrag = () => {
+      isDragging = false;
+      dragStart = null;
+    };
+    contourCanvas.addEventListener('pointerup', endDrag);
+    contourCanvas.addEventListener('pointercancel', endDrag);
 
     probBtns.forEach((btn) =>
       btn.addEventListener('click', () => {
@@ -993,10 +1315,11 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       btn.addEventListener('click', () => {
         const key = btn.dataset.homeMethod;
         if (!key || !(key in visibleMethods)) return;
+        if (key === 'lbfgs' && problem === 'lasso') return;
         visibleMethods[key] = !visibleMethods[key];
         const on = visibleMethods[key];
         btn.setAttribute('aria-pressed', String(on));
-        btn.classList.toggle('opacity-40', !on);
+        btn.classList.toggle('opacity-35', !on);
         btn.classList.toggle('line-through', !on);
         draw();
       })
@@ -1051,6 +1374,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       }, 45);
     });
 
+    syncLbfgsState();
     draw();
   })();
 </script>
