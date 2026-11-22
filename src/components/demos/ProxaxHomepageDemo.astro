@@ -150,28 +150,58 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     </div>
   </div>
 
-  <!-- Legend + Live Disparity Readout -->
-  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
-    <span class="inline-flex items-center gap-1.5">
+  <!-- Interactive Legend (click to show/hide methods) + Live Disparity Readout -->
+  <div class="flex flex-wrap items-center gap-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
+    <button
+      type="button"
+      data-home-method="gd"
+      aria-pressed="true"
+      title="Click to toggle Fixed-Step GD"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
+    >
       <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
       Fixed-Step GD
-    </span>
-    <span class="inline-flex items-center gap-1.5">
+    </button>
+    <button
+      type="button"
+      data-home-method="agd"
+      aria-pressed="true"
+      title="Click to toggle Backtracking GD"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
+    >
       <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
       Backtracking GD
-    </span>
-    <span class="inline-flex items-center gap-1.5">
+    </button>
+    <button
+      type="button"
+      data-home-method="nag"
+      aria-pressed="true"
+      title="Click to toggle Nesterov AGD (Fixed)"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
+    >
       <span class="h-2.5 w-2.5 rounded-full bg-[#8b5cf6]"></span>
       Nesterov AGD (Fixed)
-    </span>
-    <span class="inline-flex items-center gap-1.5">
+    </button>
+    <button
+      type="button"
+      data-home-method="anag"
+      aria-pressed="true"
+      title="Click to toggle Adaptive Nesterov"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#0ea5e9]"
+    >
       <span class="h-2.5 w-2.5 rounded-full bg-[#0ea5e9]"></span>
       Adaptive Nesterov
-    </span>
-    <span class="inline-flex items-center gap-1.5">
+    </button>
+    <button
+      type="button"
+      data-home-method="apd"
+      aria-pressed="true"
+      title="Click to toggle Adaptive Accelerated (Proxax APD)"
+      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#10b981]"
+    >
       <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
       Adaptive Accelerated (<code class="font-mono">Proxax APD</code>)
-    </span>
+    </button>
     <span
       id="home-demo-gap"
       class="ml-auto rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
@@ -256,6 +286,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     const curveCanvas = document.getElementById('home-curve-canvas');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
     const metricBtns = Array.from(document.querySelectorAll('.home-metric-btn'));
+    const methodBtns = Array.from(document.querySelectorAll('.home-method-btn'));
 
     if (!contourCanvas || !curveCanvas) return;
     const cCtx = contourCanvas.getContext('2d');
@@ -263,6 +294,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 
     let problem = 'rosenbrock';
     let metric = 'obj';
+    const visibleMethods = { gd: true, agd: true, nag: true, anag: true, apd: true };
     let animId = null;
     let cachedBgKey = '';
     let cachedBgImg = null;
@@ -542,11 +574,11 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         cCtx.stroke();
       }
 
-      drawTrail(gd, '#ef4444', 2);
-      drawTrail(agd, '#f59e0b', 2);
-      drawTrail(nag, '#8b5cf6', 2);
-      drawTrail(anag, '#0ea5e9', 2);
-      drawTrail(apd, '#10b981', 2.4);
+      if (visibleMethods.gd) drawTrail(gd, '#ef4444', 2);
+      if (visibleMethods.agd) drawTrail(agd, '#f59e0b', 2);
+      if (visibleMethods.nag) drawTrail(nag, '#8b5cf6', 2);
+      if (visibleMethods.anag) drawTrail(anag, '#0ea5e9', 2);
+      if (visibleMethods.apd) drawTrail(apd, '#10b981', 2.4);
 
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
       cCtx.beginPath();
@@ -622,11 +654,11 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         gCtx.stroke();
       }
 
-      drawCurve(gd, '#ef4444');
-      drawCurve(agd, '#f59e0b');
-      drawCurve(nag, '#8b5cf6');
-      drawCurve(anag, '#0ea5e9');
-      drawCurve(apd, '#10b981');
+      if (visibleMethods.gd) drawCurve(gd, '#ef4444');
+      if (visibleMethods.agd) drawCurve(agd, '#f59e0b');
+      if (visibleMethods.nag) drawCurve(nag, '#8b5cf6');
+      if (visibleMethods.anag) drawCurve(anag, '#0ea5e9');
+      if (visibleMethods.apd) drawCurve(apd, '#10b981');
     }
 
     function updateProblemUI() {
@@ -683,6 +715,19 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         });
         curveTitleObj?.classList.toggle('hidden', metric !== 'obj');
         curveTitleGrad?.classList.toggle('hidden', metric === 'obj');
+        draw();
+      })
+    );
+
+    methodBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.homeMethod;
+        if (!key || !(key in visibleMethods)) return;
+        visibleMethods[key] = !visibleMethods[key];
+        const on = visibleMethods[key];
+        btn.setAttribute('aria-pressed', String(on));
+        btn.classList.toggle('opacity-40', !on);
+        btn.classList.toggle('line-through', !on);
         draw();
       })
     );
