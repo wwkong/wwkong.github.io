@@ -14,9 +14,9 @@ export const SITE = {
   gaMeasurementId: 'G-RLJHNSFB7P',
   giscus: {
     repo: 'wwkong/wwkong.github.io',
-    repoId: '', // Filled after enabling GitHub Discussions + Giscus app
+    repoId: 'MDEwOlJlcG9zaXRvcnkxOTI4MzQxNw==',
     category: 'Announcements',
-    categoryId: '',
+    categoryId: 'DIC_kwDOASY92c4DLvis',
   },
   socials: [
     {
