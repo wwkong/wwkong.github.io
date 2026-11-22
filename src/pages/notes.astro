@@ -33,63 +33,144 @@ interface NotesData {
 
 const raw = fs.readFileSync(path.join(process.cwd(), 'src/data/notes.yml'), 'utf-8');
 const data = yaml.load(raw) as NotesData;
+
+const institutions = data.institutions.map((inst, idx) => ({
+  ...inst,
+  id: idx === 0 ? 'gatech' : 'uwaterloo',
+  shortName: inst.name.includes('Georgia') ? 'Georgia Tech' : 'University of Waterloo',
+  degree: inst.name.includes('Georgia') ? 'Ph.D. & M.Sc.' : 'B.Math.',
+  totalCourses: inst.departments.reduce((acc, d) => acc + d.courses.length, 0),
+}));
 ---
 
 <BaseLayout
   title="Course Notes"
   description="Detailed university course notes and exam review sheets from Georgia Institute of Technology and University of Waterloo."
 >
-  <header class="mb-8">
+  <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight text-[var(--text)]">Course Notes</h1>
     <p class="mt-2 text-sm text-[var(--text-muted)]">
-      Final and midterm review sheets are denoted by{' '}
+      Lecture notes and study sheets from graduate and undergraduate coursework. Final and midterm
+      review sheets are marked{' '}
       <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">F</span> and{' '}
-      <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">M</span>,
-      respectively; additional errata/supplements by{' '}
+      <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">M</span>;
+      supplements/errata by{' '}
       <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">E#</span>.
     </p>
   </header>
 
-  <div class="mb-8">
-    <div class="relative">
-      <svg
-        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.3-4.3" />
-      </svg>
-      <input
-        id="notes-filter"
-        type="search"
-        placeholder="Filter courses by code, title, or department (e.g., ISYE, PMATH, Optimization)..."
-        class="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 pr-4 pl-9 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none"
-      />
-    </div>
-  </div>
+  <!-- Embedded Tabbed Container -->
+  <div class="card overflow-hidden">
+    <!-- Top Institution Tabs + Search Bar -->
+    <div class="flex flex-col gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-4 pt-3 sm:flex-row sm:items-end sm:justify-between sm:px-5">
+      <div class="flex items-center gap-1 overflow-x-auto" role="tablist" aria-label="Institutions">
+        {
+          institutions.map((inst, idx) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${inst.id}`}
+              aria-selected={idx === 0 ? 'true' : 'false'}
+              aria-controls={`panel-${inst.id}`}
+              data-inst-tab={inst.id}
+              class:list={[
+                'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors',
+                idx === 0
+                  ? 'border-[var(--accent)] bg-[var(--surface)] text-[var(--accent)]'
+                  : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text)]',
+              ]}
+            >
+              <span>{inst.shortName}</span>
+              <span class="hidden text-[11px] font-normal text-[var(--text-muted)] sm:inline">
+                ({inst.degree})
+              </span>
+              <span
+                class="notes-tab-count rounded-full bg-[var(--accent-soft)] px-2 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
+                data-inst-count={inst.id}
+              >
+                {inst.totalCourses}
+              </span>
+            </button>
+          ))
+        }
+      </div>
 
-  <div class="space-y-12">
+      <div class="relative pb-2.5 sm:w-64">
+        <svg
+          class="pointer-events-none absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-[65%] text-[var(--text-muted)]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          id="notes-filter"
+          type="search"
+          placeholder="Search courses..."
+          class="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] py-1.5 pr-3 pl-8 text-xs text-[var(--text)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none"
+        />
+      </div>
+    </div>
+
+    <!-- Tab Panels -->
     {
-      data.institutions.map((inst) => (
-        <section class="notes-inst-group space-y-6">
-          <div class="flex items-center gap-3">
-            <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">{inst.name}</h2>
-            <div class="h-px flex-1 bg-[var(--border)]" />
+      institutions.map((inst, instIdx) => (
+        <div
+          id={`panel-${inst.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${inst.id}`}
+          data-inst-panel={inst.id}
+          class:list={['notes-inst-panel p-4 sm:p-5', instIdx !== 0 && 'hidden']}
+        >
+          <!-- Embedded Department Sub-tabs -->
+          <div
+            class="mb-5 flex flex-wrap items-center gap-1.5 border-b border-[var(--border)] pb-4"
+            role="tablist"
+            aria-label={`${inst.shortName} departments`}
+          >
+            <button
+              type="button"
+              data-dept-tab="all"
+              data-inst={inst.id}
+              class="notes-dept-tab rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-medium text-white transition-colors"
+            >
+              All Departments ({inst.totalCourses})
+            </button>
+            {inst.departments.map((dept, dIdx) => (
+              <button
+                type="button"
+                data-dept-tab={`${inst.id}-dept-${dIdx}`}
+                data-inst={inst.id}
+                class="notes-dept-tab rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                {dept.name} ({dept.courses.length})
+              </button>
+            ))}
           </div>
 
+          <!-- Department Course Lists -->
           <div class="space-y-5">
-            {inst.departments.map((dept) => (
-              <div class="notes-dept-group card overflow-hidden">
-                <div class="border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3">
-                  <h3 class="text-sm font-semibold text-[var(--text)]">{dept.name}</h3>
+            {inst.departments.map((dept, dIdx) => (
+              <section
+                class="notes-dept-section overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg)]/50"
+                data-dept-id={`${inst.id}-dept-${dIdx}`}
+              >
+                <div class="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-subtle)]/60 px-4 py-2.5">
+                  <h2 class="text-xs font-semibold tracking-wide text-[var(--text)] uppercase">
+                    {dept.name}
+                  </h2>
+                  <span class="font-mono text-[11px] text-[var(--text-muted)]">
+                    {dept.courses.length} {dept.courses.length === 1 ? 'course' : 'courses'}
+                  </span>
                 </div>
+
                 <ul class="divide-y divide-[var(--border)]">
                   {dept.courses.map((c) => (
                     <li
-                      class="notes-course-row flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-sm"
+                      class="notes-course-row flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm transition-colors hover:bg-[var(--surface)]"
                       data-search={`${inst.name} ${dept.name} ${c.term} ${c.code} ${c.title}`.toLowerCase()}
                     >
                       <div class="flex flex-wrap items-baseline gap-2.5">
@@ -118,7 +199,7 @@ const data = yaml.load(raw) as NotesData;
                             href={r.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2 py-1 font-mono text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                            class="rounded-md border border-[var(--border)] bg-[var(--surface)] px-2 py-1 font-mono text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                           >
                             {r.label}
                           </a>
@@ -127,10 +208,14 @@ const data = yaml.load(raw) as NotesData;
                     </li>
                   ))}
                 </ul>
-              </div>
+              </section>
             ))}
           </div>
-        </section>
+
+          <p class="notes-panel-empty hidden py-10 text-center text-sm text-[var(--text-muted)]">
+            No matching courses in {inst.shortName}. Try checking the other institution tab or clearing your search.
+          </p>
+        </div>
       ))
     }
   </div>
@@ -138,25 +223,113 @@ const data = yaml.load(raw) as NotesData;
 
 <script is:inline>
   (function () {
-    const input = document.getElementById('notes-filter');
-    const rows = Array.from(document.querySelectorAll('.notes-course-row'));
-    const depts = Array.from(document.querySelectorAll('.notes-dept-group'));
-    const insts = Array.from(document.querySelectorAll('.notes-inst-group'));
+    const instTabs = Array.from(document.querySelectorAll('.notes-inst-tab'));
+    const instPanels = Array.from(document.querySelectorAll('.notes-inst-panel'));
+    const deptTabs = Array.from(document.querySelectorAll('.notes-dept-tab'));
+    const searchInput = document.getElementById('notes-filter');
 
-    input?.addEventListener('input', () => {
-      const q = input.value.trim().toLowerCase();
+    let activeInst = instTabs[0]?.dataset.instTab || 'gatech';
+    const activeDeptByInst = {};
+    instTabs.forEach((t) => {
+      activeDeptByInst[t.dataset.instTab] = 'all';
+    });
+
+    function render() {
+      const q = (searchInput?.value || '').trim().toLowerCase();
       const tokens = q.split(/\s+/).filter(Boolean);
-      rows.forEach((row) => {
-        const hay = row.dataset.search || '';
-        const show = tokens.every((t) => hay.includes(t));
-        row.classList.toggle('hidden', !show);
+
+      // Update institution tab styling & live match counts
+      instPanels.forEach((panel) => {
+        const instId = panel.dataset.instPanel;
+        const activeDept = activeDeptByInst[instId] || 'all';
+        const sections = Array.from(panel.querySelectorAll('.notes-dept-section'));
+        let instMatches = 0;
+        let visibleInPanel = 0;
+
+        sections.forEach((sec) => {
+          const deptId = sec.dataset.deptId;
+          const rows = Array.from(sec.querySelectorAll('.notes-course-row'));
+          let secSearchMatches = 0;
+          let secVisible = 0;
+
+          rows.forEach((row) => {
+            const hay = row.dataset.search || '';
+            const matchSearch = tokens.every((tok) => hay.includes(tok));
+            if (matchSearch) secSearchMatches++;
+            const matchDept = activeDept === 'all' || activeDept === deptId;
+            const show = matchSearch && matchDept;
+            row.classList.toggle('hidden', !show);
+            if (show) secVisible++;
+          });
+
+          instMatches += secSearchMatches;
+          visibleInPanel += secVisible;
+          sec.classList.toggle('hidden', secVisible === 0);
+        });
+
+        // Update badge count on institution tab
+        const badge = document.querySelector(`[data-inst-count="${instId}"]`);
+        if (badge) badge.textContent = String(instMatches);
+
+        // Toggle panel visibility
+        panel.classList.toggle('hidden', instId !== activeInst);
+
+        // Toggle empty state
+        const emptyMsg = panel.querySelector('.notes-panel-empty');
+        emptyMsg?.classList.toggle('hidden', visibleInPanel > 0);
       });
-      depts.forEach((d) => {
-        d.classList.toggle('hidden', d.querySelector('.notes-course-row:not(.hidden)') === null);
+
+      // Update institution tab classes
+      instTabs.forEach((tab) => {
+        const selected = tab.dataset.instTab === activeInst;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.className = selected
+          ? 'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-[var(--accent)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--accent)] transition-colors'
+          : 'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
       });
-      insts.forEach((i) => {
-        i.classList.toggle('hidden', i.querySelector('.notes-dept-group:not(.hidden)') === null);
+
+      // Update department pill classes
+      deptTabs.forEach((btn) => {
+        const instId = btn.dataset.inst;
+        const selected = (activeDeptByInst[instId] || 'all') === btn.dataset.deptTab;
+        btn.className = selected
+          ? 'notes-dept-tab rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-medium text-white transition-colors'
+          : 'notes-dept-tab rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]';
+      });
+    }
+
+    instTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeInst = tab.dataset.instTab || activeInst;
+        render();
       });
     });
+
+    deptTabs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const instId = btn.dataset.inst;
+        if (instId) activeDeptByInst[instId] = btn.dataset.deptTab || 'all';
+        render();
+      });
+    });
+
+    searchInput?.addEventListener('input', () => {
+      render();
+      // If active tab has 0 matches during search, auto-switch to the tab that has matches
+      const activeBadge = document.querySelector(`[data-inst-count="${activeInst}"]`);
+      if (activeBadge && Number(activeBadge.textContent) === 0) {
+        for (const tab of instTabs) {
+          const id = tab.dataset.instTab;
+          const b = document.querySelector(`[data-inst-count="${id}"]`);
+          if (b && Number(b.textContent) > 0) {
+            activeInst = id;
+            render();
+            break;
+          }
+        }
+      }
+    });
+
+    render();
   })();
 </script>

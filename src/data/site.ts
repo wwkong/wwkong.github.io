@@ -35,11 +35,6 @@ export const SITE = {
       icon: 'orcid',
     },
     {
-      label: 'X / Twitter',
-      href: 'https://twitter.com/wwkong92',
-      icon: 'twitter',
-    },
-    {
       label: 'Email',
       href: 'mailto:wwkong92@gmail.com',
       icon: 'email',

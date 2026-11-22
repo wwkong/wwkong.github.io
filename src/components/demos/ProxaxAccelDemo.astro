@@ -96,7 +96,7 @@ print(sol.status_enum.name, sol.iters, sol.obj)`;
       Dual Gradient (Part III)
     </span>
     <span class="inline-flex items-center gap-1.5">
-      <span class="h-2.5 w-2.5 rounded-full bg-[#2563eb]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
       Accelerated Gradient / Proxax <code class="font-mono">APD</code>
     </span>
     <span id="demo-metrics" class="ml-auto font-mono text-[11px]"></span>
@@ -341,7 +341,7 @@ print(sol.status_enum.name, sol.iters, sol.obj)`;
 
       drawPath(gd, '#ef4444');
       drawPath(dual, '#f59e0b');
-      drawPath(acc, '#2563eb');
+      drawPath(acc, '#10b981');
 
       // Start marker
       cCtx.fillStyle = isDark ? '#e2e8f0' : '#18181b';
@@ -408,7 +408,7 @@ print(sol.status_enum.name, sol.iters, sol.obj)`;
 
       drawCurve(gd, '#ef4444');
       drawCurve(dual, '#f59e0b');
-      drawCurve(acc, '#2563eb');
+      drawCurve(acc, '#10b981');
     }
 
     kappaEl?.addEventListener('input', draw);
