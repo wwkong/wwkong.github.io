@@ -192,129 +192,106 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     </div>
   </div>
 
-  <!-- Row 2.5: Objective Function & Data Setup Strip -->
-  <div class="flex flex-wrap items-start gap-x-3 gap-y-1.5 border-b border-[var(--border)] bg-[var(--bg)]/60 px-5 py-2.5 text-xs">
-    <span class="mr-1 mt-0.5 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-      Objective
-    </span>
-    <div class="min-w-0 flex-1 text-sm text-[var(--text)]">
-      <div id="home-obj-rosen" class="flex flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+  <!-- Row 2.5: Objective Function & Separate Setup Row -->
+  <div class="flex flex-col gap-2 border-b border-[var(--border)] bg-[var(--bg)]/60 px-5 py-2.5 text-xs">
+    <!-- Objective Row -->
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+        Objective
+      </span>
+      <div class="min-w-0 flex-1 text-sm text-[var(--text)]">
+        <div id="home-obj-rosen" class="flex flex-wrap items-center justify-between gap-2">
           <span set:html={kRosenTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · Narrow Valley</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Start x₀ = (−1.2, 1.0); unique global minimum at x* = (1, 1) along the curved parabola x₂ = x₁².
-        </div>
-      </div>
-
-      <div id="home-obj-quad" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-quad" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kQuadTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Strongly Convex · Ill-Conditioned</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Start x₀ = (−2.1, 0.85); unique minimum x* = (0, 0) with condition number κ = L/μ.
-        </div>
-      </div>
-
-      <div id="home-obj-himm" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-himm" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kHimmTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · 4 Global Minima</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Start x₀ = 1.5·(cos θ₀, sin θ₀); four identical global minima (f* = 0) separated by saddles.
-        </div>
-      </div>
-
-      <div id="home-obj-lasso" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-lasso" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kL1Title} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Convex Composite · Soft-Thresholding Prox</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Rotated quadratic Q = R(28°)·diag(1, 80)·R(28°)ᵀ, c = (2.4, −0.3), start x₀ = (−1.8, 1.4).
-        </div>
-      </div>
-
-      <div id="home-obj-box" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-box" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kBoxTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Composite · 2 Local Corner Minima</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          H = R(25°)·diag(−α, 6)·R(25°)ᵀ, c = (0.28, −0.18), start x₀ = (0.06, −0.04) near the interior saddle; multiple boundary minima exist so solvers can escape to different basins.
-        </div>
-      </div>
-
-      <div id="home-obj-chained" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-chained" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kChainedTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 50 · Nonconvex Smooth · Coupled Chain</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Alternating start x₀ = (−1, 1, −1, 1, …) ∈ ℝ⁵⁰; unique global minimum at x* = (1, …, 1).
-        </div>
-      </div>
-
-      <div id="home-obj-sparse" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-sparse" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kSparseTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Exact ℓ₁ Prox</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true with 8 sparse spikes in [0.65, 0.95], start x₀ = 0.
-        </div>
-      </div>
-
-      <div id="home-obj-simplex" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-simplex" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kSimplexTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Constrained · Simplex Projection</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), b = A x_true + ε (σ = 0.04), x_true ∈ Δ⁶³ supported on 8 assets, start x₀ = (1/64)·1.
-        </div>
-      </div>
-
-      <div id="home-obj-nuc" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-nuc" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kNucTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">8×8 (64D) · Spectral Composite · Exact SVD Prox</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: M* = U Uᵀ (rank 2, U ∈ ℝ⁸ˣ² i.i.d. N(0, 0.9²)), symmetric mask Ω with 65% entries observed, start X₀ = 0.
-        </div>
-      </div>
-
-      <div id="home-obj-group" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-group" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kGroupTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Block ℓ₂,₁ Prox</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true partitioned into 8 groups of 8; 2 active groups (g = 2, 6; norms 0.85, 0.72), start x₀ = 0.
-        </div>
-      </div>
-
-      <div id="home-obj-logreg" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-logreg" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kLogRegTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Logistic + ℓ₁ Prox</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: n = 80 samples aᵢ ∈ ℝ⁶⁴ i.i.d. N(0, I/64), labels yᵢ = sign(aᵢᵀ x_true) with 6 active features in [−0.95, 0.90], start x₀ = 0.
-        </div>
-      </div>
-
-      <div id="home-obj-spec" class="hidden flex-col gap-0.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+        <div id="home-obj-spec" class="hidden flex-wrap items-center justify-between gap-2">
           <span set:html={kSpecTitle} />
           <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 100 · Strongly Convex · Dense Rotated QΛQᵀ</span>
         </div>
-        <div class="text-[11px] text-[var(--text-muted)]">
-          Data: λᵢ = κ^((i−1)/99), Q = H₁₂⋯H₁ (12 random Householder reflections), x*ᵢ = 0.5·sin(0.25i) ± 0.25, start x₀ = 0.
+      </div>
+    </div>
+
+    <!-- Setup / Data Row -->
+    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-[var(--border)]/60 pt-2">
+      <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+        Setup
+      </span>
+      <div class="min-w-0 flex-1 text-[11px] text-[var(--text-muted)]">
+        <div id="home-note-rosen">
+          Start x₀ = (−1.2, 1.0); unique global minimum at x* = (1, 1) along the curved parabola x₂ = x₁².
+        </div>
+        <div id="home-note-quad" class="hidden">
+          Start x₀ = (−2.1, 0.85); unique minimum x* = (0, 0) with condition number κ = L/μ.
+        </div>
+        <div id="home-note-himm" class="hidden">
+          Start x₀ = 1.5·(cos θ₀, sin θ₀); four identical global minima (f* = 0) separated by saddles.
+        </div>
+        <div id="home-note-lasso" class="hidden">
+          Rotated quadratic Q = R(28°)·diag(1, 80)·R(28°)ᵀ, c = (2.4, −0.3), start x₀ = (−1.8, 1.4).
+        </div>
+        <div id="home-note-box" class="hidden">
+          H = R(25°)·diag(−α, 6)·R(25°)ᵀ, c = (0.28, −0.18), start x₀ = (0.06, −0.04) near the interior saddle; multiple boundary minima with distinct values (f(xₖ)−f* disabled; use stationarity or distance).
+        </div>
+        <div id="home-note-chained" class="hidden">
+          Alternating start x₀ = (−1, 1, −1, 1, …) ∈ ℝ⁵⁰; unique global minimum at x* = (1, …, 1).
+        </div>
+        <div id="home-note-sparse" class="hidden">
+          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true with 8 sparse spikes in [0.65, 0.95], start x₀ = 0.
+        </div>
+        <div id="home-note-simplex" class="hidden">
+          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), b = A x_true + ε (σ = 0.04), x_true ∈ Δ⁶³ supported on 8 assets, start x₀ = (1/64)·1.
+        </div>
+        <div id="home-note-nuc" class="hidden">
+          M* = U Uᵀ (rank 2, U ∈ ℝ⁸ˣ² i.i.d. N(0, 0.9²)), symmetric mask Ω with 65% entries observed, start X₀ = 0.
+        </div>
+        <div id="home-note-group" class="hidden">
+          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true partitioned into 8 groups of 8; 2 active groups (g = 2, 6; norms 0.85, 0.72), start x₀ = 0.
+        </div>
+        <div id="home-note-logreg" class="hidden">
+          n = 80 samples aᵢ ∈ ℝ⁶⁴ i.i.d. N(0, I/64), labels yᵢ = sign(aᵢᵀ x_true) with 6 active features in [−0.95, 0.90], start x₀ = 0.
+        </div>
+        <div id="home-note-spec" class="hidden">
+          λᵢ = κ^((i−1)/99), Q = H₁₂⋯H₁ (12 random Householder reflections), x*ᵢ = 0.5·sin(0.25i) ± 0.25, start x₀ = 0.
         </div>
       </div>
     </div>
@@ -701,6 +678,20 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       group_lasso: document.getElementById('home-obj-group'),
       sparse_logreg: document.getElementById('home-obj-logreg'),
       spec_quad: document.getElementById('home-obj-spec'),
+    };
+    const noteRows = {
+      rosenbrock: document.getElementById('home-note-rosen'),
+      quadratic: document.getElementById('home-note-quad'),
+      himmelblau: document.getElementById('home-note-himm'),
+      lasso: document.getElementById('home-note-lasso'),
+      box_qp: document.getElementById('home-note-box'),
+      chained_rosen: document.getElementById('home-note-chained'),
+      sparse_lasso: document.getElementById('home-note-sparse'),
+      simplex_qp: document.getElementById('home-note-simplex'),
+      nuc_norm: document.getElementById('home-note-nuc'),
+      group_lasso: document.getElementById('home-note-group'),
+      sparse_logreg: document.getElementById('home-note-logreg'),
+      spec_quad: document.getElementById('home-note-spec'),
     };
     const contourTitles = {
       rosenbrock: document.getElementById('home-contour-title-rosen'),
@@ -3011,6 +3002,24 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         : 'rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]';
     }
 
+    function syncMetricUI() {
+      const disableObj = problem === 'box_qp';
+      if (disableObj && metric === 'obj') metric = 'grad';
+      metricBtns.forEach((b) => {
+        const m = b.dataset.homeMetric;
+        const isDisabled = disableObj && m === 'obj';
+        const active = m === metric;
+        b.disabled = isDisabled;
+        b.title = isDisabled ? 'Disabled on Indefinite Box QP (multiple local minima with distinct values)' : '';
+        b.className = isDisabled
+          ? 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] opacity-35 cursor-not-allowed line-through'
+          : active
+            ? 'home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs'
+            : 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
+      });
+      Object.entries(curveTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== metric));
+    }
+
     function updateProblemUI() {
       probBtns.forEach((btn) => {
         const active = btn.dataset.homeProblem === problem;
@@ -3025,6 +3034,8 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         el.classList.toggle('hidden', !active);
         el.classList.toggle('flex', active);
       });
+      Object.entries(noteRows).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
+      syncMetricUI();
 
       const lblKey =
         problem === 'rosenbrock' || problem === 'chained_rosen'
@@ -3251,14 +3262,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
     metricBtns.forEach((btn) =>
       btn.addEventListener('click', () => {
-        metric = btn.dataset.homeMetric || 'obj';
-        metricBtns.forEach((b) => {
-          const active = b.dataset.homeMetric === metric;
-          b.className = active
-            ? 'home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs'
-            : 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
-        });
-        Object.entries(curveTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== metric));
+        const targetMetric = btn.dataset.homeMetric || 'obj';
+        if (problem === 'box_qp' && targetMetric === 'obj') return;
+        metric = targetMetric;
+        syncMetricUI();
         draw();
       })
     );
