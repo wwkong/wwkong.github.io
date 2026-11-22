@@ -254,10 +254,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     </div>
   </div>
 
-  <!-- Row 3: Solver Toggle Pills (Grouped by 1st-Order vs 2nd-Order / Quasi-Newton) -->
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2.5 text-xs">
+  <!-- Row 3: Solver Toggle Pills (Separate rows for 1st-Order vs 2nd-Order / Quasi-Newton) -->
+  <div class="flex flex-col gap-2 border-b border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2.5 text-xs">
     <div class="flex flex-wrap items-center gap-1.5">
-      <span class="mr-0.5 text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+      <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
         1st-Order
       </span>
 
@@ -320,13 +320,16 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         <span class="h-2 w-2 rounded-full bg-[#ec4899]"></span>
         Adam
       </button>
+
+      <span
+        id="home-demo-gap"
+        class="ml-auto rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
+      ></span>
     </div>
 
-    <span class="hidden h-4 w-px bg-[var(--border)] sm:inline-block"></span>
-
-    <div class="flex flex-wrap items-center gap-1.5">
-      <span class="mr-0.5 text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-        2nd-Order / Quasi-Newton
+    <div class="flex flex-wrap items-center gap-1.5 border-t border-[var(--border)]/60 pt-2">
+      <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+        2nd-Order
       </span>
 
       <button
@@ -342,11 +345,6 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smooth only)</span>
       </button>
     </div>
-
-    <span
-      id="home-demo-gap"
-      class="ml-auto rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
-    ></span>
   </div>
 
   <!-- Row 4: Canvases -->
