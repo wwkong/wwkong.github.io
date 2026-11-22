@@ -39,6 +39,7 @@ const kL = tex('L');
 const kMu = tex('\\mu');
 const kHighDimD = tex('d = 50\\text{--}100');
 const kLbfgsM = tex('m = 5 \\ll d');
+const kClassicLipNote = tex('\\hat{L} = 2L \\;(\\eta = \\tfrac{1}{2L})');
 
 const renderNote = (s: string) =>
   s.replace(/\$([^$]+)\$/g, (_, expr) => tex(expr));
@@ -442,10 +443,11 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         type="button"
         data-home-method="gd"
         aria-pressed="true"
+        title="Classic GD with conservative fixed Lipschitz estimate L̂ = 2L (η = 1/(2L))"
         class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
       >
         <span class="h-2 w-2 rounded-full bg-[#ef4444]"></span>
-        Fixed GD
+        Classic GD
       </button>
 
       <button
@@ -462,10 +464,11 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         type="button"
         data-home-method="nag"
         aria-pressed="true"
+        title="Classic Nesterov AGD / FISTA with conservative fixed Lipschitz estimate L̂ = 2L (η = 1/(2L))"
         class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
       >
         <span class="h-2 w-2 rounded-full bg-[#8b5cf6]"></span>
-        Nesterov (Fixed)
+        Classic Nesterov
       </button>
 
       <button
@@ -521,6 +524,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         <span>L-BFGS</span>
         <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smoothed)</span>
       </button>
+
+      <span class="ml-auto text-[11px] text-[var(--text-muted)]">
+        Classic GD &amp; Classic Nesterov use conservative <span class="text-[var(--text)]" set:html={kClassicLipNote} />
+      </span>
     </div>
   </div>
 
@@ -1806,14 +1813,15 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         fStar = P.fTotal(xRef);
       }
 
-      // 1. Fixed-Step GD / PG
+      // 1. Classic GD / PG (conservative Lipschitz estimate L_hat = 2 * L => eta = 1 / (2L))
+      const etaGd = 0.5 * P.eta;
       const gd = [x0.slice()];
       for (let k = 0; k < K; k++) {
         const x = gd[k];
         const g = P.grad(x);
         const cand = new Array(d);
-        for (let i = 0; i < d; i++) cand[i] = x[i] - P.eta * g[i];
-        gd.push(applyProx(cand, 1.0 / P.eta));
+        for (let i = 0; i < d; i++) cand[i] = x[i] - etaGd * g[i];
+        gd.push(applyProx(cand, 1.0 / etaGd));
       }
 
       // 2. Backtracking GD / PG
@@ -1842,7 +1850,8 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         agd.push(xn);
       }
 
-      // 3. Fixed-Step Nesterov AGD / FISTA
+      // 3. Classic Nesterov AGD / FISTA (conservative Lipschitz estimate L_hat = 2 * L => eta = 1 / (2L))
+      const etaNag = 0.5 * P.etaNag;
       const nag = [x0.slice()];
       let xNagPrev = x0.slice();
       let yNag = x0.slice();
@@ -1850,8 +1859,8 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       for (let k = 0; k < K; k++) {
         const g = P.grad(yNag);
         const cand = new Array(d);
-        for (let i = 0; i < d; i++) cand[i] = yNag[i] - P.etaNag * g[i];
-        const xn = applyProx(cand, 1.0 / P.etaNag);
+        for (let i = 0; i < d; i++) cand[i] = yNag[i] - etaNag * g[i];
+        const xn = applyProx(cand, 1.0 / etaNag);
         const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tNag * tNag));
         const beta = (tNag - 1.0) / tn;
         const yn = new Array(d);
