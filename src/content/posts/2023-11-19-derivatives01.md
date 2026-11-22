@@ -68,14 +68,14 @@ Finally, some important anti-properties of F-derivatives and F-differentiability
 
 -   In fact, the existence of the partial derivatives at $x$ **is generally not** sufficient to conclude F-differentiability at $x$.
 
-    -   *Exercise*. Consider the function 
+    -   *Exercise*. Consider the function
 
-$$
-(\gamma_{1})\qquad f(x_{1},x_{2})=\begin{cases}
-        x_{1}, & \text{if }x_{2}=0,\\
-        x_{2}, & \text{if }x_{1}=0,\\
-        1, & \text{otherwise},
-\end{cases}
-$$
+        $$
+        (\gamma_{1})\qquad f(x_{1},x_{2})=\begin{cases}
+                x_{1}, & \text{if }x_{2}=0,\\
+                x_{2}, & \text{if }x_{1}=0,\\
+                1, & \text{otherwise},
+        \end{cases}
+        $$
 
-    at zero. Show that the partial derivatives of $f$ exist at zero, but the function itself is not F-differentiable.
+        at zero. Show that the partial derivatives of $f$ exist at zero, but the function itself is not F-differentiable.

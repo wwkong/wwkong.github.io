@@ -48,16 +48,16 @@ With the above definitions in mind, we give a few properties that merely require
 
 -   If $f$ is G-differentiable at $x$, then $f$ is **hemicontinuous** at $x$, i.e., for any $\varepsilon>0$ and $\Delta\in\mathbb{R}^{n}$ there exists $\delta=\delta(\varepsilon,\Delta)$ such that whenever $|t|<\delta$ then $\|f(x+t\Delta)-f(x)\|<\varepsilon$.
 
-    -   *Exercise*. Consider the function 
+    -   *Exercise*. Consider the function
 
-$$
-(\gamma_{2})\qquad f(x_{1},x_{2})=\begin{cases}
-        0, & \text{if }x=0,\\
-        \dfrac{x_{2}(x_{1}^{2}+x_{2}^{2})^{3/2}}{(x_{1}^{2}+x_{2}^{2})^{2}+x_{2}^{2}}, & \text{otherwise}.
-\end{cases}
-$$
+        $$
+        (\gamma_{2})\qquad f(x_{1},x_{2})=\begin{cases}
+                0, & \text{if }x=0,\\
+                \dfrac{x_{2}(x_{1}^{2}+x_{2}^{2})^{3/2}}{(x_{1}^{2}+x_{2}^{2})^{2}+x_{2}^{2}}, & \text{otherwise}.
+        \end{cases}
+        $$
 
-    Show that $f$ has a G-derivative at zero, but not an F-derivative at zero. Show, moreover, that $f$ is hemicontinuous at zero.
+        Show that $f$ has a G-derivative at zero, but not an F-derivative at zero. Show, moreover, that $f$ is hemicontinuous at zero.
 
 -   If $f$ is G-differentiable at $x$ and $\|x\|=\sqrt{x^{T}x}$ for every $x\in\mathbb{R}^{n}$, then the partial derivatives of $f$ exist at $x$. Furthermore, the matrix representation of ${\cal B}_{x}^{f}$ is given by the **Jacobian**
 
@@ -91,13 +91,13 @@ Finally, some important anti-properties of G-derivatives and G-differentiability
 
 -   The G-differentiability of $f$ **does not** imply that $f$ is continuous (unlike for F-differentiability).
 
-    -   *Exercise*. Consider the function 
+    -   *Exercise*. Consider the function
 
-$$
-f(x_{1},x_{2})=\begin{cases}
-        0, & \text{if }x_{1}=0,\\
-        \dfrac{2x_{2}\exp(-x_{1}^{-2})}{x_{2}^{2}+\exp(-2x_{1}^{-2})}, & \text{otherwise},
-\end{cases}
-$$
+        $$
+        f(x_{1},x_{2})=\begin{cases}
+                0, & \text{if }x_{1}=0,\\
+                \dfrac{2x_{2}\exp(-x_{1}^{-2})}{x_{2}^{2}+\exp(-2x_{1}^{-2})}, & \text{otherwise},
+        \end{cases}
+        $$
 
-    at zero. Show that the G-derivative of $f$ exists at zero, but $f$ is not continuous.
+        at zero. Show that the G-derivative of $f$ exists at zero, but $f$ is not continuous.
