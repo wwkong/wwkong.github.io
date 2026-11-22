@@ -40,6 +40,46 @@ const kMu = tex('\\mu');
 const kHighDimD = tex('d = 50\\text{--}100');
 const kLbfgsM = tex('m = 5 \\ll d');
 
+const renderNote = (s: string) =>
+  s.replace(/\$([^$]+)\$/g, (_, expr) => tex(expr));
+
+const noteRosen = renderNote(
+  'Start $x_0 = (-1.2, 1.0)$; unique global minimum at $x^* = (1, 1)$ along the curved parabola $x_2 = x_1^2$.'
+);
+const noteQuad = renderNote(
+  'Start $x_0 = (-2.1, 0.85)$; unique minimum $x^* = (0, 0)$ with condition number $\\kappa = L/\\mu$.'
+);
+const noteHimm = renderNote(
+  'Start $x_0 = 1.5\\,(\\cos \\theta_0, \\sin \\theta_0)$; four identical global minima ($f^* = 0$) separated by saddles.'
+);
+const noteLasso = renderNote(
+  'Rotated quadratic $Q = R(28^\\circ)\\,\\mathrm{diag}(1, 80)\\,R(28^\\circ)^\\top$, $c = (2.4, -0.3)$, start $x_0 = (-1.8, 1.4)$.'
+);
+const noteBox = renderNote(
+  '$H = R(25^\\circ)\\,\\mathrm{diag}(-\\alpha, 6)\\,R(25^\\circ)^\\top$, $c = (0.28, -0.18)$, start $x_0 = (0.06, -0.04)$ near the interior saddle; multiple boundary minima with distinct values ($f(x_k) - f^*$ disabled; use stationarity or distance).'
+);
+const noteChained = renderNote(
+  'Alternating start $x_0 = (-1, 1, -1, 1, \\dots) \\in \\mathbb{R}^{50}$; unique global minimum at $x^* = (1, \\dots, 1)$.'
+);
+const noteSparse = renderNote(
+  '$A \\in \\mathbb{R}^{48 \\times 64}$ i.i.d. $\\mathcal{N}(0, 1/48)$, $y = A x_{\\mathrm{true}}$ with 8 sparse spikes in $[0.65, 0.95]$, start $x_0 = 0$.'
+);
+const noteSimplex = renderNote(
+  '$A \\in \\mathbb{R}^{48 \\times 64}$ i.i.d. $\\mathcal{N}(0, 1/48)$, $b = A x_{\\mathrm{true}} + \\varepsilon$ ($\\sigma = 0.04$), $x_{\\mathrm{true}} \\in \\Delta^{63}$ supported on 8 assets, start $x_0 = \\tfrac{1}{64}\\mathbf{1}$.'
+);
+const noteNuc = renderNote(
+  '$M^* = U U^\\top$ (rank 2, $U \\in \\mathbb{R}^{8 \\times 2}$ i.i.d. $\\mathcal{N}(0, 0.9^2)$), symmetric mask $\\Omega$ with $65\\%$ entries observed, start $X_0 = 0$.'
+);
+const noteGroup = renderNote(
+  '$A \\in \\mathbb{R}^{48 \\times 64}$ i.i.d. $\\mathcal{N}(0, 1/48)$, $y = A x_{\\mathrm{true}}$ partitioned into 8 groups of 8; 2 active groups ($g \\in \\{2, 6\\}$; norms $0.85, 0.72$), start $x_0 = 0$.'
+);
+const noteLogReg = renderNote(
+  '$n = 80$ samples $a_i \\in \\mathbb{R}^{64}$ i.i.d. $\\mathcal{N}(0, I/64)$, labels $y_i = \\mathrm{sign}(a_i^\\top x_{\\mathrm{true}})$ with 6 active features in $[-0.95, 0.90]$, start $x_0 = 0$.'
+);
+const noteSpec = renderNote(
+  '$\\lambda_i = \\kappa^{(i-1)/99}$, $Q = H_{12}\\cdots H_1$ (12 random Householder reflections), $x^*_i = 0.5\\sin(0.25i) \\pm 0.25$, start $x_0 = 0$.'
+);
+
 const rosenSnippet = `import jax.numpy as jnp
 from proxax import px
 
@@ -256,43 +296,19 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
         Setup
       </span>
-      <div class="min-w-0 flex-1 text-[11px] text-[var(--text-muted)]">
-        <div id="home-note-rosen">
-          Start x₀ = (−1.2, 1.0); unique global minimum at x* = (1, 1) along the curved parabola x₂ = x₁².
-        </div>
-        <div id="home-note-quad" class="hidden">
-          Start x₀ = (−2.1, 0.85); unique minimum x* = (0, 0) with condition number κ = L/μ.
-        </div>
-        <div id="home-note-himm" class="hidden">
-          Start x₀ = 1.5·(cos θ₀, sin θ₀); four identical global minima (f* = 0) separated by saddles.
-        </div>
-        <div id="home-note-lasso" class="hidden">
-          Rotated quadratic Q = R(28°)·diag(1, 80)·R(28°)ᵀ, c = (2.4, −0.3), start x₀ = (−1.8, 1.4).
-        </div>
-        <div id="home-note-box" class="hidden">
-          H = R(25°)·diag(−α, 6)·R(25°)ᵀ, c = (0.28, −0.18), start x₀ = (0.06, −0.04) near the interior saddle; multiple boundary minima with distinct values (f(xₖ)−f* disabled; use stationarity or distance).
-        </div>
-        <div id="home-note-chained" class="hidden">
-          Alternating start x₀ = (−1, 1, −1, 1, …) ∈ ℝ⁵⁰; unique global minimum at x* = (1, …, 1).
-        </div>
-        <div id="home-note-sparse" class="hidden">
-          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true with 8 sparse spikes in [0.65, 0.95], start x₀ = 0.
-        </div>
-        <div id="home-note-simplex" class="hidden">
-          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), b = A x_true + ε (σ = 0.04), x_true ∈ Δ⁶³ supported on 8 assets, start x₀ = (1/64)·1.
-        </div>
-        <div id="home-note-nuc" class="hidden">
-          M* = U Uᵀ (rank 2, U ∈ ℝ⁸ˣ² i.i.d. N(0, 0.9²)), symmetric mask Ω with 65% entries observed, start X₀ = 0.
-        </div>
-        <div id="home-note-group" class="hidden">
-          A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true partitioned into 8 groups of 8; 2 active groups (g = 2, 6; norms 0.85, 0.72), start x₀ = 0.
-        </div>
-        <div id="home-note-logreg" class="hidden">
-          n = 80 samples aᵢ ∈ ℝ⁶⁴ i.i.d. N(0, I/64), labels yᵢ = sign(aᵢᵀ x_true) with 6 active features in [−0.95, 0.90], start x₀ = 0.
-        </div>
-        <div id="home-note-spec" class="hidden">
-          λᵢ = κ^((i−1)/99), Q = H₁₂⋯H₁ (12 random Householder reflections), x*ᵢ = 0.5·sin(0.25i) ± 0.25, start x₀ = 0.
-        </div>
+      <div class="min-w-0 flex-1 text-xs leading-relaxed text-[var(--text-muted)]">
+        <div id="home-note-rosen" set:html={noteRosen} />
+        <div id="home-note-quad" class="hidden" set:html={noteQuad} />
+        <div id="home-note-himm" class="hidden" set:html={noteHimm} />
+        <div id="home-note-lasso" class="hidden" set:html={noteLasso} />
+        <div id="home-note-box" class="hidden" set:html={noteBox} />
+        <div id="home-note-chained" class="hidden" set:html={noteChained} />
+        <div id="home-note-sparse" class="hidden" set:html={noteSparse} />
+        <div id="home-note-simplex" class="hidden" set:html={noteSimplex} />
+        <div id="home-note-nuc" class="hidden" set:html={noteNuc} />
+        <div id="home-note-group" class="hidden" set:html={noteGroup} />
+        <div id="home-note-logreg" class="hidden" set:html={noteLogReg} />
+        <div id="home-note-spec" class="hidden" set:html={noteSpec} />
       </div>
     </div>
   </div>
