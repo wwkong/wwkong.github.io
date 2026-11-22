@@ -1,0 +1,35 @@
+---
+import { SITE } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-[var(--border)] bg-[var(--surface)]/50">
+  <div
+    class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-[var(--text-muted)] sm:flex-row sm:px-6 lg:px-8"
+  >
+    <p>
+      © {year} {SITE.name}. Built with <a
+        href="https://astro.build"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline decoration-[var(--border)] underline-offset-2 hover:text-[var(--accent)]"
+        >Astro</a
+      >.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      {
+        SITE.socials.map((s) => (
+          <a
+            href={s.href}
+            target={s.href.startsWith('http') ? '_blank' : undefined}
+            rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            class="transition-colors hover:text-[var(--accent)]"
+          >
+            {s.label}
+          </a>
+        ))
+      }
+      <a href="/feed.xml" class="transition-colors hover:text-[var(--accent)]">RSS</a>
+    </div>
+  </div>
+</footer>

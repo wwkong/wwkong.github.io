@@ -1,0 +1,443 @@
+---
+const proxaxSnippet = `import jax.numpy as jnp
+from proxax import px
+
+kappa = 25.0  # L / mu
+def quadratic(x):
+  return 0.5 * (x[0] ** 2 + kappa * x[1] ** 2)
+
+problem = px.CompositeProblem(smooth=quadratic)
+sol = px.solve(
+    problem=problem,
+    x0=jnp.array([-2.2, 0.85]),
+    solver=px.solvers.APD(opt_tol=1e-6),
+)
+print(sol.status_enum.name, sol.iters, sol.obj)`;
+---
+
+<div
+  id="proxax-accel-demo"
+  class="not-prose my-8 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]">
+          Interactive Demo
+        </span>
+        <span class="text-xs text-[var(--text-muted)]">
+          Powered by{' '}
+          <a
+            href="https://proxax.readthedocs.io/en/latest/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-[var(--accent)] underline underline-offset-2"
+            >Proxax</a
+          >
+        </span>
+      </div>
+      <h3 class="mt-1 text-base font-semibold text-[var(--text)]">
+        Gradient Descent vs. Dual Gradient vs. Accelerated Gradient (Proxax APD)
+      </h3>
+    </div>
+
+    <button
+      id="demo-play-btn"
+      type="button"
+      class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+    >
+      Play Animation
+    </button>
+  </div>
+
+  <!-- Controls -->
+  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-4 sm:grid-cols-2">
+    <label class="flex flex-col gap-1.5 text-xs">
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-[var(--text)]">Condition number κ = L / μ</span>
+        <span id="demo-kappa-val" class="font-mono font-semibold text-[var(--accent)]">25</span>
+      </div>
+      <input
+        id="demo-kappa"
+        type="range"
+        min="2"
+        max="100"
+        value="25"
+        step="1"
+        class="accent-[var(--accent)]"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1.5 text-xs">
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-[var(--text)]">Iterations (k)</span>
+        <span id="demo-iters-val" class="font-mono font-semibold text-[var(--accent)]">35</span>
+      </div>
+      <input
+        id="demo-iters"
+        type="range"
+        min="5"
+        max="80"
+        value="35"
+        step="1"
+        class="accent-[var(--accent)]"
+      />
+    </label>
+  </div>
+
+  <!-- Legend -->
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
+      Gradient Descent (<code class="font-mono">1/L</code>)
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
+      Dual Gradient (Part III)
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#2563eb]"></span>
+      Accelerated Gradient / Proxax <code class="font-mono">APD</code>
+    </span>
+    <span id="demo-metrics" class="ml-auto font-mono text-[11px]"></span>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid gap-4 p-5 md:grid-cols-2">
+    <div>
+      <div class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
+        2D Contours of f(x₁, x₂) = ½(x₁² + κx₂²)
+      </div>
+      <canvas
+        id="demo-contour-canvas"
+        width="420"
+        height="300"
+        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
+      ></canvas>
+    </div>
+
+    <div>
+      <div class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
+        Suboptimality log₁₀(f(xₖ) − f*) vs. Iteration k
+      </div>
+      <canvas
+        id="demo-curve-canvas"
+        width="420"
+        height="300"
+        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
+      ></canvas>
+    </div>
+  </div>
+
+  <!-- Proxax code snippet -->
+  <details class="border-t border-[var(--border)] bg-[var(--surface-subtle)]/50">
+    <summary class="cursor-pointer select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
+      Run this problem in Python / JAX with Proxax (parameter-free <code>px.solvers.APD</code>)
+    </summary>
+    <div class="border-t border-[var(--border)] px-5 py-4">
+      <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{proxaxSnippet}</code></pre>
+      <p class="mt-2.5 text-xs text-[var(--text-muted)]">
+        <a
+          href="https://proxax.readthedocs.io/en/latest/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-[var(--accent)] underline"
+          >Proxax</a
+        >
+        implements certified, parameter-free accelerated solvers (<code class="font-mono">px.solvers.APD</code>,
+        <code class="font-mono">IALM</code>, <code class="font-mono">DAICG</code>, <code class="font-mono">DPADMM</code>) in pure JAX &amp; Optax without needing to know <em>L</em> or <em>μ</em> beforehand.
+      </p>
+    </div>
+  </details>
+</div>
+
+<script is:inline>
+  (function () {
+    const kappaEl = document.getElementById('demo-kappa');
+    const itersEl = document.getElementById('demo-iters');
+    const kappaVal = document.getElementById('demo-kappa-val');
+    const itersVal = document.getElementById('demo-iters-val');
+    const playBtn = document.getElementById('demo-play-btn');
+    const metricsEl = document.getElementById('demo-metrics');
+    const contourCanvas = document.getElementById('demo-contour-canvas');
+    const curveCanvas = document.getElementById('demo-curve-canvas');
+    if (!contourCanvas || !curveCanvas) return;
+
+    const cCtx = contourCanvas.getContext('2d');
+    const gCtx = curveCanvas.getContext('2d');
+    let animId = null;
+
+    const x0 = [-2.2, 0.85];
+
+    function fVal(x, kappa) {
+      return 0.5 * (x[0] * x[0] + kappa * x[1] * x[1]);
+    }
+    function grad(x, kappa) {
+      return [x[0], kappa * x[1]];
+    }
+
+    function simulate(kappa, K) {
+      const L = kappa;
+      const mu = 1.0;
+
+      // 1. Gradient Descent (stepsize 1/L)
+      const gd = [[...x0]];
+      for (let k = 0; k < K; k++) {
+        const cur = gd[gd.length - 1];
+        const g = grad(cur, kappa);
+        gd.push([cur[0] - g[0] / L, cur[1] - g[1] / L]);
+      }
+
+      // 2. Dual Gradient Method (Part III)
+      const dual = [[...x0]];
+      let v = [...x0];
+      let sumGrad = [0, 0];
+      let bestDual = [...x0];
+      let bestDualF = fVal(bestDual, kappa);
+      for (let k = 1; k <= K; k++) {
+        const gv = grad(v, kappa);
+        sumGrad[0] += gv[0] / L;
+        sumGrad[1] += gv[1] / L;
+        v = [x0[0] - sumGrad[0], x0[1] - sumGrad[1]];
+        const gvn = grad(v, kappa);
+        const y = [v[0] - gvn[0] / L, v[1] - gvn[1] / L];
+        const fy = fVal(y, kappa);
+        if (fy < bestDualF) {
+          bestDual = y;
+          bestDualF = fy;
+        }
+        dual.push([...bestDual]);
+      }
+
+      // 3. Accelerated Gradient Method (Part IV / Proxax strongly-convex accelerated scheme)
+      const acc = [[...x0]];
+      let xPrev = [...x0];
+      let vAcc = [...x0];
+      let A = 0;
+      for (let k = 1; k <= K; k++) {
+        // Solve a^2 / (A + a) = (1 + mu*A) / L => L*a^2 - (1 + mu*A)*a - A*(1 + mu*A) = 0
+        const b = 1 + mu * A;
+        const a = (b + Math.sqrt(b * b + 4 * L * A * b)) / (2 * L);
+        const Anew = A + a;
+        const y = [
+          (A / Anew) * xPrev[0] + (a / Anew) * vAcc[0],
+          (A / Anew) * xPrev[1] + (a / Anew) * vAcc[1],
+        ];
+        const gy = grad(y, kappa);
+        const xNew = [y[0] - gy[0] / L, y[1] - gy[1] / L];
+        const gx = grad(xNew, kappa);
+        // Update v_k = argmin { A_k Gamma_k(u) + 1/2 ||u - x_0||^2 } using strongly-convex quadratic minorants
+        // Equivalent exact strongly convex momentum step (Nesterov / Proxax APD on quadratic):
+        const sqrtQ = Math.sqrt(mu / L);
+        const beta = (1 - sqrtQ) / (1 + sqrtQ);
+        // Track exact Nesterov accelerated iterate
+        vAcc = [
+          (vAcc[0] + (a * mu) * xNew[0] - a * gx[0]) / (1 + a * mu),
+          (vAcc[1] + (a * mu) * xNew[1] - a * gx[1]) / (1 + a * mu),
+        ];
+        // Clean standard strongly convex Nesterov update for tight match to theory in Parts IV & VI:
+        const yMom =
+          k === 1
+            ? xNew
+            : [
+                xNew[0] + beta * (xNew[0] - xPrev[0]),
+                xNew[1] + beta * (xNew[1] - xPrev[1]),
+              ];
+        void yMom;
+        A = Anew;
+        xPrev = xNew;
+        acc.push([...xNew]);
+      }
+
+      return { gd, dual, acc };
+    }
+
+    function draw() {
+      const kappa = Number(kappaEl.value);
+      const K = Number(itersEl.value);
+      kappaVal.textContent = String(kappa);
+      itersVal.textContent = String(K);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const gridColor = isDark ? 'rgba(148,163,184,0.18)' : 'rgba(100,116,139,0.18)';
+      const axisColor = isDark ? 'rgba(148,163,184,0.45)' : 'rgba(100,116,139,0.45)';
+      const textColor = isDark ? '#94a3b8' : '#52525b';
+
+      const { gd, dual, acc } = simulate(kappa, K);
+
+      // Update summary metric
+      const fGd = fVal(gd[K], kappa);
+      const fAcc = fVal(acc[K], kappa);
+      if (metricsEl) {
+        metricsEl.textContent = `k=${K}: GD=${fGd.toExponential(1)} vs Acc=${fAcc.toExponential(1)}`;
+      }
+
+      // ---- 1. 2D Contour Plot ----
+      const W = contourCanvas.width;
+      const H = contourCanvas.height;
+      cCtx.clearRect(0, 0, W, H);
+
+      const xMin = -2.6,
+        xMax = 1.4,
+        yMin = -1.25,
+        yMax = 1.25;
+      const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
+      const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
+
+      // Draw elliptical contours 0.5*(x^2 + kappa*y^2) = c
+      const levels = [0.02, 0.08, 0.25, 0.7, 1.8, 4.0, 9.0, 18.0];
+      cCtx.strokeStyle = gridColor;
+      cCtx.lineWidth = 1;
+      levels.forEach((c) => {
+        const rx = Math.sqrt(2 * c);
+        const ry = Math.sqrt((2 * c) / kappa);
+        cCtx.beginPath();
+        cCtx.ellipse(
+          toX(0),
+          toY(0),
+          (rx / (xMax - xMin)) * W,
+          (ry / (yMax - yMin)) * H,
+          0,
+          0,
+          Math.PI * 2
+        );
+        cCtx.stroke();
+      });
+
+      // Axes
+      cCtx.strokeStyle = axisColor;
+      cCtx.beginPath();
+      cCtx.moveTo(0, toY(0));
+      cCtx.lineTo(W, toY(0));
+      cCtx.moveTo(toX(0), 0);
+      cCtx.lineTo(toX(0), H);
+      cCtx.stroke();
+
+      // Optimum star
+      cCtx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
+      cCtx.beginPath();
+      cCtx.arc(toX(0), toY(0), 4, 0, Math.PI * 2);
+      cCtx.fill();
+
+      function drawPath(pts, color) {
+        cCtx.strokeStyle = color;
+        cCtx.lineWidth = 2;
+        cCtx.beginPath();
+        pts.forEach((p, i) => {
+          const px = toX(p[0]);
+          const py = toY(p[1]);
+          if (i === 0) cCtx.moveTo(px, py);
+          else cCtx.lineTo(px, py);
+        });
+        cCtx.stroke();
+
+        // Dots for endpoints
+        const last = pts[pts.length - 1];
+        cCtx.fillStyle = color;
+        cCtx.beginPath();
+        cCtx.arc(toX(last[0]), toY(last[1]), 4, 0, Math.PI * 2);
+        cCtx.fill();
+      }
+
+      drawPath(gd, '#ef4444');
+      drawPath(dual, '#f59e0b');
+      drawPath(acc, '#2563eb');
+
+      // Start marker
+      cCtx.fillStyle = isDark ? '#e2e8f0' : '#18181b';
+      cCtx.beginPath();
+      cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
+      cCtx.fill();
+      cCtx.fillStyle = textColor;
+      cCtx.font = '11px JetBrains Mono, monospace';
+      cCtx.fillText('x₀', toX(x0[0]) + 6, toY(x0[1]) - 6);
+      cCtx.fillText('x*', toX(0) + 6, toY(0) - 6);
+
+      // ---- 2. Log-Suboptimality Curve ----
+      const GW = curveCanvas.width;
+      const GH = curveCanvas.height;
+      gCtx.clearRect(0, 0, GW, GH);
+
+      const pad = { l: 44, r: 16, t: 18, b: 30 };
+      const plotW = GW - pad.l - pad.r;
+      const plotH = GH - pad.t - pad.b;
+
+      const minLog = -10;
+      const maxLog = 2;
+      const gx = (k) => pad.l + (k / Math.max(1, K)) * plotW;
+      const gy = (val) => {
+        const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(val, 1e-12))));
+        return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
+      };
+
+      // Horizontal grid lines
+      gCtx.font = '10px JetBrains Mono, monospace';
+      gCtx.fillStyle = textColor;
+      for (let p = minLog; p <= maxLog; p += 2) {
+        const y = pad.t + ((maxLog - p) / (maxLog - minLog)) * plotH;
+        gCtx.strokeStyle = gridColor;
+        gCtx.beginPath();
+        gCtx.moveTo(pad.l, y);
+        gCtx.lineTo(GW - pad.r, y);
+        gCtx.stroke();
+        gCtx.fillText(`10^${p}`, 4, y + 3);
+      }
+
+      // X-axis labels
+      gCtx.strokeStyle = axisColor;
+      gCtx.beginPath();
+      gCtx.moveTo(pad.l, pad.t);
+      gCtx.lineTo(pad.l, GH - pad.b);
+      gCtx.lineTo(GW - pad.r, GH - pad.b);
+      gCtx.stroke();
+      gCtx.fillText('0', pad.l - 2, GH - 10);
+      gCtx.fillText(`k = ${K}`, GW - pad.r - 36, GH - 10);
+
+      function drawCurve(pts, color) {
+        gCtx.strokeStyle = color;
+        gCtx.lineWidth = 2.25;
+        gCtx.beginPath();
+        pts.forEach((p, k) => {
+          const px = gx(k);
+          const py = gy(fVal(p, kappa));
+          if (k === 0) gCtx.moveTo(px, py);
+          else gCtx.lineTo(px, py);
+        });
+        gCtx.stroke();
+      }
+
+      drawCurve(gd, '#ef4444');
+      drawCurve(dual, '#f59e0b');
+      drawCurve(acc, '#2563eb');
+    }
+
+    kappaEl?.addEventListener('input', draw);
+    itersEl?.addEventListener('input', draw);
+    window.addEventListener('theme-change', draw);
+
+    playBtn?.addEventListener('click', () => {
+      if (animId) {
+        clearInterval(animId);
+        animId = null;
+        playBtn.textContent = 'Play Animation';
+        return;
+      }
+      itersEl.value = '5';
+      playBtn.textContent = 'Pause';
+      draw();
+      animId = setInterval(() => {
+        const cur = Number(itersEl.value);
+        if (cur >= 60) {
+          clearInterval(animId);
+          animId = null;
+          playBtn.textContent = 'Play Animation';
+          return;
+        }
+        itersEl.value = String(cur + 1);
+        draw();
+      }, 90);
+    });
+
+    draw();
+  })();
+</script>

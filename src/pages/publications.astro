@@ -1,0 +1,33 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PublicationList, { type Publication } from '../components/PublicationList.astro';
+import { SITE } from '../data/site';
+
+const raw = fs.readFileSync(path.join(process.cwd(), 'src/data/publist.yml'), 'utf-8');
+const publications = yaml.load(raw) as Publication[];
+---
+
+<BaseLayout
+  title="Publications"
+  description="Publications by Weiwei 'William' Kong in differential privacy, synthetic data & LLMs, and nonconvex composite optimization."
+  includeKatex={true}
+>
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold tracking-tight text-[var(--text)]">Publications</h1>
+    <p class="mt-2 text-sm text-[var(--text-muted)]">
+      You can also find my articles on{' '}
+      <a
+        href={SITE.socials[0].href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium text-[var(--accent)] underline underline-offset-2"
+        >my Google Scholar profile</a
+      >.
+    </p>
+  </header>
+
+  <PublicationList publications={publications} />
+</BaseLayout>

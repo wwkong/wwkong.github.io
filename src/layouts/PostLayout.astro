@@ -1,0 +1,184 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import GiscusComments from '../components/GiscusComments.astro';
+import type { MarkdownHeading } from 'astro';
+
+interface SeriesPost {
+  slug: string;
+  title: string;
+  seriesOrder?: number;
+}
+
+interface Props {
+  title: string;
+  date: Date;
+  description?: string;
+  difficulty?: string;
+  tags?: string[];
+  series?: string;
+  seriesOrder?: number;
+  seriesPosts?: SeriesPost[];
+  headings?: MarkdownHeading[];
+  readingTimeMin?: number;
+}
+
+const {
+  title,
+  date,
+  description,
+  difficulty,
+  tags = [],
+  series,
+  seriesOrder,
+  seriesPosts = [],
+  headings = [],
+  readingTimeMin = 5,
+} = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+const cleanTocLabel = (raw: string) =>
+  raw
+    .replace(/\u200b/g, '')
+    .replace(/P\$\{\\cal P\}P/g, '𝒫')
+    .replace(/\(P\)\(\$\{\\cal P\}\)\(P\)/g, '(𝒫)')
+    .replace(/P\{\\cal P\}P/g, '𝒫')
+    .replace(/AkA_\{k\}Ak/g, 'Aₖ')
+    .replace(/ε\\varepsilonε/g, 'ε')
+    .trim();
+
+const tocHeadings = headings
+  .filter((h) => h.depth >= 1 && h.depth <= 3)
+  .map((h) => ({ ...h, text: cleanTocLabel(h.text) }));
+const currentIdx = seriesPosts.findIndex((p) => p.seriesOrder === seriesOrder);
+const prevPost = currentIdx > 0 ? seriesPosts[currentIdx - 1] : undefined;
+const nextPost =
+  currentIdx >= 0 && currentIdx < seriesPosts.length - 1 ? seriesPosts[currentIdx + 1] : undefined;
+---
+
+<BaseLayout title={title} description={description} includeKatex={true}>
+  <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
+    <article class="min-w-0">
+      <header class="mb-8 border-b border-[var(--border)] pb-6">
+        <div class="mb-3 flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
+          <a href="/year-archive/" class="hover:text-[var(--accent)]">← All Blog Posts</a>
+          <span>·</span>
+          <time datetime={date.toISOString()}>{formattedDate}</time>
+          <span>·</span>
+          <span>{readingTimeMin} min read</span>
+          {
+            difficulty && (
+              <>
+                <span>·</span>
+                <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-medium text-[var(--accent)]">
+                  {difficulty}
+                </span>
+              </>
+            )
+          }
+        </div>
+
+        <h1 class="text-3xl font-bold tracking-tight text-[var(--text)] sm:text-4xl">
+          {title}
+        </h1>
+
+        {
+          tags.length > 0 && (
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              {tags.map((tag) => (
+                <span class="rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-0.5 text-xs text-[var(--text-muted)]">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          series && seriesPosts.length > 1 && (
+            <div class="mt-5 rounded-xl border border-[var(--border)] bg-[var(--surface-subtle)]/70 p-4 text-xs">
+              <div class="font-semibold text-[var(--text)]">
+                Series: {series} (Part {seriesOrder} of {seriesPosts.length})
+              </div>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                {seriesPosts.map((sp) => (
+                  <a
+                    href={`/${sp.slug}/`}
+                    class:list={[
+                      'rounded-md px-2 py-1 transition-colors',
+                      sp.seriesOrder === seriesOrder
+                        ? 'bg-[var(--accent)] font-semibold text-white'
+                        : 'border border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)]',
+                    ]}
+                  >
+                    Part {sp.seriesOrder}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </header>
+
+      <div class="prose prose-zinc dark:prose-invert max-w-none">
+        <slot />
+      </div>
+
+      {
+        (prevPost || nextPost) && (
+          <nav
+            class="mt-12 grid gap-4 border-t border-[var(--border)] pt-6 sm:grid-cols-2"
+            aria-label="Series navigation"
+          >
+            {prevPost ? (
+              <a href={`/${prevPost.slug}/`} class="card card-hover p-4">
+                <div class="text-xs text-[var(--text-muted)]">← Previous in series</div>
+                <div class="mt-1 text-sm font-semibold text-[var(--text)]">{prevPost.title}</div>
+              </a>
+            ) : (
+              <div />
+            )}
+            {nextPost && (
+              <a href={`/${nextPost.slug}/`} class="card card-hover p-4 sm:text-right">
+                <div class="text-xs text-[var(--text-muted)]">Next in series →</div>
+                <div class="mt-1 text-sm font-semibold text-[var(--text)]">{nextPost.title}</div>
+              </a>
+            )}
+          </nav>
+        )
+      }
+
+      <GiscusComments />
+    </article>
+
+    <!-- Sticky Table of Contents (Desktop) -->
+    {
+      tocHeadings.length > 0 && (
+        <aside class="hidden lg:block">
+          <div class="sticky top-24">
+            <h2 class="mb-3 text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+              On this page
+            </h2>
+            <ul class="space-y-2 border-l border-[var(--border)] pl-3 text-xs">
+              {tocHeadings.map((h) => (
+                <li style={`margin-left: ${(h.depth - 1) * 0.5}rem`}>
+                  <a
+                    href={`#${h.slug}`}
+                    class="block leading-snug text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>

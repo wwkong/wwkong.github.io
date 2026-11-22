@@ -1,0 +1,162 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface CourseResource {
+  label: string;
+  url: string;
+}
+
+interface Course {
+  term: string;
+  code: string;
+  title: string;
+  notes?: string;
+  resources?: CourseResource[];
+}
+
+interface Department {
+  name: string;
+  courses: Course[];
+}
+
+interface Institution {
+  name: string;
+  departments: Department[];
+}
+
+interface NotesData {
+  institutions: Institution[];
+}
+
+const raw = fs.readFileSync(path.join(process.cwd(), 'src/data/notes.yml'), 'utf-8');
+const data = yaml.load(raw) as NotesData;
+---
+
+<BaseLayout
+  title="Course Notes"
+  description="Detailed university course notes and exam review sheets from Georgia Institute of Technology and University of Waterloo."
+>
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold tracking-tight text-[var(--text)]">Course Notes</h1>
+    <p class="mt-2 text-sm text-[var(--text-muted)]">
+      Final and midterm review sheets are denoted by{' '}
+      <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">F</span> and{' '}
+      <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">M</span>,
+      respectively; additional errata/supplements by{' '}
+      <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-xs text-[var(--text)]">E#</span>.
+    </p>
+  </header>
+
+  <div class="mb-8">
+    <div class="relative">
+      <svg
+        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+      </svg>
+      <input
+        id="notes-filter"
+        type="search"
+        placeholder="Filter courses by code, title, or department (e.g., ISYE, PMATH, Optimization)..."
+        class="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 pr-4 pl-9 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none"
+      />
+    </div>
+  </div>
+
+  <div class="space-y-12">
+    {
+      data.institutions.map((inst) => (
+        <section class="notes-inst-group space-y-6">
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">{inst.name}</h2>
+            <div class="h-px flex-1 bg-[var(--border)]" />
+          </div>
+
+          <div class="space-y-5">
+            {inst.departments.map((dept) => (
+              <div class="notes-dept-group card overflow-hidden">
+                <div class="border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3">
+                  <h3 class="text-sm font-semibold text-[var(--text)]">{dept.name}</h3>
+                </div>
+                <ul class="divide-y divide-[var(--border)]">
+                  {dept.courses.map((c) => (
+                    <li
+                      class="notes-course-row flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-sm"
+                      data-search={`${inst.name} ${dept.name} ${c.term} ${c.code} ${c.title}`.toLowerCase()}
+                    >
+                      <div class="flex flex-wrap items-baseline gap-2.5">
+                        <span class="rounded bg-[var(--surface-subtle)] px-1.5 py-0.5 font-mono text-[11px] font-medium text-[var(--text-muted)]">
+                          {c.term}
+                        </span>
+                        <span class="font-mono text-xs font-semibold text-[var(--text)]">
+                          {c.code}
+                        </span>
+                        <span class="text-[var(--text-muted)]">{c.title}</span>
+                      </div>
+
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        {c.notes && (
+                          <a
+                            href={c.notes}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rounded-md bg-[var(--accent)] px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+                          >
+                            Notes PDF
+                          </a>
+                        )}
+                        {c.resources?.map((r) => (
+                          <a
+                            href={r.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2 py-1 font-mono text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                          >
+                            {r.label}
+                          </a>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const input = document.getElementById('notes-filter');
+    const rows = Array.from(document.querySelectorAll('.notes-course-row'));
+    const depts = Array.from(document.querySelectorAll('.notes-dept-group'));
+    const insts = Array.from(document.querySelectorAll('.notes-inst-group'));
+
+    input?.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      const tokens = q.split(/\s+/).filter(Boolean);
+      rows.forEach((row) => {
+        const hay = row.dataset.search || '';
+        const show = tokens.every((t) => hay.includes(t));
+        row.classList.toggle('hidden', !show);
+      });
+      depts.forEach((d) => {
+        d.classList.toggle('hidden', d.querySelector('.notes-course-row:not(.hidden)') === null);
+      });
+      insts.forEach((i) => {
+        i.classList.toggle('hidden', i.querySelector('.notes-dept-group:not(.hidden)') === null);
+      });
+    });
+  })();
+</script>

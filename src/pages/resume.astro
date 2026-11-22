@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Resume" description="Resume of William Kong, Research Software Engineer at Google Research.">
+  <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-[var(--text)]">Resume</h1>
+      <p class="mt-1 text-sm text-[var(--text-muted)]">
+        View below or download the latest PDF directly.
+      </p>
+    </div>
+
+    <a
+      href="/files/resume_williamkong.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+    >
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" x2="12" y1="15" y2="3" />
+      </svg>
+      Download PDF
+    </a>
+  </header>
+
+  <div class="card overflow-hidden">
+    <object
+      data="/files/resume_williamkong.pdf"
+      type="application/pdf"
+      class="h-[80vh] min-h-[640px] w-full"
+    >
+      <div class="p-8 text-center text-sm text-[var(--text-muted)]">
+        <p>Your browser does not support inline PDF viewing.</p>
+        <a
+          href="/files/resume_williamkong.pdf"
+          class="mt-3 inline-block font-semibold text-[var(--accent)] underline"
+        >
+          Click here to download the resume PDF
+        </a>
+      </div>
+    </object>
+  </div>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  return allPosts.map((post) => {
+    const seriesPosts = post.data.series
+      ? allPosts
+          .filter((p) => p.data.series === post.data.series)
+          .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+          .map((p) => ({
+            slug: p.data.slug,
+            title: p.data.title,
+            seriesOrder: p.data.seriesOrder,
+          }))
+      : [];
+
+    return {
+      params: { slug: post.data.slug },
+      props: { post, seriesPosts },
+    };
+  });
+}
+
+const { post, seriesPosts } = Astro.props;
+const { Content, headings } = await render(post);
+const words = (post.body ?? '').trim().split(/\s+/).length;
+const readingTimeMin = Math.max(2, Math.round(words / 180));
+---
+
+<PostLayout
+  title={post.data.title}
+  date={post.data.date}
+  description={post.data.description}
+  difficulty={post.data.difficulty}
+  tags={post.data.tags}
+  series={post.data.series}
+  seriesOrder={post.data.seriesOrder}
+  seriesPosts={seriesPosts}
+  headings={headings}
+  readingTimeMin={readingTimeMin}
+>
+  <Content />
+</PostLayout>

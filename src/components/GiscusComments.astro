@@ -1,0 +1,77 @@
+---
+import { SITE } from '../data/site';
+
+const { repo, repoId, category, categoryId } = SITE.giscus;
+const configured = Boolean(repoId && categoryId);
+---
+
+<section class="mt-14 border-t border-[var(--border)] pt-8" aria-label="Comments">
+  <h2 class="mb-4 text-lg font-semibold tracking-tight text-[var(--text)]">Discussion</h2>
+  {
+    configured ? (
+      <div id="giscus-container" />
+    ) : (
+      <div class="rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-subtle)]/60 p-5 text-sm text-[var(--text-muted)]">
+        <p class="font-medium text-[var(--text)]">Comments powered by Giscus (GitHub Discussions)</p>
+        <p class="mt-1">
+          To activate live comments on <code class="font-mono text-xs">{repo}</code>, enable GitHub
+          Discussions in repository settings, install the{' '}
+          <a
+            href="https://github.com/apps/giscus"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[var(--accent)] underline"
+          >
+            Giscus app
+          </a>
+          , and set <code class="font-mono text-xs">repoId</code> and{' '}
+          <code class="font-mono text-xs">categoryId</code> in{' '}
+          <code class="font-mono text-xs">src/data/site.ts</code>.
+        </p>
+      </div>
+    )
+  }
+</section>
+
+{
+  configured && (
+    <script
+      is:inline
+      define:vars={{ repo, repoId, category, categoryId }}
+    >
+      (function () {
+        const container = document.getElementById('giscus-container');
+        if (!container) return;
+
+        const getTheme = () =>
+          document.documentElement.classList.contains('dark') ? 'dark_dimmed' : 'light';
+
+        const script = document.createElement('script');
+        script.src = 'https://giscus.app/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-repo', repo);
+        script.setAttribute('data-repo-id', repoId);
+        script.setAttribute('data-category', category);
+        script.setAttribute('data-category-id', categoryId);
+        script.setAttribute('data-mapping', 'pathname');
+        script.setAttribute('data-strict', '0');
+        script.setAttribute('data-reactions-enabled', '1');
+        script.setAttribute('data-emit-metadata', '0');
+        script.setAttribute('data-input-position', 'top');
+        script.setAttribute('data-theme', getTheme());
+        script.setAttribute('data-lang', 'en');
+        script.setAttribute('data-loading', 'lazy');
+        container.appendChild(script);
+
+        window.addEventListener('theme-change', () => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          iframe?.contentWindow?.postMessage(
+            { giscus: { setConfig: { theme: getTheme() } } },
+            'https://giscus.app'
+          );
+        });
+      })();
+    </script>
+  )
+}

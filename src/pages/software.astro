@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SoftwareCard from '../components/SoftwareCard.astro';
+
+const items = (await getCollection('software')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Software"
+  description="Open-source optimization and scientific computing libraries authored or contributed to by William Kong, including Proxax, TASMANIAN, ProximalAlgorithms, and NC-OPT."
+>
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold tracking-tight text-[var(--text)]">Software</h1>
+    <p class="mt-2 text-sm text-[var(--text-muted)]">
+      Open-source libraries for certified optimization and scientific computing <em>(includes partial contributions)</em>.
+    </p>
+  </header>
+
+  <div class="space-y-5">
+    {
+      items.map((item) => (
+        <SoftwareCard
+          title={item.data.title}
+          order={item.data.order}
+          software_url={item.data.software_url}
+          repo_url={item.data.repo_url}
+          language={item.data.language}
+          role={item.data.role}
+          tags={item.data.tags}
+          description={item.data.description}
+          snippet={item.data.snippet}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>

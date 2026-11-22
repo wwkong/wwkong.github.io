@@ -1,0 +1,363 @@
+---
+import katex from 'katex';
+
+export interface Publication {
+  title: string;
+  authors: string;
+  url?: string;
+  id?: string;
+  display: string;
+  year: number;
+  arxiv?: string | number;
+  doi?: string;
+  abstract?: string;
+  tags?: string[];
+  selected?: boolean;
+}
+
+interface Props {
+  publications: Publication[];
+}
+
+const { publications } = Astro.props;
+
+function renderMathText(raw: string): string {
+  // Replace inline $...$ with KaTeX HTML at build time
+  return raw.replace(/\$([^$]+)\$/g, (_, expr: string) => {
+    try {
+      return katex.renderToString(expr, {
+        throwOnError: false,
+        strict: false,
+        macros: { '\\cal': '\\mathcal' },
+      });
+    } catch {
+      return `$${expr}$`;
+    }
+  });
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, '').trim();
+}
+
+function makeBibtex(p: Publication): string {
+  const key = (p.url || p.id || 'kong' + p.year).replace(/[^a-zA-Z0-9_]/g, '');
+  const venue = stripHtml(p.display);
+  const isConf = /Conference|NeurIPS|Neural Information|ICLR|EMNLP|Symposium|Workshop/i.test(venue);
+  const isThesis = /Thesis/i.test(venue);
+  const entryType = isThesis ? 'phdthesis' : isConf ? 'inproceedings' : 'article';
+  const venueField = isThesis ? 'school' : isConf ? 'booktitle' : 'journal';
+  const authorsBib = p.authors.replace(/,?\s*&\s*/g, ' and ').replace(/,\s*/g, ' and ');
+  const lines = [
+    `@${entryType}{kong_${p.year}_${key},`,
+    `  title={${p.title}},`,
+    `  author={${authorsBib}},`,
+    `  ${venueField}={${venue}},`,
+    `  year={${p.year}},`,
+  ];
+  if (p.arxiv) lines.push(`  eprint={${p.arxiv}},`, `  archivePrefix={arXiv},`);
+  if (p.doi) lines.push(`  doi={${p.doi.replace(/^https?:\/\/(dx\.)?doi\.org\//, '')}},`);
+  lines.push('}');
+  return lines.join('\n');
+}
+
+// Preserve ordering within each year; sort years descending
+const years = Array.from(new Set(publications.map((p) => p.year))).sort((a, b) => b - a);
+const allTags = Array.from(
+  new Set(publications.flatMap((p) => p.tags ?? []))
+).sort();
+
+const enriched = publications.map((p) => ({
+  ...p,
+  slugId: p.url || p.id || `pub-${p.year}`,
+  doiHref: p.doi ? (p.doi.startsWith('http') ? p.doi : `https://doi.org/${p.doi}`) : undefined,
+  abstractHtml: p.abstract ? renderMathText(p.abstract) : undefined,
+  bibtex: makeBibtex(p),
+  searchBlob: `${p.title} ${p.authors} ${stripHtml(p.display)} ${p.year} ${(p.tags ?? []).join(' ')} ${p.abstract ?? ''}`.toLowerCase(),
+}));
+---
+
+<div id="pub-controls" class="card mb-8 p-4 sm:p-5">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="relative flex-1">
+      <svg
+        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+      </svg>
+      <input
+        id="pub-search"
+        type="search"
+        placeholder="Filter by title, author, venue, or keyword..."
+        class="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] py-2 pr-3 pl-9 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none"
+      />
+    </div>
+
+    <div class="inline-flex rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-xs font-medium">
+      <button
+        type="button"
+        data-scope="all"
+        class="pub-scope-btn rounded-md bg-[var(--surface)] px-3 py-1.5 text-[var(--text)] shadow-xs"
+      >
+        All ({publications.length})
+      </button>
+      <button
+        type="button"
+        data-scope="selected"
+        class="pub-scope-btn rounded-md px-3 py-1.5 text-[var(--text-muted)] hover:text-[var(--text)]"
+      >
+        Selected ({publications.filter((p) => p.selected).length})
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-2">
+    <button
+      type="button"
+      data-tag="all"
+      class="pub-tag-btn rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-medium text-white transition-colors"
+    >
+      All Topics
+    </button>
+    {
+      allTags.map((tag) => (
+        <button
+          type="button"
+          data-tag={tag}
+          class="pub-tag-btn rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          {tag}
+        </button>
+      ))
+    }
+    <span id="pub-count" class="ml-auto text-xs text-[var(--text-muted)]">
+      Showing {publications.length} of {publications.length}
+    </span>
+  </div>
+</div>
+
+<div id="pub-groups" class="space-y-10">
+  {
+    years.map((year) => {
+      const items = enriched.filter((p) => p.year === year);
+      return (
+        <section class="pub-year-group" data-year={year}>
+          <div class="mb-4 flex items-center gap-3">
+            <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">{year}</h2>
+            <div class="h-px flex-1 bg-[var(--border)]" />
+          </div>
+
+          <div class="space-y-4">
+            {items.map((p) => (
+              <article
+                id={p.slugId}
+                class="pub-item card card-hover scroll-mt-20 p-5"
+                data-tags={(p.tags ?? []).join('|')}
+                data-selected={p.selected ? 'true' : 'false'}
+                data-search={p.searchBlob}
+              >
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                  <h3 class="text-[0.98rem] leading-snug font-semibold text-[var(--text)]">
+                    {p.title}
+                  </h3>
+                  {p.selected && (
+                    <span class="shrink-0 rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--accent)]">
+                      Selected
+                    </span>
+                  )}
+                </div>
+
+                <p class="mt-1.5 text-sm text-[var(--text-muted)]">{p.authors}</p>
+
+                <p class="mt-1 text-sm text-[var(--text)]">
+                  <span set:html={p.display} /> ({p.year})
+                </p>
+
+                <div class="mt-3.5 flex flex-wrap items-center gap-2">
+                  {p.url && (
+                    <a
+                      href={`/files/publications/${p.url}.pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center rounded-md bg-[var(--accent)] px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+                    >
+                      PDF
+                    </a>
+                  )}
+                  {p.doiHref && (
+                    <a
+                      href={p.doiHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    >
+                      DOI
+                    </a>
+                  )}
+                  {p.arxiv && (
+                    <a
+                      href={`https://arxiv.org/abs/${p.arxiv}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    >
+                      arXiv
+                    </a>
+                  )}
+                  {p.abstractHtml && (
+                    <button
+                      type="button"
+                      class="pub-abstract-toggle inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                      aria-expanded="false"
+                    >
+                      Abstract
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    class="pub-bibtex-btn inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    data-bibtex={p.bibtex}
+                  >
+                    BibTeX
+                  </button>
+
+                  {p.tags && p.tags.length > 0 && (
+                    <div class="ml-auto hidden flex-wrap gap-1.5 sm:flex">
+                      {p.tags.map((tag) => (
+                        <span class="rounded-full bg-[var(--surface-subtle)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {p.abstractHtml && (
+                  <div class="pub-abstract-body mt-4 hidden rounded-xl border border-[var(--border)] bg-[var(--surface-subtle)]/60 p-4 text-sm leading-relaxed text-[var(--text-muted)]">
+                    <div set:html={p.abstractHtml} />
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    })
+  }
+</div>
+
+<p id="pub-empty" class="hidden py-12 text-center text-sm text-[var(--text-muted)]">
+  No publications match your current filters.
+</p>
+
+<script is:inline>
+  (function () {
+    const searchInput = document.getElementById('pub-search');
+    const tagBtns = Array.from(document.querySelectorAll('.pub-tag-btn'));
+    const scopeBtns = Array.from(document.querySelectorAll('.pub-scope-btn'));
+    const items = Array.from(document.querySelectorAll('.pub-item'));
+    const groups = Array.from(document.querySelectorAll('.pub-year-group'));
+    const countEl = document.getElementById('pub-count');
+    const emptyEl = document.getElementById('pub-empty');
+
+    let activeTag = 'all';
+    let activeScope = 'all';
+
+    // Support deep link ?tag=...
+    const params = new URLSearchParams(window.location.search);
+    const initialTag = params.get('tag');
+    if (initialTag && tagBtns.some((b) => b.dataset.tag === initialTag)) {
+      activeTag = initialTag;
+    }
+
+    function updateButtonStyles() {
+      tagBtns.forEach((btn) => {
+        const active = btn.dataset.tag === activeTag;
+        btn.className = active
+          ? 'pub-tag-btn rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-medium text-white transition-colors'
+          : 'pub-tag-btn rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]';
+      });
+      scopeBtns.forEach((btn) => {
+        const active = btn.dataset.scope === activeScope;
+        btn.className = active
+          ? 'pub-scope-btn rounded-md bg-[var(--surface)] px-3 py-1.5 text-[var(--text)] shadow-xs'
+          : 'pub-scope-btn rounded-md px-3 py-1.5 text-[var(--text-muted)] hover:text-[var(--text)]';
+      });
+    }
+
+    function applyFilters() {
+      const q = (searchInput?.value || '').trim().toLowerCase();
+      let visibleCount = 0;
+
+      items.forEach((el) => {
+        const tags = (el.dataset.tags || '').split('|');
+        const isSel = el.dataset.selected === 'true';
+        const hay = el.dataset.search || '';
+        const matchTag = activeTag === 'all' || tags.includes(activeTag);
+        const matchScope = activeScope === 'all' || isSel;
+        const matchQuery = !q || q.split(/\s+/).every((t) => hay.includes(t));
+        const show = matchTag && matchScope && matchQuery;
+        el.classList.toggle('hidden', !show);
+        if (show) visibleCount++;
+      });
+
+      groups.forEach((grp) => {
+        const anyVisible = grp.querySelector('.pub-item:not(.hidden)') !== null;
+        grp.classList.toggle('hidden', !anyVisible);
+      });
+
+      if (countEl) countEl.textContent = `Showing ${visibleCount} of ${items.length}`;
+      emptyEl?.classList.toggle('hidden', visibleCount > 0);
+      updateButtonStyles();
+    }
+
+    tagBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        activeTag = btn.dataset.tag || 'all';
+        applyFilters();
+      })
+    );
+    scopeBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        activeScope = btn.dataset.scope || 'all';
+        applyFilters();
+      })
+    );
+    searchInput?.addEventListener('input', applyFilters);
+
+    // Abstract toggles
+    document.querySelectorAll('.pub-abstract-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.pub-item');
+        const body = card?.querySelector('.pub-abstract-body');
+        if (!body) return;
+        const open = !body.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    // BibTeX copy
+    document.querySelectorAll('.pub-bibtex-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const bib = btn.dataset.bibtex || '';
+        try {
+          await navigator.clipboard.writeText(bib);
+          const orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.textContent = orig;
+          }, 1400);
+        } catch {
+          window.prompt('Copy BibTeX:', bib);
+        }
+      });
+    });
+
+    applyFilters();
+  })();
+</script>

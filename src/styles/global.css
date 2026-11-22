@@ -1,0 +1,149 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@layer base {
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-subtle: #f4f4f5;
+    --border: #e4e4e7;
+    --text: #18181b;
+    --text-muted: #52525b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-soft: #eff6ff;
+  }
+
+  .dark {
+    --bg: #0b0f19;
+    --surface: #111827;
+    --surface-subtle: #182235;
+    --border: #233046;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent-hover: #93c5fd;
+    --accent-soft: rgba(59, 130, 246, 0.14);
+  }
+
+  html {
+    background-color: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+  }
+}
+
+/* KaTeX overflow handling & typography polish */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.6rem 0.25rem;
+  margin: 1.25rem 0;
+}
+
+.katex {
+  font-size: 1.04em;
+}
+
+/* Shiki dual theme support */
+.astro-code,
+.astro-code span {
+  background-color: var(--surface-subtle) !important;
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: #0f172a !important;
+}
+
+/* Prose polish for math blogs */
+.prose {
+  --tw-prose-body: var(--text);
+  --tw-prose-headings: var(--text);
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: var(--text);
+  --tw-prose-counters: var(--text-muted);
+  --tw-prose-bullets: var(--text-muted);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--text-muted);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-code: var(--text);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.prose ins {
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+.prose :not(pre) > code {
+  background-color: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.375rem;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none !important;
+}
+
+.prose pre {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.prose img {
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  padding: 0.5rem;
+}
+
+/* Subtle card styling */
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-hover:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.14);
+}

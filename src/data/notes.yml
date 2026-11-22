@@ -1,0 +1,209 @@
+institutions:
+- name: Georgia Institute of Technology
+  departments:
+  - name: Industrial and Systems Engineering
+    courses:
+    - term: F16
+      code: ISYE 6661
+      title: Linear Optimization
+      notes: /files/notes/isye6661_CouseNotes_F16.pdf
+      resources:
+      - label: F
+        url: /files/notes/isye6661_final_studysheet.pdf
+    - term: F16
+      code: ISYE 6761
+      title: Stochastic Processes I
+      notes: /files/notes/isye6761_CouseNotes_F16.pdf
+      resources:
+      - label: F
+        url: /files/notes/isye6761_final_studysheet.pdf
+    - term: W17
+      code: ISYE 6662
+      title: Discrete Optimization
+      notes: /files/notes/isye6662_CouseNotes_W17.pdf
+    - term: W17
+      code: ISYE 6663
+      title: Nonlinear Optimization
+      notes: /files/notes/isye6663_CouseNotes_W17.pdf
+      resources:
+      - label: F
+        url: /files/notes/isye6663_final_studysheet.pdf
+    - term: W17
+      code: ISYE 6762
+      title: Stochastic Processes II
+      notes: /files/notes/isye6762_CouseNotes_W17.pdf
+    - term: F17
+      code: ISYE 6664
+      title: Stochastic Optimization
+      notes: /files/notes/isye6664_CouseNotes_F17.pdf
+    - term: W18
+      code: ISYE 7683
+      title: Advanced Nonlinear Optimization
+      notes: /files/notes/isye7683_CouseNotes_W18.pdf
+    - term: W19
+      code: ISYE 8813
+      title: Topics in Convex Optimization
+      notes: /files/notes/isye8813_MON_CouseNotes_W19.pdf
+  - name: Computer Science / Computational Science & Engineering
+    courses:
+    - term: F17
+      code: CS 6505
+      title: Computability and Algorithms
+      notes: /files/notes/cs6505_CouseNotes_F17.pdf
+    - term: F17
+      code: CSE 6140
+      title: Computational Science & Engineering Algorithms
+      notes: /files/notes/cse6140_CouseNotes_F17.pdf
+- name: University of Waterloo
+  departments:
+  - name: Mathematics
+    courses:
+    - term: W12
+      code: MATH 247
+      title: Advanced Calculus III
+      notes: /files/notes/math247_CouseNotes_W12.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam MATH247.pdf
+  - name: Pure Mathematics
+    courses:
+    - term: F12
+      code: PMATH 351
+      title: Real Analysis
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam PMATH351.pdf
+      - label: M
+        url: /files/notes/Study Guide for Midterm Exam PMATH351.pdf
+    - term: S13
+      code: PMATH 450
+      title: Lebesgue Integration and Fourier Analysis
+      notes: /files/notes/pmath450_CouseNotes_S13.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam PMATH450.pdf
+    - term: S13
+      code: PMATH 352
+      title: Complex Analysis
+      notes: /files/notes/pmath352_CouseNotes_S13.pdf
+  - name: Computer Science
+    courses:
+    - term: W12
+      code: CS 330
+      title: Management Information Systems
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam CS330.pdf
+    - term: W12
+      code: CS 371
+      title: Introduction to Computational Mathematics
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam CS371.pdf
+    - term: F12
+      code: CS 338
+      title: Databases for Business Systems
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam CS338.pdf
+    - term: W14
+      code: CS 476
+      title: Numerical Methods for Finance
+      notes: /files/notes/cs476_CouseNotes_W14.pdf
+  - name: Combinatorics and Optimization
+    courses:
+    - term: W14
+      code: CO 255
+      title: Advanced Introduction to Optimization
+      notes: /files/notes/co255_CouseNotes_W14.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam CO255.pdf
+  - name: Applied Mathematics
+    courses:
+    - term: F07
+      code: AMATH 2XX
+      title: Vector Calculus, MIT Video Series
+      notes: /files/notes/Course Review for Calculus IV (MIT).pdf
+    - term: W14
+      code: AMATH 350
+      title: Differential Equations for Business
+      notes: /files/notes/amath350_CouseNotes_W14.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam AMATH350.pdf
+      - label: M
+        url: /files/notes/Study Guide for Midterm Exam AMATH350.pdf
+      - label: E1
+        url: /files/notes/Study Guide for Final Exam AMATH350 - Black Scholes.pdf
+      - label: E2
+        url: /files/notes/Study Guide for Final Exam AMATH350 - Theorems.pdf
+    - term: F14
+      code: AMATH 442
+      title: Numerical Solutions of Partial Differential Equations
+      notes: /files/notes/amath442_CouseNotes_F14.pdf
+  - name: Statistics
+    courses:
+    - term: W12
+      code: STAT 231
+      title: Statistics
+      notes: /files/notes/stat231_CouseNotes_W12.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam STAT231.pdf
+    - term: F12
+      code: STAT 333
+      title: Applied Probability
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam STAT333.pdf
+    - term: S13
+      code: STAT 330
+      title: Mathematical Statistics
+      notes: /files/notes/stat330_CouseNotes_S13.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam STAT330.pdf
+    - term: S13
+      code: STAT 371
+      title: Statistics for Business I
+      notes: /files/notes/stat371_CouseNotes_S13.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam STAT371.pdf
+    - term: W14
+      code: STAT 443
+      title: Forecasting
+      notes: /files/notes/stat443_CouseNotes_W14.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam STAT443.pdf
+  - name: Actuarial Science
+    courses:
+    - term: F12
+      code: ACTSC 371
+      title: Corporate Finance I
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam ACTSC371.pdf
+    - term: S13
+      code: ACTSC 372
+      title: Corporate Finance II
+      notes: /files/notes/actsc372_CouseNotes_S13.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam ACTSC372.pdf
+    - term: S13
+      code: ACTSC 445
+      title: Asset-Liability Management
+      notes: /files/notes/actsc445_CouseNotes_S13.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam ACTSC445.pdf
+    - term: W14
+      code: ACTSC 446
+      title: Mathematical Models in Finance
+      notes: /files/notes/actsc446_CouseNotes_W14.pdf
+      resources:
+      - label: F
+        url: /files/notes/Study Guide for Final Exam ACTSC446.pdf
