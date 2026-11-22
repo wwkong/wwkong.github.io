@@ -1,0 +1,620 @@
+---
+const rosenSnippet = `import jax.numpy as jnp
+from proxax import px
+
+b = 100.0  # Rosenbrock valley steepness (nonconvex, kappa ≈ 2500 at x*)
+def rosenbrock(x):
+  return (1.0 - x[0]) ** 2 + b * (x[1] - x[0] ** 2) ** 2
+
+problem = px.CompositeProblem(smooth=rosenbrock)
+sol = px.solve(
+    problem=problem,
+    x0=jnp.array([-1.2, 1.0]),
+    solver=px.solvers.APD(opt_tol=1e-6),
+)
+print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
+---
+
+<div
+  id="proxax-home-demo"
+  class="card overflow-hidden shadow-sm"
+>
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-4">
+    <div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]">
+          Interactive Optimization Sandbox
+        </span>
+        <span class="text-xs text-[var(--text-muted)]">
+          Powered by{' '}
+          <a
+            href="https://proxax.readthedocs.io/en/latest/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-[var(--accent)] underline underline-offset-2"
+            >Proxax</a
+          >
+        </span>
+      </div>
+      <h3 class="mt-1 text-base font-semibold text-[var(--text)]">
+        Nonconvex Banana Valley: Why Adaptive Acceleration Matters
+      </h3>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="inline-flex rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
+        <button
+          type="button"
+          data-home-problem="rosenbrock"
+          class="home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white"
+        >
+          Rosenbrock (Nonconvex)
+        </button>
+        <button
+          type="button"
+          data-home-problem="quadratic"
+          class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          Quadratic (κ=500)
+        </button>
+      </div>
+
+      <button
+        id="home-demo-play"
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
+      >
+        Play
+      </button>
+    </div>
+  </div>
+
+  <!-- Sliders -->
+  <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 sm:grid-cols-3">
+    <label class="flex flex-col gap-1.5 text-xs">
+      <div class="flex items-center justify-between">
+        <span id="home-param-label" class="font-medium text-[var(--text)]">Valley steepness b</span>
+        <span id="home-param-val" class="font-mono font-semibold text-[var(--accent)]">100</span>
+      </div>
+      <input
+        id="home-param-slider"
+        type="range"
+        min="15"
+        max="180"
+        value="100"
+        step="5"
+        class="accent-[var(--accent)]"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1.5 text-xs">
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-[var(--text)]">Iterations (k)</span>
+        <span id="home-iter-val" class="font-mono font-semibold text-[var(--accent)]">250</span>
+      </div>
+      <input
+        id="home-iter-slider"
+        type="range"
+        min="10"
+        max="350"
+        value="250"
+        step="5"
+        class="accent-[var(--accent)]"
+      />
+    </label>
+
+    <div class="flex flex-col justify-center gap-1 text-xs">
+      <span class="font-medium text-[var(--text)]">Y-Axis Metric</span>
+      <div class="inline-flex w-fit rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 text-[11px] font-medium">
+        <button
+          type="button"
+          data-home-metric="obj"
+          class="home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs"
+        >
+          Objective f(xₖ) − f*
+        </button>
+        <button
+          type="button"
+          data-home-metric="grad"
+          class="home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          Stationarity ‖∇f(xₖ)‖
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend + Live Disparity Readout -->
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
+      Fixed-Step GD
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
+      Adaptive Backtracking GD
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
+      Adaptive Accelerated (<code class="font-mono">Proxax APD</code>)
+    </span>
+    <span
+      id="home-demo-gap"
+      class="ml-auto rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]"
+    ></span>
+  </div>
+
+  <!-- Canvases -->
+  <div class="grid gap-4 p-5 md:grid-cols-2">
+    <div>
+      <div id="home-contour-title" class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
+        Rosenbrock Banana Valley: f(x₁, x₂) = (1 − x₁)² + b(x₂ − x₁²)²
+      </div>
+      <canvas
+        id="home-contour-canvas"
+        width="440"
+        height="310"
+        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
+      ></canvas>
+    </div>
+
+    <div>
+      <div id="home-curve-title" class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
+        Log₁₀ Suboptimality (orders of magnitude gap)
+      </div>
+      <canvas
+        id="home-curve-canvas"
+        width="440"
+        height="310"
+        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
+      ></canvas>
+    </div>
+  </div>
+
+  <!-- Footer / Proxax Snippet -->
+  <details class="border-t border-[var(--border)] bg-[var(--surface-subtle)]/50">
+    <summary class="cursor-pointer select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
+      Solve this nonconvex problem in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
+      <a href="/accel04/" class="text-[var(--accent)] underline" onclick="event.stopPropagation()">Acceleration blog series</a>
+    </summary>
+    <div class="border-t border-[var(--border)] px-5 py-4">
+      <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
+      <p class="mt-2.5 text-xs text-[var(--text-muted)]">
+        Because the Rosenbrock valley is nonconvex and severely ill-conditioned (local condition number ≈ 2500 at <em>x*</em> = (1, 1) when <em>b</em> = 100), fixed-step GD crawls along the curved trough. Adaptive curvature estimation combined with accelerated extrapolation and restart—as implemented in{' '}
+        <a
+          href="https://proxax.readthedocs.io/en/latest/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold text-[var(--accent)] underline"
+          >Proxax</a
+        >
+        (<code class="font-mono">px.solvers.APD</code>)—reaches high accuracy orders of magnitude faster without tuning <em>L</em> or <em>μ</em>.
+      </p>
+    </div>
+  </details>
+</div>
+
+<script is:inline>
+  (function () {
+    const paramSlider = document.getElementById('home-param-slider');
+    const paramLabel = document.getElementById('home-param-label');
+    const paramVal = document.getElementById('home-param-val');
+    const iterSlider = document.getElementById('home-iter-slider');
+    const iterVal = document.getElementById('home-iter-val');
+    const playBtn = document.getElementById('home-demo-play');
+    const gapBadge = document.getElementById('home-demo-gap');
+    const contourTitle = document.getElementById('home-contour-title');
+    const curveTitle = document.getElementById('home-curve-title');
+    const contourCanvas = document.getElementById('home-contour-canvas');
+    const curveCanvas = document.getElementById('home-curve-canvas');
+    const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
+    const metricBtns = Array.from(document.querySelectorAll('.home-metric-btn'));
+
+    if (!contourCanvas || !curveCanvas) return;
+    const cCtx = contourCanvas.getContext('2d');
+    const gCtx = curveCanvas.getContext('2d');
+
+    let problem = 'rosenbrock';
+    let metric = 'obj';
+    let animId = null;
+    let cachedBgKey = '';
+    let cachedBgImg = null;
+
+    function fEval(x, param) {
+      if (problem === 'rosenbrock') {
+        const a = 1 - x[0];
+        const c = x[1] - x[0] * x[0];
+        return a * a + param * c * c;
+      }
+      return 0.5 * (x[0] * x[0] + param * x[1] * x[1]);
+    }
+
+    function gEval(x, param) {
+      if (problem === 'rosenbrock') {
+        const c = x[1] - x[0] * x[0];
+        return [-2 * (1 - x[0]) - 4 * param * x[0] * c, 2 * param * c];
+      }
+      return [x[0], param * x[1]];
+    }
+
+    function gradNorm(x, param) {
+      const g = gEval(x, param);
+      return Math.hypot(g[0], g[1]);
+    }
+
+    function getBounds() {
+      if (problem === 'rosenbrock') {
+        return { xMin: -1.65, xMax: 1.55, yMin: -0.4, yMax: 1.8, x0: [-1.2, 1.0], xStar: [1.0, 1.0] };
+      }
+      return { xMin: -2.4, xMax: 1.2, yMin: -1.1, yMax: 1.1, x0: [-2.1, 0.85], xStar: [0.0, 0.0] };
+    }
+
+    function simulate(param, K) {
+      const { x0 } = getBounds();
+
+      // 1. Fixed-Step GD
+      const eta = problem === 'rosenbrock' ? 1.0 / (6.0 * param + 12.0) : 1.0 / param;
+      const gd = [[...x0]];
+      for (let k = 0; k < K; k++) {
+        const x = gd[gd.length - 1];
+        const g = gEval(x, param);
+        gd.push([x[0] - eta * g[0], x[1] - eta * g[1]]);
+      }
+
+      // 2. Adaptive Backtracking GD (unaccelerated)
+      const agd = [[...x0]];
+      let L1 = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      for (let k = 0; k < K; k++) {
+        const x = agd[agd.length - 1];
+        const fx = fEval(x, param);
+        const g = gEval(x, param);
+        const gn2 = g[0] * g[0] + g[1] * g[1];
+        L1 = Math.max(1.0, L1 * 0.7);
+        let xn = x;
+        for (let tries = 0; tries < 40; tries++) {
+          xn = [x[0] - g[0] / L1, x[1] - g[1] / L1];
+          if (fEval(xn, param) <= fx - (0.5 * gn2) / L1 + 1e-15 || L1 > 1e8) break;
+          L1 *= 2.0;
+        }
+        agd.push(xn);
+      }
+
+      // 3. Adaptive Accelerated Proximal Descent (Proxax APD-style: adaptive L + Nesterov extrapolation + adaptive restart)
+      const apd = [[...x0]];
+      let xPrev = [...x0];
+      let y = [...x0];
+      let t = 1.0;
+      let L2 = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      for (let k = 0; k < K; k++) {
+        const fy = fEval(y, param);
+        const gy = gEval(y, param);
+        L2 = Math.max(1.0, L2 * 0.85);
+        let xn = y;
+        for (let tries = 0; tries < 40; tries++) {
+          xn = [y[0] - gy[0] / L2, y[1] - gy[1] / L2];
+          const dx0 = xn[0] - y[0];
+          const dx1 = xn[1] - y[1];
+          if (
+            fEval(xn, param) <=
+              fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * L2 * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
+            L2 > 1e8
+          ) {
+            break;
+          }
+          L2 *= 2.0;
+        }
+        // Adaptive gradient restart
+        if ((y[0] - xn[0]) * (xn[0] - xPrev[0]) + (y[1] - xn[1]) * (xn[1] - xPrev[1]) > 0) {
+          t = 1.0;
+          y = [...xn];
+        } else {
+          const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * t * t));
+          const beta = (t - 1.0) / tNew;
+          y = [xn[0] + beta * (xn[0] - xPrev[0]), xn[1] + beta * (xn[1] - xPrev[1])];
+          t = tNew;
+        }
+        xPrev = xn;
+        apd.push([...xn]);
+      }
+
+      return { gd, agd, apd };
+    }
+
+    function renderHeatmapBg(W, H, param, isDark) {
+      const key = `${problem}:${param}:${isDark ? 'd' : 'l'}`;
+      if (cachedBgKey === key && cachedBgImg) return cachedBgImg;
+
+      const { xMin, xMax, yMin, yMax } = getBounds();
+      const img = cCtx.createImageData(W, H);
+      const data = img.data;
+
+      for (let py = 0; py < H; py++) {
+        const wy = yMax - (py / (H - 1)) * (yMax - yMin);
+        for (let px = 0; px < W; px++) {
+          const wx = xMin + (px / (W - 1)) * (xMax - xMin);
+          const v = fEval([wx, wy], param);
+          // Smooth log-scale shading + delicate contour rings
+          const lv = Math.log10(v + 1e-3);
+          const norm = Math.max(0, Math.min(1, (lv + 2.5) / 5.5));
+          const ring = Math.abs(((lv * 2.2) % 1 + 1) % 1 - 0.5) < 0.045;
+
+          const idx = (py * W + px) * 4;
+          if (isDark) {
+            // Deep pine trough -> dark slate highlands
+            let r = 10 + norm * 16;
+            let g = 46 - norm * 22;
+            let b = 33 - norm * 12;
+            if (ring) {
+              r += 16;
+              g += 28;
+              b += 20;
+            }
+            data[idx] = r;
+            data[idx + 1] = g;
+            data[idx + 2] = b;
+            data[idx + 3] = 255;
+          } else {
+            // Crisp mint valley -> soft sage off-white highlands
+            let r = 205 + norm * 45;
+            let g = 242 + norm * 10;
+            let b = 221 + norm * 28;
+            if (ring) {
+              r -= 24;
+              g -= 18;
+              b -= 22;
+            }
+            data[idx] = r;
+            data[idx + 1] = g;
+            data[idx + 2] = b;
+            data[idx + 3] = 255;
+          }
+        }
+      }
+      cachedBgKey = key;
+      cachedBgImg = img;
+      return img;
+    }
+
+    function draw() {
+      const param = Number(paramSlider.value);
+      const K = Number(iterSlider.value);
+      paramVal.textContent = String(param);
+      iterVal.textContent = String(K);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const gridColor = isDark ? 'rgba(147,175,160,0.18)' : 'rgba(75,95,82,0.16)';
+      const axisColor = isDark ? 'rgba(147,175,160,0.45)' : 'rgba(75,95,82,0.45)';
+      const textColor = isDark ? '#93afa0' : '#4b5f52';
+
+      const { gd, agd, apd } = simulate(param, K);
+      const metricFn = (pt) => (metric === 'obj' ? fEval(pt, param) : gradNorm(pt, param));
+
+      const vGd = metricFn(gd[K]);
+      const vApd = metricFn(apd[K]);
+      const ratio = vGd / Math.max(vApd, 1e-16);
+      const orders = Math.log10(Math.max(1, ratio));
+      if (gapBadge) {
+        gapBadge.textContent =
+          orders >= 1
+            ? `APD is ~10^${orders.toFixed(1)}× more accurate (k=${K})`
+            : `k=${K}: APD=${vApd.toExponential(1)}`;
+      }
+
+      // ---- 1. 2D Contour Heatmap + Trajectories ----
+      const W = contourCanvas.width;
+      const H = contourCanvas.height;
+      const bg = renderHeatmapBg(W, H, param, isDark);
+      cCtx.putImageData(bg, 0, 0);
+
+      const { xMin, xMax, yMin, yMax, x0, xStar } = getBounds();
+      const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
+      const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
+
+      // Subtle valley centerline y = x^2 for Rosenbrock
+      if (problem === 'rosenbrock') {
+        cCtx.strokeStyle = isDark ? 'rgba(52,211,153,0.35)' : 'rgba(21,128,61,0.28)';
+        cCtx.setLineDash([4, 4]);
+        cCtx.lineWidth = 1.2;
+        cCtx.beginPath();
+        for (let sx = xMin; sx <= xMax; sx += 0.04) {
+          const px = toX(sx);
+          const py = toY(sx * sx);
+          if (sx === xMin) cCtx.moveTo(px, py);
+          else cCtx.lineTo(px, py);
+        }
+        cCtx.stroke();
+        cCtx.setLineDash([]);
+      }
+
+      function drawTrail(pts, color, width) {
+        cCtx.strokeStyle = color;
+        cCtx.lineWidth = width;
+        cCtx.lineJoin = 'round';
+        cCtx.beginPath();
+        pts.forEach((p, i) => {
+          const px = toX(p[0]);
+          const py = toY(p[1]);
+          if (i === 0) cCtx.moveTo(px, py);
+          else cCtx.lineTo(px, py);
+        });
+        cCtx.stroke();
+
+        const last = pts[pts.length - 1];
+        cCtx.fillStyle = color;
+        cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+        cCtx.lineWidth = 1.5;
+        cCtx.beginPath();
+        cCtx.arc(toX(last[0]), toY(last[1]), 4.5, 0, Math.PI * 2);
+        cCtx.fill();
+        cCtx.stroke();
+      }
+
+      drawTrail(gd, '#ef4444', 2);
+      drawTrail(agd, '#f59e0b', 2);
+      drawTrail(apd, '#10b981', 2.4);
+
+      // Start & Optimum markers
+      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
+      cCtx.beginPath();
+      cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
+      cCtx.fill();
+
+      cCtx.fillStyle = isDark ? '#34d399' : '#15803d';
+      cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+      cCtx.lineWidth = 1.5;
+      cCtx.beginPath();
+      cCtx.arc(toX(xStar[0]), toY(xStar[1]), 5.5, 0, Math.PI * 2);
+      cCtx.fill();
+      cCtx.stroke();
+
+      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
+      cCtx.font = 'bold 11px JetBrains Mono, monospace';
+      cCtx.fillText('x₀', toX(x0[0]) + 7, toY(x0[1]) - 6);
+      cCtx.fillText('x*', toX(xStar[0]) + 8, toY(xStar[1]) - 6);
+
+      // ---- 2. Log-Scale Convergence Curve ----
+      const GW = curveCanvas.width;
+      const GH = curveCanvas.height;
+      gCtx.clearRect(0, 0, GW, GH);
+
+      const pad = { l: 48, r: 16, t: 18, b: 30 };
+      const plotW = GW - pad.l - pad.r;
+      const plotH = GH - pad.t - pad.b;
+      const minLog = -10;
+      const maxLog = 3;
+
+      const gx = (k) => pad.l + (k / Math.max(1, K)) * plotW;
+      const gy = (val) => {
+        const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(val, 1e-12))));
+        return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
+      };
+
+      gCtx.font = '10px JetBrains Mono, monospace';
+      gCtx.fillStyle = textColor;
+      for (let p = minLog; p <= maxLog; p += 2) {
+        const y = pad.t + ((maxLog - p) / (maxLog - minLog)) * plotH;
+        gCtx.strokeStyle = gridColor;
+        gCtx.lineWidth = 1;
+        gCtx.beginPath();
+        gCtx.moveTo(pad.l, y);
+        gCtx.lineTo(GW - pad.r, y);
+        gCtx.stroke();
+        gCtx.fillText(`10^${p}`, 4, y + 3);
+      }
+
+      gCtx.strokeStyle = axisColor;
+      gCtx.beginPath();
+      gCtx.moveTo(pad.l, pad.t);
+      gCtx.lineTo(pad.l, GH - pad.b);
+      gCtx.lineTo(GW - pad.r, GH - pad.b);
+      gCtx.stroke();
+      gCtx.fillText('0', pad.l - 2, GH - 10);
+      gCtx.fillText(`k = ${K}`, GW - pad.r - 42, GH - 10);
+
+      function drawCurve(pts, color) {
+        gCtx.strokeStyle = color;
+        gCtx.lineWidth = 2.25;
+        gCtx.beginPath();
+        pts.forEach((pt, k) => {
+          const px = gx(k);
+          const py = gy(metricFn(pt));
+          if (k === 0) gCtx.moveTo(px, py);
+          else gCtx.lineTo(px, py);
+        });
+        gCtx.stroke();
+      }
+
+      drawCurve(gd, '#ef4444');
+      drawCurve(agd, '#f59e0b');
+      drawCurve(apd, '#10b981');
+    }
+
+    function updateProblemUI() {
+      probBtns.forEach((btn) => {
+        const active = btn.dataset.homeProblem === problem;
+        btn.className = active
+          ? 'home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white'
+          : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
+      });
+      if (problem === 'rosenbrock') {
+        paramLabel.textContent = 'Valley steepness b';
+        paramSlider.min = '15';
+        paramSlider.max = '180';
+        paramSlider.step = '5';
+        paramSlider.value = '100';
+        iterSlider.max = '350';
+        iterSlider.value = '250';
+        contourTitle.textContent = 'Rosenbrock Banana Valley: f(x₁, x₂) = (1 − x₁)² + b(x₂ − x₁²)²';
+      } else {
+        paramLabel.textContent = 'Condition number κ = L / μ';
+        paramSlider.min = '50';
+        paramSlider.max = '1000';
+        paramSlider.step = '25';
+        paramSlider.value = '500';
+        iterSlider.max = '250';
+        iterSlider.value = '120';
+        contourTitle.textContent = 'Ill-Conditioned Quadratic: f(x₁, x₂) = ½(x₁² + κx₂²)';
+      }
+      cachedBgKey = '';
+      draw();
+    }
+
+    probBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        problem = btn.dataset.homeProblem || 'rosenbrock';
+        updateProblemUI();
+      })
+    );
+
+    metricBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        metric = btn.dataset.homeMetric || 'obj';
+        metricBtns.forEach((b) => {
+          const active = b.dataset.homeMetric === metric;
+          b.className = active
+            ? 'home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs'
+            : 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
+        });
+        curveTitle.textContent =
+          metric === 'obj'
+            ? 'Log₁₀ Suboptimality f(xₖ) − f* vs. Iteration k'
+            : 'Log₁₀ Stationarity Residual ‖∇f(xₖ)‖ vs. Iteration k';
+        draw();
+      })
+    );
+
+    paramSlider?.addEventListener('input', draw);
+    iterSlider?.addEventListener('input', draw);
+    window.addEventListener('theme-change', () => {
+      cachedBgKey = '';
+      draw();
+    });
+
+    playBtn?.addEventListener('click', () => {
+      if (animId) {
+        clearInterval(animId);
+        animId = null;
+        playBtn.textContent = 'Play';
+        return;
+      }
+      const targetMax = Number(iterSlider.max);
+      iterSlider.value = '10';
+      playBtn.textContent = 'Pause';
+      draw();
+      animId = setInterval(() => {
+        const cur = Number(iterSlider.value);
+        if (cur >= targetMax) {
+          clearInterval(animId);
+          animId = null;
+          playBtn.textContent = 'Play';
+          return;
+        }
+        iterSlider.value = String(cur + 5);
+        draw();
+      }, 45);
+    });
+
+    draw();
+  })();
+</script>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ProxaxHomepageDemo from '../components/demos/ProxaxHomepageDemo.astro';
 import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
 ---
 
@@ -175,6 +176,17 @@ import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
         ))
       }
     </div>
+  </section>
+
+  <!-- Interactive Optimization Demo -->
+  <section class="border-t border-[var(--border)] py-10">
+    <div class="mb-6 flex items-baseline justify-between">
+      <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">Interactive Demo</h2>
+      <a href="/software/" class="text-xs font-medium text-[var(--accent)] hover:underline">
+        Explore Proxax &amp; software →
+      </a>
+    </div>
+    <ProxaxHomepageDemo />
   </section>
 
   <!-- Recent News -->

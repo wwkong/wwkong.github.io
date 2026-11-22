@@ -63,7 +63,7 @@ const institutions = data.institutions.map((inst, idx) => ({
   <div class="card overflow-hidden">
     <!-- Top Institution Tabs + Search Bar -->
     <div class="flex flex-col gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-4 pt-3 sm:flex-row sm:items-end sm:justify-between sm:px-5">
-      <div class="flex items-center gap-1 overflow-x-auto" role="tablist" aria-label="Institutions">
+      <div class="flex flex-wrap items-center gap-1" role="tablist" aria-label="Institutions">
         {
           institutions.map((inst, idx) => (
             <button
@@ -74,7 +74,7 @@ const institutions = data.institutions.map((inst, idx) => ({
               aria-controls={`panel-${inst.id}`}
               data-inst-tab={inst.id}
               class:list={[
-                'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors',
+                'notes-inst-tab relative flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors',
                 idx === 0
                   ? 'border-[var(--accent)] bg-[var(--surface)] text-[var(--accent)]'
                   : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text)]',
@@ -284,8 +284,8 @@ const institutions = data.institutions.map((inst, idx) => ({
         const selected = tab.dataset.instTab === activeInst;
         tab.setAttribute('aria-selected', String(selected));
         tab.className = selected
-          ? 'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-[var(--accent)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--accent)] transition-colors'
-          : 'notes-inst-tab relative -mb-px flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
+          ? 'notes-inst-tab relative flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-[var(--accent)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--accent)] transition-colors'
+          : 'notes-inst-tab relative flex shrink-0 items-center gap-2 rounded-t-xl border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
       });
 
       // Update department pill classes
