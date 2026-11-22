@@ -228,7 +228,7 @@
 
 - title: 'Efficient Gradient Clipping Methods in DP-SGD for Convolution Models'
   authors: Weiwei Kong, Mónica Ribero, & Grigoris Velegkas
-  id: conv_fast_clipping
+  url: conv_fast_clipping
   display: <i>OpenReview Preprint</i>
   year: 2024
   abstract: 'Differentially private stochastic gradient descent (DP-SGD) is a well-known method for training machine learning models with a specified level of privacy. However, its basic implementation is generally bottlenecked by the computation of the gradient norm (gradient clipping) for each example in an input batch. While various techniques have been developed to mitigate this issue, there are only a handful of methods pertaining to convolution models, e.g., vision models. In this work, we present three practical methods for performing gradient clipping that improve upon previous state-of-art methods. Two of these methods use in-place operations to reduce memory overhead, while the third one leverages a relationship between Fourier transforms and convolution layers. We then develop a dynamic algorithm that dispatches one of the above three algorithms to optimize performance. Extensive benchmarks confirm that this algorithm consistently outperforms other state-of-the-art algorithms and frameworks.'
