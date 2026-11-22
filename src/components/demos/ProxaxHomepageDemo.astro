@@ -8,6 +8,9 @@ const kRosenTitle = tex('f(x_1, x_2) = (1 - x_1)^2 + b(x_2 - x_1^2)^2');
 const kQuadTitle = tex('f(x_1, x_2) = \\tfrac{1}{2}(x_1^2 + \\kappa x_2^2)');
 const kHimmTitle = tex('f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2');
 const kL1Title = tex('\\phi(x) = \\tfrac{1}{2}x^{\\top}Qx - c^{\\top}x + \\lambda\\|x\\|_1');
+const kChainedTitle = tex('f(x) = \\sum_{i=1}^{49}\\bigl[(1-x_i)^2 + b(x_{i+1}-x_i^2)^2\\bigr]');
+const kSparseTitle = tex('\\phi(x) = \\tfrac{1}{2}\\|Ax - y\\|_2^2 + \\lambda\\|x\\|_1 \\;(d=64)');
+const kSpecTitle = tex('f(x) = \\tfrac{1}{2}\\sum_{i=1}^{100} \\lambda_i x_i^2,\\; \\lambda_i \\in [1, \\kappa]');
 
 const kParamRosen = tex('b');
 const kParamQuad = tex('\\kappa = L/\\mu');
@@ -27,30 +30,33 @@ const kL1Btn = tex('\\ell_1');
 const kXStar = tex('x^*');
 const kL = tex('L');
 const kMu = tex('\\mu');
+const kHighDimD = tex('d = 50\\text{--}100');
+const kLbfgsM = tex('m = 5 \\ll d');
 
 const rosenSnippet = `import jax.numpy as jnp
 from proxax import px
 
-# Example 1: Nonconvex Rosenbrock (b = 100)
-def rosenbrock(x):
-  return (1.0 - x[0]) ** 2 + 100.0 * (x[1] - x[0] ** 2) ** 2
+# High-dimensional Chained Rosenbrock (d = 50, nonconvex)
+def chained_rosenbrock(x):
+  return jnp.sum((1.0 - x[:-1]) ** 2 + 50.0 * (x[1:] - x[:-1] ** 2) ** 2)
 
+x0 = jnp.where(jnp.arange(50) % 2 == 0, -1.0, 1.0)
 sol = px.solve(
-    problem=px.CompositeProblem(smooth=rosenbrock),
-    x0=jnp.array([-1.2, 1.0]),
+    problem=px.CompositeProblem(smooth=chained_rosenbrock),
+    x0=x0,
     solver=px.solvers.APD(opt_tol=1e-6),
 )
 
-# Example 2: Nonsmooth Composite L1 (proximal soft-thresholding)
-problem_l1 = px.CompositeProblem(
-    smooth=smooth_quadratic,
-    proximal=px.prox.L1(weight=1.0),
+# High-dimensional Sparse Lasso (d = 64, nonsmooth composite)
+problem_lasso = px.CompositeProblem(
+    smooth=lambda x: 0.5 * jnp.sum((A @ x - y) ** 2),
+    proximal=px.prox.L1(weight=0.4),
 )
-sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(opt_tol=1e-6))`;
+sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_tol=1e-6))`;
 ---
 
 <div id="proxax-home-demo" class="card overflow-hidden shadow-sm">
-  <!-- Row 1: Title + Problem Presets -->
+  <!-- Row 1: Title + Grouped Problem Presets (2D vs High-Dim) -->
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
     <div class="flex flex-wrap items-center gap-2.5">
       <span class="rounded-full bg-[var(--accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent)]">
@@ -68,39 +74,71 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       </span>
     </div>
 
-    <div
-      class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium"
-      role="tablist"
-      aria-label="Test problems"
-    >
-      <button
-        type="button"
-        data-home-problem="rosenbrock"
-        class="home-prob-btn rounded-md bg-[var(--accent)] px-3 py-1 text-white transition-colors"
-      >
-        Rosenbrock
-      </button>
-      <button
-        type="button"
-        data-home-problem="quadratic"
-        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
-      >
-        Quadratic
-      </button>
-      <button
-        type="button"
-        data-home-problem="himmelblau"
-        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
-      >
-        Himmelblau
-      </button>
-      <button
-        type="button"
-        data-home-problem="lasso"
-        class="home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
-      >
-        Composite <span set:html={kL1Btn} />
-      </button>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-2" role="tablist" aria-label="Test problems">
+      <!-- 2D Group -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">2D</span>
+        <div class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
+          <button
+            type="button"
+            data-home-problem="rosenbrock"
+            class="home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white transition-colors"
+          >
+            Rosenbrock
+          </button>
+          <button
+            type="button"
+            data-home-problem="quadratic"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Quadratic
+          </button>
+          <button
+            type="button"
+            data-home-problem="himmelblau"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Himmelblau
+          </button>
+          <button
+            type="button"
+            data-home-problem="lasso"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Composite <span set:html={kL1Btn} />
+          </button>
+        </div>
+      </div>
+
+      <span class="hidden h-4 w-px bg-[var(--border)] xl:inline-block"></span>
+
+      <!-- High-Dim Group -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">High-Dim</span>
+        <div class="inline-flex flex-wrap rounded-lg border border-[var(--border)] bg-[var(--surface)] p-0.5 text-xs font-medium">
+          <button
+            type="button"
+            data-home-problem="chained_rosen"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Chained Rosen <span class="font-mono text-[10px] opacity-75">50D</span>
+          </button>
+          <button
+            type="button"
+            data-home-problem="sparse_lasso"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Sparse Lasso <span class="font-mono text-[10px] opacity-75">64D</span>
+          </button>
+          <button
+            type="button"
+            data-home-problem="spec_quad"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Spectrum Quad <span class="font-mono text-[10px] opacity-75">100D</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -296,7 +334,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         id="home-method-lbfgs"
         data-home-method="lbfgs"
         aria-pressed="true"
-        title="Quasi-Newton L-BFGS (smooth problems only)"
+        title="Quasi-Newton L-BFGS (m=5 on high-dim, smooth problems only)"
         class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[var(--text)]"
       >
         <span class="inline-block h-0.5 w-3 border-t-2 border-dashed border-[var(--text)]"></span>
@@ -326,15 +364,28 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       <div id="home-contour-title-lasso" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         Nonsmooth Composite (<span set:html={kL1Btn} /> Prox): <span class="text-[var(--text)]" set:html={kL1Title} />
       </div>
+      <div id="home-contour-title-chained" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Coordinate Profile (<span class="text-[var(--text)]" set:html={kChainedTitle} />)
+      </div>
+      <div id="home-contour-title-sparse" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Sparse Signal Recovery: <span class="text-[var(--text)]" set:html={kSparseTitle} />
+      </div>
+      <div id="home-contour-title-spec" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Per-Eigenmode Error: <span class="text-[var(--text)]" set:html={kSpecTitle} />
+      </div>
+
       <div class="relative">
         <canvas
           id="home-contour-canvas"
           width="520"
           height="330"
-          title="Drag to pan · Double-click or use +/- to zoom"
+          title="Drag to pan · Double-click or use +/- to zoom (2D problems)"
           class="w-full cursor-grab rounded-xl border border-[var(--border)] bg-[var(--bg)] active:cursor-grabbing"
         ></canvas>
-        <div class="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)]/90 p-0.5 text-[11px] font-semibold text-[var(--text)] shadow-xs backdrop-blur-xs">
+        <div
+          id="home-zoom-toolbar"
+          class="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)]/90 p-0.5 text-[11px] font-semibold text-[var(--text)] shadow-xs backdrop-blur-xs"
+        >
           <button
             id="home-zoom-auto"
             type="button"
@@ -408,12 +459,11 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     <div class="border-t border-[var(--border)] px-5 py-4">
       <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
       <p class="mt-2.5 text-xs leading-relaxed text-[var(--text-muted)]">
-        The live plot above runs directly in your browser in JavaScript (no backend server).{' '}
-        <strong>L-BFGS</strong> (dashed quasi-Newton reference) is shown on smooth problems and disabled on{' '}
-        <strong>Composite <span set:html={kL1Btn} /></strong>, where all first-order solvers apply exact
-        soft-thresholding proximal steps and stationarity is measured via the proximal gradient mapping. On{' '}
-        <strong>Himmelblau</strong>, distance to <span set:html={kXStar} /> measures distance to the nearest of the 4
-        global minima.{' '}
+        The live plot above runs directly in your browser in JavaScript (no backend server). In 2D, L-BFGS has memory
+        exceeding dimension so it behaves like exact Newton; in the <strong>High-Dim</strong> tabs (<span set:html={kHighDimD} />,
+        L-BFGS memory <span set:html={kLbfgsM} />), curvature is only partially captured, giving a realistic high-dimensional race.
+        On nonsmooth <strong>Composite / Sparse <span set:html={kL1Btn} /></strong> problems, L-BFGS is disabled and
+        all first-order solvers apply exact soft-thresholding proximal steps.{' '}
         <a
           href="https://proxax.readthedocs.io/en/latest/"
           target="_blank"
@@ -421,8 +471,8 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
           class="font-semibold text-[var(--accent)] underline"
           >Proxax</a
         >{' '}
-        (<code class="font-mono">px.solvers.APD</code>) handles smooth, nonsmooth, and nonconvex composite problems in
-        JAX without tuning <span set:html={kL} /> or <span set:html={kMu} />.
+        (<code class="font-mono">px.solvers.APD</code>) handles all of these in JAX without tuning{' '}
+        <span set:html={kL} /> or <span set:html={kMu} />.
       </p>
     </div>
   </details>
@@ -431,10 +481,10 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
 <script is:inline>
   (function () {
     const paramSlider = document.getElementById('home-param-slider');
-    const paramLabels = {
-      rosenbrock: document.getElementById('home-param-label-rosen'),
-      quadratic: document.getElementById('home-param-label-quad'),
-      himmelblau: document.getElementById('home-param-label-himm'),
+    const paramLabelEls = {
+      rosen: document.getElementById('home-param-label-rosen'),
+      quad: document.getElementById('home-param-label-quad'),
+      himm: document.getElementById('home-param-label-himm'),
       lasso: document.getElementById('home-param-label-lasso'),
     };
     const contourTitles = {
@@ -442,6 +492,9 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       quadratic: document.getElementById('home-contour-title-quad'),
       himmelblau: document.getElementById('home-contour-title-himm'),
       lasso: document.getElementById('home-contour-title-lasso'),
+      chained_rosen: document.getElementById('home-contour-title-chained'),
+      sparse_lasso: document.getElementById('home-contour-title-sparse'),
+      spec_quad: document.getElementById('home-contour-title-spec'),
     };
     const curveTitles = {
       obj: document.getElementById('home-curve-title-obj'),
@@ -458,13 +511,14 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     const readoutEl = document.getElementById('home-demo-readout');
     const lbfgsBtn = document.getElementById('home-method-lbfgs');
     const lbfgsNote = document.getElementById('lbfgs-smooth-note');
-    const contourCanvas = document.getElementById('home-contour-canvas');
-    const curveCanvas = document.getElementById('home-curve-canvas');
+    const zoomToolbar = document.getElementById('home-zoom-toolbar');
     const zoomAutoBtn = document.getElementById('home-zoom-auto');
     const zoomLevelEl = document.getElementById('home-zoom-level');
     const zoomInBtn = document.getElementById('home-zoom-in');
     const zoomOutBtn = document.getElementById('home-zoom-out');
     const zoomResetBtn = document.getElementById('home-zoom-reset');
+    const contourCanvas = document.getElementById('home-contour-canvas');
+    const curveCanvas = document.getElementById('home-curve-canvas');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
     const metricBtns = Array.from(document.querySelectorAll('.home-metric-btn'));
     const methodBtns = Array.from(document.querySelectorAll('.home-method-btn'));
@@ -487,20 +541,27 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     let animId = null;
     let cachedBgKey = '';
     let cachedBgImg = null;
-    let viewBox = null; // { xMin, xMax, yMin, yMax } when zoomed/panned
+    let simCacheKey = '';
+    let simCache = null;
+    let viewBox = null;
     let autoZoom = false;
     let isDragging = false;
     let dragStart = null;
 
-    // Rotated quadratic Q for Composite L1: R(28 deg) diag(1, 80) R(28 deg)^T
+    const isHighDim = (p) => p === 'chained_rosen' || p === 'sparse_lasso' || p === 'spec_quad';
+    const isComposite = (p) => p === 'lasso' || p === 'sparse_lasso';
+
+    // ---- Precomputed deterministic data ----
+    // 1. 2D Composite L1 rotated quadratic
     const thL1 = (28 * Math.PI) / 180;
-    const cL1 = Math.cos(thL1);
-    const sL1 = Math.sin(thL1);
+    const cL1 = Math.cos(thL1),
+      sL1 = Math.sin(thL1);
     const q00 = cL1 * cL1 * 1.0 + sL1 * sL1 * 80.0;
     const q01 = cL1 * sL1 * (1.0 - 80.0);
     const q11 = sL1 * sL1 * 1.0 + cL1 * cL1 * 80.0;
     const cVecL1 = [2.4, -0.3];
 
+    // 2. Himmelblau 4 optima
     const himmOptima = [
       [3.0, 2.0],
       [-2.805118086952745, 3.131312518250573],
@@ -508,391 +569,674 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       [3.584428340330492, -1.848126526964404],
     ];
 
-    function softThresh(x, alpha) {
-      return [
-        Math.sign(x[0]) * Math.max(Math.abs(x[0]) - alpha, 0),
-        Math.sign(x[1]) * Math.max(Math.abs(x[1]) - alpha, 0),
+    // 3. Deterministic 48 x 64 Gaussian matrix A & sparse true signal for Sparse Lasso (64D)
+    const SPARSE_M = 48;
+    const SPARSE_D = 64;
+    const sparseA = new Array(SPARSE_M);
+    const sparseTrue = new Array(SPARSE_D).fill(0);
+    {
+      let seed = 1337;
+      const rand = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      const randn = () => {
+        const u1 = Math.max(1e-9, rand());
+        const u2 = rand();
+        return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      };
+      const scale = 1.0 / Math.sqrt(SPARSE_M);
+      for (let i = 0; i < SPARSE_M; i++) {
+        const row = new Float64Array(SPARSE_D);
+        for (let j = 0; j < SPARSE_D; j++) row[j] = randn() * scale;
+        sparseA[i] = row;
+      }
+      const spikes = [
+        [5, 2.4],
+        [14, -2.0],
+        [23, 2.8],
+        [31, -1.8],
+        [40, 2.2],
+        [49, -2.6],
+        [56, 1.9],
+        [61, -2.1],
       ];
+      spikes.forEach(([idx, val]) => {
+        sparseTrue[idx] = val;
+      });
+    }
+    const sparseY = new Float64Array(SPARSE_M);
+    for (let i = 0; i < SPARSE_M; i++) {
+      let sum = 0;
+      const row = sparseA[i];
+      for (let j = 0; j < SPARSE_D; j++) sum += row[j] * sparseTrue[j];
+      sparseY[i] = sum;
     }
 
-    function proxStep(v, L, param) {
-      if (problem === 'lasso') return softThresh(v, param / L);
-      return v;
-    }
-
-    function fSmooth(x, param) {
-      if (problem === 'rosenbrock') {
-        const a = 1 - x[0];
-        const c = x[1] - x[0] * x[0];
-        return a * a + param * c * c;
-      }
-      if (problem === 'quadratic') {
-        return 0.5 * (x[0] * x[0] + param * x[1] * x[1]);
-      }
-      if (problem === 'himmelblau') {
-        const a = x[0] * x[0] + x[1] - 11;
-        const b = x[0] + x[1] * x[1] - 7;
-        return a * a + b * b;
-      }
-      return (
-        0.5 * (q00 * x[0] * x[0] + 2 * q01 * x[0] * x[1] + q11 * x[1] * x[1]) -
-        cVecL1[0] * x[0] -
-        cVecL1[1] * x[1]
-      );
-    }
-
-    function fTotal(x, param) {
-      if (problem === 'lasso') {
-        return fSmooth(x, param) + param * (Math.abs(x[0]) + Math.abs(x[1]));
-      }
-      return fSmooth(x, param);
-    }
-
-    function gEval(x, param) {
-      if (problem === 'rosenbrock') {
-        const c = x[1] - x[0] * x[0];
-        return [-2 * (1 - x[0]) - 4 * param * x[0] * c, 2 * param * c];
-      }
-      if (problem === 'quadratic') {
-        return [x[0], param * x[1]];
-      }
-      if (problem === 'himmelblau') {
-        const a = x[0] * x[0] + x[1] - 11;
-        const b = x[0] + x[1] * x[1] - 7;
-        return [4 * x[0] * a + 2 * b, 2 * a + 4 * x[1] * b];
-      }
-      return [q00 * x[0] + q01 * x[1] - cVecL1[0], q01 * x[0] + q11 * x[1] - cVecL1[1]];
-    }
-
-    function stationarityRes(x, param) {
-      const g = gEval(x, param);
-      if (problem === 'lasso') {
-        const Lref = 80.0;
-        const xp = softThresh([x[0] - g[0] / Lref, x[1] - g[1] / Lref], param / Lref);
-        return Lref * Math.hypot(x[0] - xp[0], x[1] - xp[1]);
-      }
-      return Math.hypot(g[0], g[1]);
-    }
-
-    function getBounds(param) {
-      if (problem === 'rosenbrock') {
-        return { xMin: -1.65, xMax: 1.55, yMin: -0.4, yMax: 1.8, x0: [-1.2, 1.0], optima: [[1.0, 1.0]] };
-      }
-      if (problem === 'quadratic') {
-        return { xMin: -2.4, xMax: 1.2, yMin: -1.1, yMax: 1.1, x0: [-2.1, 0.85], optima: [[0.0, 0.0]] };
-      }
-      if (problem === 'himmelblau') {
-        const rad = (param * Math.PI) / 180;
+    // ---- Problem Factory (unified N-dim interface) ----
+    function buildProblem(prob, param) {
+      if (prob === 'rosenbrock') {
         return {
-          xMin: -5.0,
-          xMax: 5.0,
-          yMin: -5.0,
-          yMax: 5.0,
-          x0: [1.5 * Math.cos(rad), 1.5 * Math.sin(rad)],
-          optima: himmOptima,
+          dim: 2,
+          maxK: 14000,
+          x0: [-1.2, 1.0],
+          optima: [[1.0, 1.0]],
+          fStar: 0,
+          eta: 1.0 / (6.0 * param + 12.0),
+          etaNag: 1.0 / (10.0 * param + 20.0),
+          adamLr: 0.02,
+          lbfgsMem: 10,
+          Linit: 20.0,
+          fSmooth: (x) => {
+            const a = 1 - x[0],
+              c = x[1] - x[0] * x[0];
+            return a * a + param * c * c;
+          },
+          fTotal: (x) => {
+            const a = 1 - x[0],
+              c = x[1] - x[0] * x[0];
+            return a * a + param * c * c;
+          },
+          grad: (x) => {
+            const c = x[1] - x[0] * x[0];
+            return [-2 * (1 - x[0]) - 4 * param * x[0] * c, 2 * param * c];
+          },
+          prox: null,
+          Lref: 1,
         };
       }
-      return { xMin: -2.2, xMax: 2.2, yMin: -1.4, yMax: 1.8, x0: [-1.8, 1.4], optima: null };
+      if (prob === 'quadratic') {
+        return {
+          dim: 2,
+          maxK: 10000,
+          x0: [-2.1, 0.85],
+          optima: [[0.0, 0.0]],
+          fStar: 0,
+          eta: 1.0 / param,
+          etaNag: 1.0 / param,
+          adamLr: 0.04,
+          lbfgsMem: 10,
+          Linit: param * 0.5,
+          fSmooth: (x) => 0.5 * (x[0] * x[0] + param * x[1] * x[1]),
+          fTotal: (x) => 0.5 * (x[0] * x[0] + param * x[1] * x[1]),
+          grad: (x) => [x[0], param * x[1]],
+          prox: null,
+          Lref: 1,
+        };
+      }
+      if (prob === 'himmelblau') {
+        const rad = (param * Math.PI) / 180;
+        return {
+          dim: 2,
+          maxK: 600,
+          x0: [1.5 * Math.cos(rad), 1.5 * Math.sin(rad)],
+          optima: himmOptima,
+          fStar: 0,
+          eta: 0.005,
+          etaNag: 0.003,
+          adamLr: 0.08,
+          lbfgsMem: 10,
+          Linit: 20.0,
+          fSmooth: (x) => {
+            const a = x[0] * x[0] + x[1] - 11,
+              b = x[0] + x[1] * x[1] - 7;
+            return a * a + b * b;
+          },
+          fTotal: (x) => {
+            const a = x[0] * x[0] + x[1] - 11,
+              b = x[0] + x[1] * x[1] - 7;
+            return a * a + b * b;
+          },
+          grad: (x) => {
+            const a = x[0] * x[0] + x[1] - 11,
+              b = x[0] + x[1] * x[1] - 7;
+            return [4 * x[0] * a + 2 * b, 2 * a + 4 * x[1] * b];
+          },
+          prox: null,
+          Lref: 1,
+        };
+      }
+      if (prob === 'lasso') {
+        const prox = (x, L) => {
+          const a = param / L;
+          return [
+            Math.sign(x[0]) * Math.max(Math.abs(x[0]) - a, 0),
+            Math.sign(x[1]) * Math.max(Math.abs(x[1]) - a, 0),
+          ];
+        };
+        const fS = (x) =>
+          0.5 * (q00 * x[0] * x[0] + 2 * q01 * x[0] * x[1] + q11 * x[1] * x[1]) -
+          cVecL1[0] * x[0] -
+          cVecL1[1] * x[1];
+        const fT = (x) => fS(x) + param * (Math.abs(x[0]) + Math.abs(x[1]));
+        const gr = (x) => [q00 * x[0] + q01 * x[1] - cVecL1[0], q01 * x[0] + q11 * x[1] - cVecL1[1]];
+        return {
+          dim: 2,
+          maxK: 1200,
+          x0: [-1.8, 1.4],
+          optima: null,
+          fStar: 0,
+          eta: 1.0 / 80.0,
+          etaNag: 1.0 / 80.0,
+          adamLr: 0.03,
+          lbfgsMem: 10,
+          Linit: 40.0,
+          fSmooth: fS,
+          fTotal: fT,
+          grad: gr,
+          prox,
+          Lref: 80.0,
+          lam: param,
+        };
+      }
+      if (prob === 'chained_rosen') {
+        const d = 50;
+        const x0 = Array.from({ length: d }, (_, i) => (i % 2 === 0 ? -1.0 : 1.0));
+        const opt = new Array(d).fill(1.0);
+        const fS = (x) => {
+          let s = 0;
+          for (let i = 0; i < d - 1; i++) {
+            const a = 1 - x[i],
+              c = x[i + 1] - x[i] * x[i];
+            s += a * a + param * c * c;
+          }
+          return s;
+        };
+        const gr = (x) => {
+          const g = new Array(d).fill(0);
+          for (let i = 0; i < d - 1; i++) {
+            const c = x[i + 1] - x[i] * x[i];
+            g[i] += -2 * (1 - x[i]) - 4 * param * x[i] * c;
+            g[i + 1] += 2 * param * c;
+          }
+          return g;
+        };
+        return {
+          dim: d,
+          maxK: 1200,
+          x0,
+          optima: [opt],
+          fStar: 0,
+          eta: 1.0 / (8.0 * param + 30.0),
+          etaNag: 1.0 / (12.0 * param + 40.0),
+          adamLr: 0.03,
+          lbfgsMem: 5,
+          Linit: 100.0,
+          fSmooth: fS,
+          fTotal: fS,
+          grad: gr,
+          prox: null,
+          Lref: 1,
+        };
+      }
+      if (prob === 'sparse_lasso') {
+        const d = SPARSE_D;
+        const x0 = new Array(d).fill(0);
+        const fS = (x) => {
+          let s = 0;
+          for (let i = 0; i < SPARSE_M; i++) {
+            const row = sparseA[i];
+            let r = -sparseY[i];
+            for (let j = 0; j < d; j++) r += row[j] * x[j];
+            s += r * r;
+          }
+          return 0.5 * s;
+        };
+        const fT = (x) => {
+          let l1 = 0;
+          for (let j = 0; j < d; j++) l1 += Math.abs(x[j]);
+          return fS(x) + param * l1;
+        };
+        const gr = (x) => {
+          const res = new Float64Array(SPARSE_M);
+          for (let i = 0; i < SPARSE_M; i++) {
+            const row = sparseA[i];
+            let r = -sparseY[i];
+            for (let j = 0; j < d; j++) r += row[j] * x[j];
+            res[i] = r;
+          }
+          const g = new Array(d).fill(0);
+          for (let i = 0; i < SPARSE_M; i++) {
+            const row = sparseA[i];
+            const ri = res[i];
+            for (let j = 0; j < d; j++) g[j] += row[j] * ri;
+          }
+          return g;
+        };
+        const prox = (x, L) => {
+          const a = param / L;
+          const out = new Array(d);
+          for (let j = 0; j < d; j++) {
+            const v = x[j];
+            out[j] = v > a ? v - a : v < -a ? v + a : 0;
+          }
+          return out;
+        };
+        return {
+          dim: d,
+          maxK: 800,
+          x0,
+          optima: null,
+          fStar: 0,
+          eta: 1.0 / 6.0,
+          etaNag: 1.0 / 6.0,
+          adamLr: 0.04,
+          lbfgsMem: 5,
+          Linit: 4.0,
+          fSmooth: fS,
+          fTotal: fT,
+          grad: gr,
+          prox,
+          Lref: 6.0,
+          lam: param,
+        };
+      }
+      // spec_quad: d = 100, log-spaced eigenvalues [1, kappa]
+      const d = 100;
+      const eigs = Array.from({ length: d }, (_, i) => Math.pow(param, i / (d - 1)));
+      const x0 = Array.from({ length: d }, (_, i) => (i % 2 === 0 ? 1 : -1) / Math.sqrt(d));
+      const opt = new Array(d).fill(0);
+      return {
+        dim: d,
+        maxK: 800,
+        eigs,
+        x0,
+        optima: [opt],
+        fStar: 0,
+        eta: 1.0 / param,
+        etaNag: 1.0 / param,
+        adamLr: 0.02,
+        lbfgsMem: 5,
+        Linit: param * 0.5,
+        fSmooth: (x) => {
+          let s = 0;
+          for (let i = 0; i < d; i++) s += eigs[i] * x[i] * x[i];
+          return 0.5 * s;
+        },
+        fTotal: (x) => {
+          let s = 0;
+          for (let i = 0; i < d; i++) s += eigs[i] * x[i] * x[i];
+          return 0.5 * s;
+        },
+        grad: (x) => {
+          const g = new Array(d);
+          for (let i = 0; i < d; i++) g[i] = eigs[i] * x[i];
+          return g;
+        },
+        prox: null,
+        Lref: 1,
+      };
     }
 
-    function computeLassoOptimum(param) {
-      let xp = [0.0, 0.0];
-      let y = [0.0, 0.0];
-      let t = 1.0;
-      let L = 40.0;
-      for (let k = 0; k < 600; k++) {
-        const fy = fSmooth(y, param);
-        const gy = gEval(y, param);
-        L = Math.max(1.0, L * 0.85);
-        let xn = y;
-        for (let tries = 0; tries < 30; tries++) {
-          xn = softThresh([y[0] - gy[0] / L, y[1] - gy[1] / L], param / L);
-          const dx0 = xn[0] - y[0];
-          const dx1 = xn[1] - y[1];
-          if (fSmooth(xn, param) <= fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * L * (dx0 * dx0 + dx1 * dx1) + 1e-15)
-            break;
-          L *= 2.0;
-        }
-        if ((y[0] - xn[0]) * (xn[0] - xp[0]) + (y[1] - xn[1]) * (xn[1] - xp[1]) > 0) {
-          t = 1.0;
-          y = [...xn];
-        } else {
-          const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * t * t));
-          const beta = (t - 1.0) / tn;
-          y = [xn[0] + beta * (xn[0] - xp[0]), xn[1] + beta * (xn[1] - xp[1])];
-          t = tn;
-        }
-        xp = xn;
-      }
-      return { xStar: xp, fStar: fTotal(xp, param) };
+    function vecNorm(v) {
+      let s = 0;
+      for (let i = 0; i < v.length; i++) s += v[i] * v[i];
+      return Math.sqrt(s);
     }
 
-    function simulate(param, K) {
-      const bounds = getBounds(param);
-      const x0 = bounds.x0;
-      let optima = bounds.optima;
-      let fStar = 0.0;
-      if (problem === 'lasso') {
-        const ref = computeLassoOptimum(param);
-        optima = [ref.xStar];
-        fStar = ref.fStar;
+    function vecDist(a, b) {
+      let s = 0;
+      for (let i = 0; i < a.length; i++) {
+        const d = a[i] - b[i];
+        s += d * d;
+      }
+      return Math.sqrt(s);
+    }
+
+    function runFullSim(probName, param) {
+      const key = `${probName}:${param}`;
+      if (simCacheKey === key && simCache) return simCache;
+
+      const P = buildProblem(probName, param);
+      const d = P.dim;
+      const K = P.maxK;
+      const x0 = P.x0;
+      const applyProx = (v, L) => (P.prox ? P.prox(v, L) : v);
+
+      // Helper to run Proxax APD
+      function runApd(steps) {
+        const traj = [x0.slice()];
+        let xp = x0.slice();
+        let y = x0.slice();
+        let t = 1.0;
+        let L = P.Linit;
+        for (let k = 0; k < steps; k++) {
+          const fy = P.fSmooth(y);
+          const gy = P.grad(y);
+          L = Math.max(0.5, L * 0.85);
+          let xn = y;
+          for (let tries = 0; tries < 35; tries++) {
+            const cand = new Array(d);
+            for (let i = 0; i < d; i++) cand[i] = y[i] - gy[i] / L;
+            xn = applyProx(cand, L);
+            let dot = 0,
+              sq = 0;
+            for (let i = 0; i < d; i++) {
+              const dx = xn[i] - y[i];
+              dot += gy[i] * dx;
+              sq += dx * dx;
+            }
+            if (P.fSmooth(xn) <= fy + dot + 0.5 * L * sq + 1e-13 || L > 1e8) break;
+            L *= 2.0;
+          }
+          let rdot = 0;
+          for (let i = 0; i < d; i++) rdot += (y[i] - xn[i]) * (xn[i] - xp[i]);
+          if (rdot > 0) {
+            t = 1.0;
+            y = xn.slice();
+          } else {
+            const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * t * t));
+            const beta = (t - 1.0) / tn;
+            const yn = new Array(d);
+            for (let i = 0; i < d; i++) yn[i] = xn[i] + beta * (xn[i] - xp[i]);
+            y = yn;
+            t = tn;
+          }
+          xp = xn;
+          traj.push(xn);
+        }
+        return traj;
       }
 
-      const eta =
-        problem === 'rosenbrock'
-          ? 1.0 / (6.0 * param + 12.0)
-          : problem === 'quadratic'
-            ? 1.0 / param
-            : problem === 'himmelblau'
-              ? 0.005
-              : 1.0 / 80.0;
-
-      const etaNag =
-        problem === 'rosenbrock'
-          ? 1.0 / (10.0 * param + 20.0)
-          : problem === 'himmelblau'
-            ? 0.003
-            : eta;
+      // 5. Proxax APD (also used as exact reference optimum for composite problems!)
+      const apd = runApd(K);
+      let optima = P.optima;
+      let fStar = P.fStar;
+      if (!optima) {
+        // Refine reference solution for composite problems
+        const refTraj = runApd(Math.max(K, 900));
+        const xRef = refTraj[refTraj.length - 1];
+        optima = [xRef];
+        fStar = P.fTotal(xRef);
+      }
 
       // 1. Fixed-Step GD / PG
-      const gd = [[...x0]];
+      const gd = [x0.slice()];
       for (let k = 0; k < K; k++) {
-        const x = gd[gd.length - 1];
-        const g = gEval(x, param);
-        gd.push(proxStep([x[0] - eta * g[0], x[1] - eta * g[1]], 1.0 / eta, param));
+        const x = gd[k];
+        const g = P.grad(x);
+        const cand = new Array(d);
+        for (let i = 0; i < d; i++) cand[i] = x[i] - P.eta * g[i];
+        gd.push(applyProx(cand, 1.0 / P.eta));
       }
 
-      // 2. Adaptive Backtracking GD / PG
-      const agd = [[...x0]];
-      let L1 = problem === 'quadratic' ? param * 0.5 : 20.0;
+      // 2. Backtracking GD / PG
+      const agd = [x0.slice()];
+      let L1 = P.Linit;
       for (let k = 0; k < K; k++) {
-        const x = agd[agd.length - 1];
-        const fx = fSmooth(x, param);
-        const g = gEval(x, param);
-        L1 = Math.max(1.0, L1 * 0.7);
+        const x = agd[k];
+        const fx = P.fSmooth(x);
+        const g = P.grad(x);
+        L1 = Math.max(0.5, L1 * 0.7);
         let xn = x;
-        for (let tries = 0; tries < 40; tries++) {
-          xn = proxStep([x[0] - g[0] / L1, x[1] - g[1] / L1], L1, param);
-          const dx0 = xn[0] - x[0];
-          const dx1 = xn[1] - x[1];
-          if (
-            fSmooth(xn, param) <= fx + g[0] * dx0 + g[1] * dx1 + 0.5 * L1 * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
-            L1 > 1e8
-          )
-            break;
+        for (let tries = 0; tries < 35; tries++) {
+          const cand = new Array(d);
+          for (let i = 0; i < d; i++) cand[i] = x[i] - g[i] / L1;
+          xn = applyProx(cand, L1);
+          let dot = 0,
+            sq = 0;
+          for (let i = 0; i < d; i++) {
+            const dx = xn[i] - x[i];
+            dot += g[i] * dx;
+            sq += dx * dx;
+          }
+          if (P.fSmooth(xn) <= fx + dot + 0.5 * L1 * sq + 1e-13 || L1 > 1e8) break;
           L1 *= 2.0;
         }
         agd.push(xn);
       }
 
       // 3. Fixed-Step Nesterov AGD / FISTA
-      const nag = [[...x0]];
-      let xNagPrev = [...x0];
-      let yNag = [...x0];
+      const nag = [x0.slice()];
+      let xNagPrev = x0.slice();
+      let yNag = x0.slice();
       let tNag = 1.0;
       for (let k = 0; k < K; k++) {
-        const g = gEval(yNag, param);
-        const xn = proxStep([yNag[0] - etaNag * g[0], yNag[1] - etaNag * g[1]], 1.0 / etaNag, param);
-        const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tNag * tNag));
-        const beta = (tNag - 1.0) / tNew;
-        yNag = [xn[0] + beta * (xn[0] - xNagPrev[0]), xn[1] + beta * (xn[1] - xNagPrev[1])];
+        const g = P.grad(yNag);
+        const cand = new Array(d);
+        for (let i = 0; i < d; i++) cand[i] = yNag[i] - P.etaNag * g[i];
+        const xn = applyProx(cand, 1.0 / P.etaNag);
+        const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tNag * tNag));
+        const beta = (tNag - 1.0) / tn;
+        const yn = new Array(d);
+        for (let i = 0; i < d; i++) yn[i] = xn[i] + beta * (xn[i] - xNagPrev[i]);
         xNagPrev = xn;
-        tNag = tNew;
-        nag.push([...xn]);
+        yNag = yn;
+        tNag = tn;
+        nag.push(xn);
       }
 
       // 4. Adaptive Nesterov (no restart)
-      const anag = [[...x0]];
-      let xAnagPrev = [...x0];
-      let yAnag = [...x0];
+      const anag = [x0.slice()];
+      let xAnagPrev = x0.slice();
+      let yAnag = x0.slice();
       let tAnag = 1.0;
-      let LAnag = problem === 'quadratic' ? param * 0.5 : 20.0;
+      let LAnag = P.Linit;
       for (let k = 0; k < K; k++) {
-        const fy = fSmooth(yAnag, param);
-        const gy = gEval(yAnag, param);
-        LAnag = Math.max(1.0, LAnag * 0.85);
+        const fy = P.fSmooth(yAnag);
+        const gy = P.grad(yAnag);
+        LAnag = Math.max(0.5, LAnag * 0.85);
         let xn = yAnag;
-        for (let tries = 0; tries < 40; tries++) {
-          xn = proxStep([yAnag[0] - gy[0] / LAnag, yAnag[1] - gy[1] / LAnag], LAnag, param);
-          const dx0 = xn[0] - yAnag[0];
-          const dx1 = xn[1] - yAnag[1];
-          if (
-            fSmooth(xn, param) <=
-              fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * LAnag * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
-            LAnag > 1e8
-          )
-            break;
+        for (let tries = 0; tries < 35; tries++) {
+          const cand = new Array(d);
+          for (let i = 0; i < d; i++) cand[i] = yAnag[i] - gy[i] / LAnag;
+          xn = applyProx(cand, LAnag);
+          let dot = 0,
+            sq = 0;
+          for (let i = 0; i < d; i++) {
+            const dx = xn[i] - yAnag[i];
+            dot += gy[i] * dx;
+            sq += dx * dx;
+          }
+          if (P.fSmooth(xn) <= fy + dot + 0.5 * LAnag * sq + 1e-13 || LAnag > 1e8) break;
           LAnag *= 2.0;
         }
-        const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tAnag * tAnag));
-        const beta = (tAnag - 1.0) / tNew;
-        yAnag = [xn[0] + beta * (xn[0] - xAnagPrev[0]), xn[1] + beta * (xn[1] - xAnagPrev[1])];
+        const tn = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tAnag * tAnag));
+        const beta = (tAnag - 1.0) / tn;
+        const yn = new Array(d);
+        for (let i = 0; i < d; i++) yn[i] = xn[i] + beta * (xn[i] - xAnagPrev[i]);
         xAnagPrev = xn;
-        tAnag = tNew;
-        anag.push([...xn]);
+        yAnag = yn;
+        tAnag = tn;
+        anag.push(xn);
       }
 
-      // 5. Proxax APD (Adaptive L + Adaptive Restart)
-      const apd = [[...x0]];
-      let xPrev = [...x0];
-      let y = [...x0];
-      let t = 1.0;
-      let L2 = problem === 'quadratic' ? param * 0.5 : 20.0;
-      for (let k = 0; k < K; k++) {
-        const fy = fSmooth(y, param);
-        const gy = gEval(y, param);
-        L2 = Math.max(1.0, L2 * 0.85);
-        let xn = y;
-        for (let tries = 0; tries < 40; tries++) {
-          xn = proxStep([y[0] - gy[0] / L2, y[1] - gy[1] / L2], L2, param);
-          const dx0 = xn[0] - y[0];
-          const dx1 = xn[1] - y[1];
-          if (
-            fSmooth(xn, param) <=
-              fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * L2 * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
-            L2 > 1e8
-          )
-            break;
-          L2 *= 2.0;
-        }
-        if ((y[0] - xn[0]) * (xn[0] - xPrev[0]) + (y[1] - xn[1]) * (xn[1] - xPrev[1]) > 0) {
-          t = 1.0;
-          y = [...xn];
-        } else {
-          const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * t * t));
-          const beta = (t - 1.0) / tNew;
-          y = [xn[0] + beta * (xn[0] - xPrev[0]), xn[1] + beta * (xn[1] - xPrev[1])];
-          t = tNew;
-        }
-        xPrev = xn;
-        apd.push([...xn]);
-      }
-
-      // 6. Adam (with prox step on Composite L1)
-      const adamLr =
-        problem === 'rosenbrock' ? 0.02 : problem === 'himmelblau' ? 0.08 : problem === 'lasso' ? 0.03 : 0.04;
-      const adam = [[...x0]];
-      let m0 = 0,
-        m1 = 0,
-        v0 = 0,
-        v1 = 0;
+      // 6. Adam
+      const adam = [x0.slice()];
+      const m = new Float64Array(d);
+      const v = new Float64Array(d);
       let b1p = 1,
         b2p = 1;
       for (let k = 1; k <= K; k++) {
-        const x = adam[adam.length - 1];
-        const g = gEval(x, param);
-        m0 = 0.9 * m0 + 0.1 * g[0];
-        m1 = 0.9 * m1 + 0.1 * g[1];
-        v0 = 0.999 * v0 + 0.001 * g[0] * g[0];
-        v1 = 0.999 * v1 + 0.001 * g[1] * g[1];
+        const x = adam[k - 1];
+        const g = P.grad(x);
         b1p *= 0.9;
         b2p *= 0.999;
-        const mh0 = m0 / (1 - b1p);
-        const mh1 = m1 / (1 - b1p);
-        const vh0 = v0 / (1 - b2p);
-        const vh1 = v1 / (1 - b2p);
-        let xn = [
-          x[0] - (adamLr * mh0) / (Math.sqrt(vh0) + 1e-8),
-          x[1] - (adamLr * mh1) / (Math.sqrt(vh1) + 1e-8),
-        ];
-        if (problem === 'lasso') {
-          xn = softThresh(xn, adamLr * param);
+        const inv1 = 1.0 / (1.0 - b1p);
+        const inv2 = 1.0 / (1.0 - b2p);
+        const cand = new Array(d);
+        for (let i = 0; i < d; i++) {
+          m[i] = 0.9 * m[i] + 0.1 * g[i];
+          v[i] = 0.999 * v[i] + 0.001 * g[i] * g[i];
+          cand[i] = x[i] - (P.adamLr * m[i] * inv1) / (Math.sqrt(v[i] * inv2) + 1e-8);
         }
-        adam.push(xn);
+        adam.push(P.prox ? P.prox(cand, 1.0 / P.adamLr) : cand);
       }
 
-      // 7. L-BFGS (m = 10, Armijo backtracking — smooth problems only)
-      const lbfgs = [[...x0]];
-      if (problem !== 'lasso') {
-        const S = [];
-        const Y = [];
-        const mem = 10;
-        let x = [...x0];
+      // 7. L-BFGS (smooth problems only)
+      const lbfgs = [x0.slice()];
+      if (!P.prox) {
+        const S = [],
+          Y = [];
+        let x = x0.slice();
         let converged = false;
         for (let k = 0; k < K; k++) {
           if (converged) {
-            lbfgs.push([...x]);
+            lbfgs.push(x);
             continue;
           }
-          const g = gEval(x, param);
-          const gn = Math.hypot(g[0], g[1]);
-          if (gn < 1e-13) {
+          const g = P.grad(x);
+          const gn = vecNorm(g);
+          if (gn < 1e-12) {
             converged = true;
-            lbfgs.push([...x]);
+            lbfgs.push(x);
             continue;
           }
-          // Two-loop recursion
-          let q0 = g[0],
-            q1 = g[1];
+          const q = g.slice();
           const alphas = new Array(S.length);
           const rhos = new Array(S.length);
-          for (let i = S.length - 1; i >= 0; i--) {
-            const sy = S[i][0] * Y[i][0] + S[i][1] * Y[i][1];
+          for (let j = S.length - 1; j >= 0; j--) {
+            let sy = 0,
+              sq = 0;
+            const sj = S[j],
+              yj = Y[j];
+            for (let i = 0; i < d; i++) {
+              sy += sj[i] * yj[i];
+              sq += sj[i] * q[i];
+            }
             const rho = 1.0 / sy;
-            rhos[i] = rho;
-            const a = rho * (S[i][0] * q0 + S[i][1] * q1);
-            alphas[i] = a;
-            q0 -= a * Y[i][0];
-            q1 -= a * Y[i][1];
+            rhos[j] = rho;
+            const a = rho * sq;
+            alphas[j] = a;
+            for (let i = 0; i < d; i++) q[i] -= a * yj[i];
           }
           let gamma = 1.0 / Math.max(gn, 1.0);
           if (S.length > 0) {
-            const ls = S[S.length - 1];
-            const ly = Y[Y.length - 1];
-            gamma = (ls[0] * ly[0] + ls[1] * ly[1]) / Math.max(ly[0] * ly[0] + ly[1] * ly[1], 1e-30);
+            const ls = S[S.length - 1],
+              ly = Y[Y.length - 1];
+            let sy = 0,
+              yy = 0;
+            for (let i = 0; i < d; i++) {
+              sy += ls[i] * ly[i];
+              yy += ly[i] * ly[i];
+            }
+            gamma = sy / Math.max(yy, 1e-30);
           }
-          let r0 = gamma * q0,
-            r1 = gamma * q1;
-          for (let i = 0; i < S.length; i++) {
-            const b = rhos[i] * (Y[i][0] * r0 + Y[i][1] * r1);
-            r0 += S[i][0] * (alphas[i] - b);
-            r1 += S[i][1] * (alphas[i] - b);
+          const r = new Array(d);
+          for (let i = 0; i < d; i++) r[i] = gamma * q[i];
+          for (let j = 0; j < S.length; j++) {
+            const sj = S[j],
+              yj = Y[j];
+            let yr = 0;
+            for (let i = 0; i < d; i++) yr += yj[i] * r[i];
+            const b = rhos[j] * yr;
+            const diff = alphas[j] - b;
+            for (let i = 0; i < d; i++) r[i] += sj[i] * diff;
           }
-          let d0 = -r0,
-            d1 = -r1;
-          let dg = d0 * g[0] + d1 * g[1];
+          let dg = 0;
+          const dir = new Array(d);
+          for (let i = 0; i < d; i++) {
+            dir[i] = -r[i];
+            dg += dir[i] * g[i];
+          }
           if (dg >= 0 || !Number.isFinite(dg)) {
-            d0 = -g[0];
-            d1 = -g[1];
-            dg = -(g[0] * g[0] + g[1] * g[1]);
+            dg = 0;
+            for (let i = 0; i < d; i++) {
+              dir[i] = -g[i];
+              dg -= g[i] * g[i];
+            }
           }
-          const fx = fSmooth(x, param);
+          const fx = P.fSmooth(x);
           let step = 1.0;
           let xn = x;
-          for (let tries = 0; tries < 30; tries++) {
-            xn = [x[0] + step * d0, x[1] + step * d1];
-            if (fSmooth(xn, param) <= fx + 1e-4 * step * dg) break;
+          for (let tries = 0; tries < 25; tries++) {
+            const cand = new Array(d);
+            for (let i = 0; i < d; i++) cand[i] = x[i] + step * dir[i];
+            xn = cand;
+            if (P.fSmooth(xn) <= fx + 1e-4 * step * dg) break;
             step *= 0.5;
           }
-          const gnVec = gEval(xn, param);
-          const sv = [xn[0] - x[0], xn[1] - x[1]];
-          const yv = [gnVec[0] - g[0], gnVec[1] - g[1]];
-          const sy = sv[0] * yv[0] + sv[1] * yv[1];
-          if (sy > 1e-12 * Math.hypot(sv[0], sv[1]) * Math.hypot(yv[0], yv[1])) {
+          const gnVec = P.grad(xn);
+          const sv = new Array(d),
+            yv = new Array(d);
+          let sy = 0,
+            sn = 0,
+            yn = 0;
+          for (let i = 0; i < d; i++) {
+            sv[i] = xn[i] - x[i];
+            yv[i] = gnVec[i] - g[i];
+            sy += sv[i] * yv[i];
+            sn += sv[i] * sv[i];
+            yn += yv[i] * yv[i];
+          }
+          if (sy > 1e-12 * Math.sqrt(sn * yn)) {
             S.push(sv);
             Y.push(yv);
-            if (S.length > mem) {
+            if (S.length > P.lbfgsMem) {
               S.shift();
               Y.shift();
             }
           }
           x = xn;
-          lbfgs.push([...x]);
+          lbfgs.push(x);
         }
       }
 
-      return { gd, agd, nag, anag, apd, adam, lbfgs, optima, fStar };
+      // Precompute all 3 metrics across all iterations for instant O(1) rendering!
+      function computeMetrics(traj) {
+        const n = traj.length;
+        const obj = new Float64Array(n);
+        const grad = new Float64Array(n);
+        const dist = new Float64Array(n);
+        for (let k = 0; k < n; k++) {
+          const pt = traj[k];
+          obj[k] = Math.max(0, P.fTotal(pt) - fStar);
+          const g = P.grad(pt);
+          if (P.prox) {
+            const cand = new Array(d);
+            for (let i = 0; i < d; i++) cand[i] = pt[i] - g[i] / P.Lref;
+            const xp = P.prox(cand, P.Lref);
+            grad[k] = P.Lref * vecDist(pt, xp);
+          } else {
+            grad[k] = vecNorm(g);
+          }
+          let bestD = Infinity;
+          for (let o = 0; o < optima.length; o++) {
+            const dd = vecDist(pt, optima[o]);
+            if (dd < bestD) bestD = dd;
+          }
+          dist[k] = bestD;
+        }
+        return { obj, grad, dist };
+      }
+
+      simCacheKey = key;
+      simCache = {
+        P,
+        optima,
+        fStar,
+        trajs: { gd, agd, nag, anag, apd, adam, lbfgs },
+        metrics: {
+          gd: computeMetrics(gd),
+          agd: computeMetrics(agd),
+          nag: computeMetrics(nag),
+          anag: computeMetrics(anag),
+          apd: computeMetrics(apd),
+          adam: computeMetrics(adam),
+          lbfgs: P.prox ? null : computeMetrics(lbfgs),
+        },
+      };
+      return simCache;
+    }
+
+    function get2DBounds(param) {
+      if (problem === 'rosenbrock')
+        return { xMin: -1.65, xMax: 1.55, yMin: -0.4, yMax: 1.8, x0: [-1.2, 1.0] };
+      if (problem === 'quadratic')
+        return { xMin: -2.4, xMax: 1.2, yMin: -1.1, yMax: 1.1, x0: [-2.1, 0.85] };
+      if (problem === 'himmelblau') {
+        const rad = (param * Math.PI) / 180;
+        return { xMin: -5.0, xMax: 5.0, yMin: -5.0, yMax: 5.0, x0: [1.5 * Math.cos(rad), 1.5 * Math.sin(rad)] };
+      }
+      return { xMin: -2.2, xMax: 2.2, yMin: -1.4, yMax: 1.8, x0: [-1.8, 1.4] };
     }
 
     function getViewBounds(param) {
-      const base = getBounds(param);
-      if (viewBox) {
-        return { ...base, ...viewBox };
-      }
-      return base;
+      const base = get2DBounds(param);
+      return viewBox ? { ...base, ...viewBox } : base;
     }
 
-    function renderHeatmapBg(W, H, param, fStar, isDark) {
+    function renderHeatmapBg(W, H, param, P, fStar, isDark) {
       const bgParam = problem === 'himmelblau' ? 0 : param;
       const vb = getViewBounds(param);
       const vbKey = `${vb.xMin.toFixed(4)},${vb.xMax.toFixed(4)},${vb.yMin.toFixed(4)},${vb.yMax.toFixed(4)}`;
@@ -907,16 +1251,15 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         const wy = yMax - (py / (H - 1)) * (yMax - yMin);
         for (let px = 0; px < W; px++) {
           const wx = xMin + (px / (W - 1)) * (xMax - xMin);
-          const v = Math.max(0, fTotal([wx, wy], param) - fStar);
+          const v = Math.max(0, P.fTotal([wx, wy]) - fStar);
           const lv = Math.log10(v + 1e-3);
           const norm = Math.max(0, Math.min(1, (lv + 2.5) / 5.5));
           const ring = Math.abs((((lv * 2.2) % 1) + 1) % 1 - 0.5) < 0.045;
-
           const idx = (py * W + px) * 4;
           if (isDark) {
-            let r = 10 + norm * 16;
-            let g = 46 - norm * 22;
-            let b = 33 - norm * 12;
+            let r = 10 + norm * 16,
+              g = 46 - norm * 22,
+              b = 33 - norm * 12;
             if (ring) {
               r += 16;
               g += 28;
@@ -927,9 +1270,9 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
             data[idx + 2] = b;
             data[idx + 3] = 255;
           } else {
-            let r = 205 + norm * 45;
-            let g = 242 + norm * 10;
-            let b = 221 + norm * 28;
+            let r = 205 + norm * 45,
+              g = 242 + norm * 10,
+              b = 221 + norm * 28;
             if (ring) {
               r -= 24;
               g -= 18;
@@ -947,10 +1290,188 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       return img;
     }
 
+    function drawHighDimLeft(sim, K, isDark, gridColor, axisColor, textColor, lbfgsColor) {
+      const W = contourCanvas.width;
+      const H = contourCanvas.height;
+      cCtx.clearRect(0, 0, W, H);
+      const pad = { l: 46, r: 16, t: 18, b: 30 };
+      const plotW = W - pad.l - pad.r;
+      const plotH = H - pad.t - pad.b;
+      const { P, trajs } = sim;
+      const d = P.dim;
+      const lbfgsActive = !P.prox && visibleMethods.lbfgs;
+
+      cCtx.font = '10px JetBrains Mono, monospace';
+      cCtx.fillStyle = textColor;
+
+      if (problem === 'chained_rosen') {
+        // Coordinate profile x_i vs i = 1..50 (target = 1.0)
+        const yMin = -1.35,
+          yMax = 1.35;
+        const sx = (i) => pad.l + (i / (d - 1)) * plotW;
+        const sy = (v) => pad.t + ((yMax - Math.max(yMin, Math.min(yMax, v))) / (yMax - yMin)) * plotH;
+
+        [-1, 0, 1].forEach((val) => {
+          const y = sy(val);
+          cCtx.strokeStyle = val === 1 ? (isDark ? 'rgba(52,211,153,0.45)' : 'rgba(21,128,61,0.4)') : gridColor;
+          cCtx.setLineDash(val === 1 ? [5, 4] : []);
+          cCtx.beginPath();
+          cCtx.moveTo(pad.l, y);
+          cCtx.lineTo(W - pad.r, y);
+          cCtx.stroke();
+          cCtx.setLineDash([]);
+          cCtx.fillText(val === 1 ? 'x*=1' : String(val), 6, y + 3);
+        });
+
+        const drawProfile = (vec, color, width, dashed) => {
+          cCtx.strokeStyle = color;
+          cCtx.lineWidth = width;
+          cCtx.setLineDash(dashed ? [6, 3] : []);
+          cCtx.beginPath();
+          for (let i = 0; i < d; i++) {
+            const px = sx(i),
+              py = sy(vec[i]);
+            if (i === 0) cCtx.moveTo(px, py);
+            else cCtx.lineTo(px, py);
+          }
+          cCtx.stroke();
+          cCtx.setLineDash([]);
+        };
+
+        if (visibleMethods.gd) drawProfile(trajs.gd[K], '#ef4444', 1.7, false);
+        if (visibleMethods.agd) drawProfile(trajs.agd[K], '#f59e0b', 1.7, false);
+        if (visibleMethods.nag) drawProfile(trajs.nag[K], '#8b5cf6', 1.7, false);
+        if (visibleMethods.anag) drawProfile(trajs.anag[K], '#0ea5e9', 1.7, false);
+        if (visibleMethods.adam) drawProfile(trajs.adam[K], '#ec4899', 1.7, false);
+        if (visibleMethods.apd) drawProfile(trajs.apd[K], '#10b981', 2.4, false);
+        if (lbfgsActive) drawProfile(trajs.lbfgs[K], lbfgsColor, 1.9, true);
+
+        cCtx.fillText('coord i = 1', pad.l, H - 10);
+        cCtx.fillText(`i = ${d}`, W - pad.r - 36, H - 10);
+      } else if (problem === 'sparse_lasso') {
+        // Stem plot: true sparse signal vs APD & GD recovered coordinates
+        const yMin = -3.2,
+          yMax = 3.2;
+        const sx = (i) => pad.l + ((i + 0.5) / d) * plotW;
+        const sy = (v) => pad.t + ((yMax - Math.max(yMin, Math.min(yMax, v))) / (yMax - yMin)) * plotH;
+        const y0 = sy(0);
+
+        [-2, 0, 2].forEach((val) => {
+          const y = sy(val);
+          cCtx.strokeStyle = val === 0 ? axisColor : gridColor;
+          cCtx.beginPath();
+          cCtx.moveTo(pad.l, y);
+          cCtx.lineTo(W - pad.r, y);
+          cCtx.stroke();
+          cCtx.fillText(String(val), 14, y + 3);
+        });
+
+        // True spikes background stems
+        for (let i = 0; i < d; i++) {
+          if (sparseTrue[i] !== 0) {
+            const px = sx(i),
+              py = sy(sparseTrue[i]);
+            cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.22)';
+            cCtx.lineWidth = 5;
+            cCtx.beginPath();
+            cCtx.moveTo(px, y0);
+            cCtx.lineTo(px, py);
+            cCtx.stroke();
+          }
+        }
+
+        // Recovered stems for APD (primary) + dots for GD / Adam if visible
+        const drawDots = (vec, color, r) => {
+          cCtx.fillStyle = color;
+          for (let i = 0; i < d; i++) {
+            if (Math.abs(vec[i]) > 0.03 || sparseTrue[i] !== 0) {
+              cCtx.beginPath();
+              cCtx.arc(sx(i), sy(vec[i]), r, 0, Math.PI * 2);
+              cCtx.fill();
+            }
+          }
+        };
+
+        if (visibleMethods.apd) {
+          const vec = trajs.apd[K];
+          cCtx.strokeStyle = '#10b981';
+          cCtx.lineWidth = 2;
+          for (let i = 0; i < d; i++) {
+            if (Math.abs(vec[i]) > 0.02) {
+              cCtx.beginPath();
+              cCtx.moveTo(sx(i), y0);
+              cCtx.lineTo(sx(i), sy(vec[i]));
+              cCtx.stroke();
+            }
+          }
+          drawDots(vec, '#10b981', 3.2);
+        }
+        if (visibleMethods.gd) drawDots(trajs.gd[K], '#ef4444', 2.3);
+        if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.3);
+
+        cCtx.fillStyle = textColor;
+        cCtx.fillText('gray bars = true spikes · i = 1..64', pad.l, H - 10);
+      } else {
+        // spec_quad: per-eigenmode log10|x_i| across i = 1..100
+        const minLog = -12,
+          maxLog = 1;
+        const sx = (i) => pad.l + (i / (d - 1)) * plotW;
+        const sy = (val) => {
+          const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(Math.abs(val), 1e-14))));
+          return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
+        };
+
+        for (let p = minLog; p <= maxLog; p += 3) {
+          const y = pad.t + ((maxLog - p) / (maxLog - minLog)) * plotH;
+          cCtx.strokeStyle = gridColor;
+          cCtx.beginPath();
+          cCtx.moveTo(pad.l, y);
+          cCtx.lineTo(W - pad.r, y);
+          cCtx.stroke();
+          cCtx.fillText(`10^${p}`, 4, y + 3);
+        }
+
+        const drawSpec = (vec, color, width, dashed) => {
+          cCtx.strokeStyle = color;
+          cCtx.lineWidth = width;
+          cCtx.setLineDash(dashed ? [6, 3] : []);
+          cCtx.beginPath();
+          for (let i = 0; i < d; i++) {
+            const px = sx(i),
+              py = sy(vec[i]);
+            if (i === 0) cCtx.moveTo(px, py);
+            else cCtx.lineTo(px, py);
+          }
+          cCtx.stroke();
+          cCtx.setLineDash([]);
+        };
+
+        if (visibleMethods.gd) drawSpec(trajs.gd[K], '#ef4444', 1.8, false);
+        if (visibleMethods.agd) drawSpec(trajs.agd[K], '#f59e0b', 1.8, false);
+        if (visibleMethods.nag) drawSpec(trajs.nag[K], '#8b5cf6', 1.8, false);
+        if (visibleMethods.anag) drawSpec(trajs.anag[K], '#0ea5e9', 1.8, false);
+        if (visibleMethods.adam) drawSpec(trajs.adam[K], '#ec4899', 1.8, false);
+        if (visibleMethods.apd) drawSpec(trajs.apd[K], '#10b981', 2.4, false);
+        if (lbfgsActive) drawSpec(trajs.lbfgs[K], lbfgsColor, 1.9, true);
+
+        cCtx.fillText('λ₁ = 1 (slow)', pad.l, H - 10);
+        cCtx.fillText('λ₁₀₀ = κ (fast)', W - pad.r - 88, H - 10);
+      }
+
+      // Outer axes
+      cCtx.strokeStyle = axisColor;
+      cCtx.lineWidth = 1;
+      cCtx.beginPath();
+      cCtx.moveTo(pad.l, pad.t);
+      cCtx.lineTo(pad.l, H - pad.b);
+      cCtx.lineTo(W - pad.r, H - pad.b);
+      cCtx.stroke();
+    }
+
     function draw() {
       const param = Number(paramSlider.value);
       const K = Number(iterSlider.value);
-      paramVal.textContent = problem === 'lasso' ? param.toFixed(1) : String(param);
+      paramVal.textContent = isComposite(problem) ? param.toFixed(1) : String(param);
       iterVal.textContent = String(K);
 
       const isDark = document.documentElement.classList.contains('dark');
@@ -959,20 +1480,12 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       const textColor = isDark ? '#93afa0' : '#4b5f52';
       const lbfgsColor = isDark ? '#f8fafc' : '#0f172a';
 
-      const { gd, agd, nag, anag, apd, adam, lbfgs, optima, fStar } = simulate(param, K);
-      const lbfgsActive = problem !== 'lasso' && visibleMethods.lbfgs;
+      const sim = runFullSim(problem, param);
+      const { P, optima, fStar, trajs, metrics } = sim;
+      const lbfgsActive = !P.prox && visibleMethods.lbfgs;
 
-      const distToOpt = (pt) =>
-        Math.min(...optima.map((opt) => Math.hypot(pt[0] - opt[0], pt[1] - opt[1])));
-
-      const metricFn = (pt) => {
-        if (metric === 'obj') return Math.max(0, fTotal(pt, param) - fStar);
-        if (metric === 'grad') return stationarityRes(pt, param);
-        return distToOpt(pt);
-      };
-
-      const vGd = metricFn(gd[K]);
-      const vApd = metricFn(apd[K]);
+      const vGd = metrics.gd[metric][K];
+      const vApd = metrics.apd[metric][K];
       const ratio = vGd / Math.max(vApd, 1e-16);
       const orders = Math.log10(Math.max(1, ratio));
       if (gapBadge) {
@@ -985,17 +1498,16 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       // Live numeric readout strip
       if (readoutEl) {
         const entries = [
-          { key: 'gd', name: 'GD', color: '#ef4444', val: metricFn(gd[K]), show: visibleMethods.gd },
-          { key: 'agd', name: 'BT-GD', color: '#f59e0b', val: metricFn(agd[K]), show: visibleMethods.agd },
-          { key: 'nag', name: 'NAG', color: '#8b5cf6', val: metricFn(nag[K]), show: visibleMethods.nag },
-          { key: 'anag', name: 'Adapt-NAG', color: '#0ea5e9', val: metricFn(anag[K]), show: visibleMethods.anag },
-          { key: 'apd', name: 'Proxax APD', color: '#10b981', val: metricFn(apd[K]), show: visibleMethods.apd },
-          { key: 'adam', name: 'Adam', color: '#ec4899', val: metricFn(adam[K]), show: visibleMethods.adam },
+          { name: 'GD', color: '#ef4444', val: metrics.gd[metric][K], show: visibleMethods.gd },
+          { name: 'BT-GD', color: '#f59e0b', val: metrics.agd[metric][K], show: visibleMethods.agd },
+          { name: 'NAG', color: '#8b5cf6', val: metrics.nag[metric][K], show: visibleMethods.nag },
+          { name: 'Adapt-NAG', color: '#0ea5e9', val: metrics.anag[metric][K], show: visibleMethods.anag },
+          { name: 'Proxax APD', color: '#10b981', val: metrics.apd[metric][K], show: visibleMethods.apd },
+          { name: 'Adam', color: '#ec4899', val: metrics.adam[metric][K], show: visibleMethods.adam },
           {
-            key: 'lbfgs',
             name: 'L-BFGS',
             color: lbfgsColor,
-            val: lbfgsActive ? metricFn(lbfgs[K]) : null,
+            val: lbfgsActive ? metrics.lbfgs[metric][K] : null,
             show: lbfgsActive,
           },
         ].filter((e) => e.show);
@@ -1010,192 +1522,173 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
             .join('');
       }
 
-      // Compute dynamic auto-zoom bounding box around active solver endpoints + nearest optimum
-      const baseBounds = getBounds(param);
-      const baseW = baseBounds.xMax - baseBounds.xMin;
-      const baseH = baseBounds.yMax - baseBounds.yMin;
-      const aspect = contourCanvas.width / contourCanvas.height;
+      // ---- 1. Left Canvas (2D Contours OR High-Dim Visualization) ----
+      if (isHighDim(problem)) {
+        drawHighDimLeft(sim, K, isDark, gridColor, axisColor, textColor, lbfgsColor);
+      } else {
+        const baseBounds = get2DBounds(param);
+        const baseW = baseBounds.xMax - baseBounds.xMin;
+        const baseH = baseBounds.yMax - baseBounds.yMin;
+        const aspect = contourCanvas.width / contourCanvas.height;
 
-      if (autoZoom && K > 0) {
-        const focusPts = [];
-        const addEnd = (arr) => {
-          if (arr && arr.length > K) focusPts.push(arr[K]);
-        };
-        if (visibleMethods.gd) addEnd(gd);
-        if (visibleMethods.agd) addEnd(agd);
-        if (visibleMethods.nag) addEnd(nag);
-        if (visibleMethods.anag) addEnd(anag);
-        if (visibleMethods.adam) addEnd(adam);
-        if (visibleMethods.apd) addEnd(apd);
-        if (lbfgsActive) addEnd(lbfgs);
+        if (autoZoom && K > 0) {
+          const focusPts = [];
+          if (visibleMethods.gd) focusPts.push(trajs.gd[K]);
+          if (visibleMethods.agd) focusPts.push(trajs.agd[K]);
+          if (visibleMethods.nag) focusPts.push(trajs.nag[K]);
+          if (visibleMethods.anag) focusPts.push(trajs.anag[K]);
+          if (visibleMethods.adam) focusPts.push(trajs.adam[K]);
+          if (visibleMethods.apd) focusPts.push(trajs.apd[K]);
+          if (lbfgsActive) focusPts.push(trajs.lbfgs[K]);
 
-        if (focusPts.length > 0) {
-          // Include the optimum nearest to APD (or first visible solver)
-          const refPt = visibleMethods.apd ? apd[K] : focusPts[0];
-          let nearestOpt = optima[0];
-          let bestD = Infinity;
-          optima.forEach((opt) => {
-            const d = Math.hypot(refPt[0] - opt[0], refPt[1] - opt[1]);
-            if (d < bestD) {
-              bestD = d;
-              nearestOpt = opt;
-            }
-          });
-          focusPts.push(nearestOpt);
+          if (focusPts.length > 0) {
+            const refPt = visibleMethods.apd ? trajs.apd[K] : focusPts[0];
+            let nearestOpt = optima[0],
+              bestD = Infinity;
+            optima.forEach((opt) => {
+              const dd = Math.hypot(refPt[0] - opt[0], refPt[1] - opt[1]);
+              if (dd < bestD) {
+                bestD = dd;
+                nearestOpt = opt;
+              }
+            });
+            focusPts.push(nearestOpt);
 
-          let minX = Infinity,
-            maxX = -Infinity,
-            minY = Infinity,
-            maxY = -Infinity;
-          focusPts.forEach((p) => {
-            if (p[0] < minX) minX = p[0];
-            if (p[0] > maxX) maxX = p[0];
-            if (p[1] < minY) minY = p[1];
-            if (p[1] > maxY) maxY = p[1];
-          });
-
-          const cx = 0.5 * (minX + maxX);
-          const cy = 0.5 * (minY + maxY);
-          // Pad by 1.6x, clamp between tiny microscopic floor and full base bounds
-          let spanX = Math.max((maxX - minX) * 1.6, baseW * 0.008);
-          let spanY = Math.max((maxY - minY) * 1.6, baseH * 0.008);
-          if (spanX / spanY > aspect) {
-            spanY = spanX / aspect;
-          } else {
-            spanX = spanY * aspect;
+            let minX = Infinity,
+              maxX = -Infinity,
+              minY = Infinity,
+              maxY = -Infinity;
+            focusPts.forEach((p) => {
+              if (p[0] < minX) minX = p[0];
+              if (p[0] > maxX) maxX = p[0];
+              if (p[1] < minY) minY = p[1];
+              if (p[1] > maxY) maxY = p[1];
+            });
+            const cx = 0.5 * (minX + maxX),
+              cy = 0.5 * (minY + maxY);
+            let spanX = Math.max((maxX - minX) * 1.6, baseW * 0.008);
+            let spanY = Math.max((maxY - minY) * 1.6, baseH * 0.008);
+            if (spanX / spanY > aspect) spanY = spanX / aspect;
+            else spanX = spanY * aspect;
+            viewBox =
+              spanX >= baseW * 0.96 || spanY >= baseH * 0.96
+                ? null
+                : { xMin: cx - 0.5 * spanX, xMax: cx + 0.5 * spanX, yMin: cy - 0.5 * spanY, yMax: cy + 0.5 * spanY };
           }
-          if (spanX >= baseW * 0.96 || spanY >= baseH * 0.96) {
-            viewBox = null;
+        } else if (autoZoom && K === 0) {
+          viewBox = null;
+        }
+
+        if (zoomLevelEl) {
+          const vbCur = getViewBounds(param);
+          const scale = baseW / Math.max(vbCur.xMax - vbCur.xMin, 1e-9);
+          if (scale > 1.05) {
+            zoomLevelEl.textContent = scale >= 10 ? `${Math.round(scale)}×` : `${scale.toFixed(1)}×`;
+            zoomLevelEl.classList.remove('hidden');
           } else {
-            viewBox = {
-              xMin: cx - 0.5 * spanX,
-              xMax: cx + 0.5 * spanX,
-              yMin: cy - 0.5 * spanY,
-              yMax: cy + 0.5 * spanY,
-            };
+            zoomLevelEl.classList.add('hidden');
           }
         }
-      } else if (autoZoom && K === 0) {
-        viewBox = null;
-      }
 
-      // Update zoom scale readout
-      if (zoomLevelEl) {
-        const vbCur = getViewBounds(param);
-        const scale = baseW / Math.max(vbCur.xMax - vbCur.xMin, 1e-9);
-        if (scale > 1.05) {
-          zoomLevelEl.textContent = scale >= 10 ? `${Math.round(scale)}×` : `${scale.toFixed(1)}×`;
-          zoomLevelEl.classList.remove('hidden');
-        } else {
-          zoomLevelEl.classList.add('hidden');
+        const W = contourCanvas.width,
+          H = contourCanvas.height;
+        cCtx.putImageData(renderHeatmapBg(W, H, param, P, fStar, isDark), 0, 0);
+        const { xMin, xMax, yMin, yMax, x0 } = getViewBounds(param);
+        const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
+        const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
+
+        if (problem === 'lasso') {
+          cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.25)';
+          cCtx.setLineDash([4, 4]);
+          cCtx.lineWidth = 1.2;
+          cCtx.beginPath();
+          cCtx.moveTo(0, toY(0));
+          cCtx.lineTo(W, toY(0));
+          cCtx.moveTo(toX(0), 0);
+          cCtx.lineTo(toX(0), H);
+          cCtx.stroke();
+          cCtx.setLineDash([]);
+        } else if (problem === 'rosenbrock') {
+          cCtx.strokeStyle = isDark ? 'rgba(52,211,153,0.35)' : 'rgba(21,128,61,0.28)';
+          cCtx.setLineDash([4, 4]);
+          cCtx.lineWidth = 1.2;
+          cCtx.beginPath();
+          for (let sx = xMin; sx <= xMax; sx += (xMax - xMin) / 100) {
+            const px = toX(sx),
+              py = toY(sx * sx);
+            if (sx === xMin) cCtx.moveTo(px, py);
+            else cCtx.lineTo(px, py);
+          }
+          cCtx.stroke();
+          cCtx.setLineDash([]);
         }
-      }
 
-      // ---- 1. 2D Contour Heatmap + Trajectories ----
-      const W = contourCanvas.width;
-      const H = contourCanvas.height;
-      const bg = renderHeatmapBg(W, H, param, fStar, isDark);
-      cCtx.putImageData(bg, 0, 0);
+        function drawTrail(pts, color, width, dashed) {
+          const tStride = Math.max(1, Math.floor((K + 1) / 1200));
+          cCtx.strokeStyle = color;
+          cCtx.lineWidth = width;
+          cCtx.lineJoin = 'round';
+          cCtx.setLineDash(dashed ? [6, 3] : []);
+          cCtx.beginPath();
+          for (let i = 0; i <= K; i += tStride) {
+            const px = toX(pts[i][0]),
+              py = toY(pts[i][1]);
+            if (i === 0) cCtx.moveTo(px, py);
+            else cCtx.lineTo(px, py);
+          }
+          const last = pts[K];
+          cCtx.lineTo(toX(last[0]), toY(last[1]));
+          cCtx.stroke();
+          cCtx.setLineDash([]);
 
-      const { xMin, xMax, yMin, yMax, x0 } = getViewBounds(param);
-      const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
-      const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
-
-      if (problem === 'lasso') {
-        cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.25)';
-        cCtx.setLineDash([4, 4]);
-        cCtx.lineWidth = 1.2;
-        cCtx.beginPath();
-        cCtx.moveTo(0, toY(0));
-        cCtx.lineTo(W, toY(0));
-        cCtx.moveTo(toX(0), 0);
-        cCtx.lineTo(toX(0), H);
-        cCtx.stroke();
-        cCtx.setLineDash([]);
-      } else if (problem === 'rosenbrock') {
-        cCtx.strokeStyle = isDark ? 'rgba(52,211,153,0.35)' : 'rgba(21,128,61,0.28)';
-        cCtx.setLineDash([4, 4]);
-        cCtx.lineWidth = 1.2;
-        cCtx.beginPath();
-        for (let sx = xMin; sx <= xMax; sx += 0.04) {
-          const px = toX(sx);
-          const py = toY(sx * sx);
-          if (sx === xMin) cCtx.moveTo(px, py);
-          else cCtx.lineTo(px, py);
+          cCtx.fillStyle = color;
+          cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+          cCtx.lineWidth = 1.5;
+          cCtx.beginPath();
+          cCtx.arc(toX(last[0]), toY(last[1]), 4.5, 0, Math.PI * 2);
+          cCtx.fill();
+          cCtx.stroke();
         }
-        cCtx.stroke();
-        cCtx.setLineDash([]);
-      }
 
-      function drawTrail(pts, color, width, dashed) {
-        const tStride = Math.max(1, Math.floor(pts.length / 1500));
-        cCtx.strokeStyle = color;
-        cCtx.lineWidth = width;
-        cCtx.lineJoin = 'round';
-        cCtx.setLineDash(dashed ? [6, 3] : []);
-        cCtx.beginPath();
-        for (let i = 0; i < pts.length; i += tStride) {
-          const px = toX(pts[i][0]);
-          const py = toY(pts[i][1]);
-          if (i === 0) cCtx.moveTo(px, py);
-          else cCtx.lineTo(px, py);
-        }
-        const last = pts[pts.length - 1];
-        cCtx.lineTo(toX(last[0]), toY(last[1]));
-        cCtx.stroke();
-        cCtx.setLineDash([]);
+        if (visibleMethods.gd) drawTrail(trajs.gd, '#ef4444', 1.9, false);
+        if (visibleMethods.agd) drawTrail(trajs.agd, '#f59e0b', 1.9, false);
+        if (visibleMethods.nag) drawTrail(trajs.nag, '#8b5cf6', 1.9, false);
+        if (visibleMethods.anag) drawTrail(trajs.anag, '#0ea5e9', 1.9, false);
+        if (visibleMethods.adam) drawTrail(trajs.adam, '#ec4899', 1.9, false);
+        if (visibleMethods.apd) drawTrail(trajs.apd, '#10b981', 2.6, false);
+        if (lbfgsActive) drawTrail(trajs.lbfgs, lbfgsColor, 2.0, true);
 
-        cCtx.fillStyle = color;
-        cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
-        cCtx.lineWidth = 1.5;
+        cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
         cCtx.beginPath();
-        cCtx.arc(toX(last[0]), toY(last[1]), 4.5, 0, Math.PI * 2);
+        cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
         cCtx.fill();
-        cCtx.stroke();
+        cCtx.font = 'bold 11px JetBrains Mono, monospace';
+        cCtx.fillText('x₀', toX(x0[0]) + 7, toY(x0[1]) - 6);
+
+        optima.forEach((opt, idx) => {
+          cCtx.fillStyle = isDark ? '#34d399' : '#15803d';
+          cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+          cCtx.lineWidth = 1.5;
+          cCtx.beginPath();
+          cCtx.arc(toX(opt[0]), toY(opt[1]), 5, 0, Math.PI * 2);
+          cCtx.fill();
+          cCtx.stroke();
+          if (optima.length === 1 || idx === 0) {
+            cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
+            cCtx.fillText('x*', toX(opt[0]) + 8, toY(opt[1]) - 6);
+          }
+        });
       }
 
-      if (visibleMethods.gd) drawTrail(gd, '#ef4444', 1.9, false);
-      if (visibleMethods.agd) drawTrail(agd, '#f59e0b', 1.9, false);
-      if (visibleMethods.nag) drawTrail(nag, '#8b5cf6', 1.9, false);
-      if (visibleMethods.anag) drawTrail(anag, '#0ea5e9', 1.9, false);
-      if (visibleMethods.adam) drawTrail(adam, '#ec4899', 1.9, false);
-      if (visibleMethods.apd) drawTrail(apd, '#10b981', 2.6, false);
-      if (lbfgsActive) drawTrail(lbfgs, lbfgsColor, 2.0, true);
-
-      // Start & Optima markers
-      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
-      cCtx.beginPath();
-      cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
-      cCtx.fill();
-
-      cCtx.font = 'bold 11px JetBrains Mono, monospace';
-      cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
-      cCtx.fillText('x₀', toX(x0[0]) + 7, toY(x0[1]) - 6);
-
-      optima.forEach((opt, idx) => {
-        cCtx.fillStyle = isDark ? '#34d399' : '#15803d';
-        cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
-        cCtx.lineWidth = 1.5;
-        cCtx.beginPath();
-        cCtx.arc(toX(opt[0]), toY(opt[1]), 5, 0, Math.PI * 2);
-        cCtx.fill();
-        cCtx.stroke();
-        if (optima.length === 1 || idx === 0) {
-          cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
-          cCtx.fillText('x*', toX(opt[0]) + 8, toY(opt[1]) - 6);
-        }
-      });
-
-      // ---- 2. Log-Scale Convergence Curve ----
-      const GW = curveCanvas.width;
-      const GH = curveCanvas.height;
+      // ---- 2. Right Canvas: Log-Scale Convergence Curve ----
+      const GW = curveCanvas.width,
+        GH = curveCanvas.height;
       gCtx.clearRect(0, 0, GW, GH);
-
       const pad = { l: 50, r: 16, t: 18, b: 30 };
-      const plotW = GW - pad.l - pad.r;
-      const plotH = GH - pad.t - pad.b;
-      const minLog = -14;
-      const maxLog = 2;
+      const plotW = GW - pad.l - pad.r,
+        plotH = GH - pad.t - pad.b;
+      const minLog = -14,
+        maxLog = 3;
 
       const gx = (k) => pad.l + (k / Math.max(1, K)) * plotW;
       const gy = (val) => {
@@ -1225,31 +1718,30 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       gCtx.fillText('0', pad.l - 2, GH - 10);
       gCtx.fillText(`k = ${K}`, GW - pad.r - 56, GH - 10);
 
-      const stride = Math.max(1, Math.floor(K / 450));
-      function drawCurve(pts, color, width, dashed) {
+      const stride = Math.max(1, Math.floor((K + 1) / 450));
+      function drawCurve(arr, color, width, dashed) {
         gCtx.strokeStyle = color;
         gCtx.lineWidth = width;
         gCtx.setLineDash(dashed ? [6, 3] : []);
         gCtx.beginPath();
-        for (let k = 0; k < pts.length; k += stride) {
-          const px = gx(k);
-          const py = gy(metricFn(pts[k]));
+        for (let k = 0; k <= K; k += stride) {
+          const px = gx(k),
+            py = gy(arr[k]);
           if (k === 0) gCtx.moveTo(px, py);
           else gCtx.lineTo(px, py);
         }
-        const lastIdx = pts.length - 1;
-        gCtx.lineTo(gx(lastIdx), gy(metricFn(pts[lastIdx])));
+        gCtx.lineTo(gx(K), gy(arr[K]));
         gCtx.stroke();
         gCtx.setLineDash([]);
       }
 
-      if (visibleMethods.gd) drawCurve(gd, '#ef4444', 2.0, false);
-      if (visibleMethods.agd) drawCurve(agd, '#f59e0b', 2.0, false);
-      if (visibleMethods.nag) drawCurve(nag, '#8b5cf6', 2.0, false);
-      if (visibleMethods.anag) drawCurve(anag, '#0ea5e9', 2.0, false);
-      if (visibleMethods.adam) drawCurve(adam, '#ec4899', 2.0, false);
-      if (visibleMethods.apd) drawCurve(apd, '#10b981', 2.6, false);
-      if (lbfgsActive) drawCurve(lbfgs, lbfgsColor, 2.0, true);
+      if (visibleMethods.gd) drawCurve(metrics.gd[metric], '#ef4444', 2.0, false);
+      if (visibleMethods.agd) drawCurve(metrics.agd[metric], '#f59e0b', 2.0, false);
+      if (visibleMethods.nag) drawCurve(metrics.nag[metric], '#8b5cf6', 2.0, false);
+      if (visibleMethods.anag) drawCurve(metrics.anag[metric], '#0ea5e9', 2.0, false);
+      if (visibleMethods.adam) drawCurve(metrics.adam[metric], '#ec4899', 2.0, false);
+      if (visibleMethods.apd) drawCurve(metrics.apd[metric], '#10b981', 2.6, false);
+      if (lbfgsActive) drawCurve(metrics.lbfgs[metric], lbfgsColor, 2.0, true);
     }
 
     function getAnimStep() {
@@ -1258,7 +1750,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     }
 
     function syncLbfgsState() {
-      const disabled = problem === 'lasso';
+      const disabled = isComposite(problem);
       if (lbfgsBtn) {
         lbfgsBtn.disabled = disabled;
         lbfgsBtn.classList.toggle('cursor-not-allowed', disabled);
@@ -1268,15 +1760,37 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       lbfgsNote?.classList.toggle('hidden', !disabled);
     }
 
+    function syncAutoZoomBtn() {
+      if (!zoomAutoBtn) return;
+      zoomAutoBtn.setAttribute('aria-pressed', String(autoZoom));
+      zoomAutoBtn.className = autoZoom
+        ? 'rounded bg-[var(--accent)] px-1.5 py-0.5 font-mono text-[10px] text-white transition-colors'
+        : 'rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]';
+    }
+
     function updateProblemUI() {
       probBtns.forEach((btn) => {
         const active = btn.dataset.homeProblem === problem;
         btn.className = active
-          ? 'home-prob-btn rounded-md bg-[var(--accent)] px-3 py-1 text-white transition-colors'
-          : 'home-prob-btn rounded-md px-3 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
+          ? 'home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white transition-colors'
+          : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
       });
-      Object.entries(paramLabels).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
       Object.entries(contourTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
+
+      const lblKey =
+        problem === 'rosenbrock' || problem === 'chained_rosen'
+          ? 'rosen'
+          : problem === 'quadratic' || problem === 'spec_quad'
+            ? 'quad'
+            : problem === 'himmelblau'
+              ? 'himm'
+              : 'lasso';
+      Object.entries(paramLabelEls).forEach(([k, el]) => el?.classList.toggle('hidden', k !== lblKey));
+
+      // Hide 2D zoom/pan overlay on high-dim plots
+      const hd = isHighDim(problem);
+      zoomToolbar?.classList.toggle('hidden', hd);
+      contourCanvas.classList.toggle('cursor-grab', !hd);
 
       if (problem === 'rosenbrock') {
         paramSlider.min = '15';
@@ -1305,7 +1819,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         iterSlider.max = '600';
         iterSlider.value = '200';
         animStepInput.value = '5';
-      } else {
+      } else if (problem === 'lasso') {
         paramSlider.min = '0.2';
         paramSlider.max = '2.0';
         paramSlider.step = '0.1';
@@ -1314,7 +1828,36 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         iterSlider.max = '1200';
         iterSlider.value = '400';
         animStepInput.value = '10';
+      } else if (problem === 'chained_rosen') {
+        paramSlider.min = '10';
+        paramSlider.max = '100';
+        paramSlider.step = '5';
+        paramSlider.value = '50';
+        iterSlider.min = '0';
+        iterSlider.max = '1200';
+        iterSlider.value = '600';
+        animStepInput.value = '10';
+      } else if (problem === 'sparse_lasso') {
+        paramSlider.min = '0.1';
+        paramSlider.max = '1.5';
+        paramSlider.step = '0.1';
+        paramSlider.value = '0.4';
+        iterSlider.min = '0';
+        iterSlider.max = '800';
+        iterSlider.value = '300';
+        animStepInput.value = '10';
+      } else {
+        // spec_quad
+        paramSlider.min = '100';
+        paramSlider.max = '10000';
+        paramSlider.step = '100';
+        paramSlider.value = '2000';
+        iterSlider.min = '0';
+        iterSlider.max = '800';
+        iterSlider.value = '400';
+        animStepInput.value = '10';
       }
+
       iterSlider.step = String(getAnimStep());
       viewBox = null;
       cachedBgKey = '';
@@ -1322,25 +1865,18 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       draw();
     }
 
-    function syncAutoZoomBtn() {
-      if (!zoomAutoBtn) return;
-      zoomAutoBtn.setAttribute('aria-pressed', String(autoZoom));
-      zoomAutoBtn.className = autoZoom
-        ? 'rounded bg-[var(--accent)] px-1.5 py-0.5 font-mono text-[10px] text-white transition-colors'
-        : 'rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]';
-    }
-
     function zoomAt(factor, cxFrac, cyFrac) {
+      if (isHighDim(problem)) return;
       autoZoom = false;
       syncAutoZoomBtn();
       const param = Number(paramSlider.value);
       const vb = getViewBounds(param);
-      const curW = vb.xMax - vb.xMin;
-      const curH = vb.yMax - vb.yMin;
-      const newW = curW * factor;
-      const newH = curH * factor;
-      const cx = vb.xMin + cxFrac * curW;
-      const cy = vb.yMax - cyFrac * curH;
+      const curW = vb.xMax - vb.xMin,
+        curH = vb.yMax - vb.yMin;
+      const newW = curW * factor,
+        newH = curH * factor;
+      const cx = vb.xMin + cxFrac * curW,
+        cy = vb.yMax - cyFrac * curH;
       viewBox = {
         xMin: cx - cxFrac * newW,
         xMax: cx + (1 - cxFrac) * newW,
@@ -1358,7 +1894,6 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       syncAutoZoomBtn();
       draw();
     });
-
     zoomInBtn?.addEventListener('click', () => zoomAt(0.6, 0.5, 0.5));
     zoomOutBtn?.addEventListener('click', () => zoomAt(1.6, 0.5, 0.5));
     zoomResetBtn?.addEventListener('click', () => {
@@ -1370,36 +1905,28 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     });
 
     contourCanvas.addEventListener('dblclick', (e) => {
+      if (isHighDim(problem)) return;
       const rect = contourCanvas.getBoundingClientRect();
-      const fx = (e.clientX - rect.left) / rect.width;
-      const fy = (e.clientY - rect.top) / rect.height;
-      zoomAt(0.55, fx, fy);
+      zoomAt(0.55, (e.clientX - rect.left) / rect.width, (e.clientY - rect.top) / rect.height);
     });
 
     contourCanvas.addEventListener('pointerdown', (e) => {
+      if (isHighDim(problem)) return;
       autoZoom = false;
       syncAutoZoomBtn();
-      const param = Number(paramSlider.value);
-      const vb = getViewBounds(param);
+      const vb = getViewBounds(Number(paramSlider.value));
       isDragging = true;
-      dragStart = {
-        clientX: e.clientX,
-        clientY: e.clientY,
-        xMin: vb.xMin,
-        xMax: vb.xMax,
-        yMin: vb.yMin,
-        yMax: vb.yMax,
-      };
+      dragStart = { clientX: e.clientX, clientY: e.clientY, xMin: vb.xMin, xMax: vb.xMax, yMin: vb.yMin, yMax: vb.yMax };
       contourCanvas.setPointerCapture(e.pointerId);
     });
 
     contourCanvas.addEventListener('pointermove', (e) => {
-      if (!isDragging || !dragStart) return;
+      if (!isDragging || !dragStart || isHighDim(problem)) return;
       const rect = contourCanvas.getBoundingClientRect();
       const dxFrac = (e.clientX - dragStart.clientX) / rect.width;
       const dyFrac = (e.clientY - dragStart.clientY) / rect.height;
-      const spanX = dragStart.xMax - dragStart.xMin;
-      const spanY = dragStart.yMax - dragStart.yMin;
+      const spanX = dragStart.xMax - dragStart.xMin,
+        spanY = dragStart.yMax - dragStart.yMin;
       viewBox = {
         xMin: dragStart.xMin - dxFrac * spanX,
         xMax: dragStart.xMax - dxFrac * spanX,
@@ -1442,7 +1969,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       btn.addEventListener('click', () => {
         const key = btn.dataset.homeMethod;
         if (!key || !(key in visibleMethods)) return;
-        if (key === 'lbfgs' && problem === 'lasso') return;
+        if (key === 'lbfgs' && isComposite(problem)) return;
         visibleMethods[key] = !visibleMethods[key];
         const on = visibleMethods[key];
         btn.setAttribute('aria-pressed', String(on));
@@ -1481,10 +2008,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         return;
       }
       const targetMax = Number(iterSlider.max);
-      const startVal = Number(iterSlider.value);
-      if (startVal >= targetMax) {
-        iterSlider.value = '0';
-      }
+      if (Number(iterSlider.value) >= targetMax) iterSlider.value = '0';
       playBtn.textContent = 'Pause';
       draw();
       animId = setInterval(() => {
