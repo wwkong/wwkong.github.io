@@ -1,4 +1,6 @@
 ---
+import { Code } from 'astro:components';
+
 interface Props {
   title: string;
   order: number;
@@ -22,6 +24,17 @@ const {
   description,
   snippet,
 } = Astro.props;
+
+const langLower = (language ?? '').toLowerCase();
+const codeLang = langLower.includes('python')
+  ? 'python'
+  : langLower.includes('julia')
+    ? 'julia'
+    : langLower.includes('c++') || langLower.includes('cpp')
+      ? 'cpp'
+      : langLower.includes('matlab')
+        ? 'matlab'
+        : 'text';
 
 // Convert basic **bold** and `code` in description safely
 const formattedDesc = description
@@ -91,7 +104,14 @@ const formattedDesc = description
         <summary class="cursor-pointer select-none px-4 py-2.5 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
           Quickstart example ({title})
         </summary>
-        <pre class="overflow-x-auto border-t border-[var(--border)] p-4 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{snippet}</code></pre>
+        <div class="overflow-x-auto border-t border-[var(--border)]">
+          <Code
+            code={snippet}
+            lang={codeLang}
+            themes={{ light: 'github-light', dark: 'github-dark' }}
+            class="rounded-b-xl p-4 font-mono text-xs leading-relaxed"
+          />
+        </div>
       </details>
     )
   }

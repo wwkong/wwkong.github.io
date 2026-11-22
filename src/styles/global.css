@@ -68,13 +68,13 @@
 /* Shiki dual theme support */
 .astro-code,
 .astro-code span {
-  background-color: var(--surface-subtle) !important;
+  background-color: var(--bg) !important;
 }
 
 .dark .astro-code,
 .dark .astro-code span {
   color: var(--shiki-dark) !important;
-  background-color: #0f172a !important;
+  background-color: var(--bg) !important;
 }
 
 /* Prose polish for math blogs */

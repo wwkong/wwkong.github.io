@@ -1,4 +1,5 @@
 ---
+import { Code } from 'astro:components';
 const proxaxSnippet = `import jax.numpy as jnp
 from proxax import px
 
@@ -135,7 +136,14 @@ print(sol.status_enum.name, sol.iters, sol.obj)`;
       Run this problem in Python / JAX with Proxax (parameter-free <code>px.solvers.APD</code>)
     </summary>
     <div class="border-t border-[var(--border)] px-5 py-4">
-      <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{proxaxSnippet}</code></pre>
+      <div class="overflow-x-auto rounded-lg border border-[var(--border)]">
+        <Code
+          code={proxaxSnippet}
+          lang="python"
+          themes={{ light: 'github-light', dark: 'github-dark' }}
+          class="p-3.5 font-mono text-xs leading-relaxed"
+        />
+      </div>
       <p class="mt-2.5 text-xs text-[var(--text-muted)]">
         <a
           href="https://proxax.readthedocs.io/en/latest/"

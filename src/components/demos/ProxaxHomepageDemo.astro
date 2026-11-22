@@ -1,5 +1,6 @@
 ---
 import katex from 'katex';
+import { Code } from 'astro:components';
 
 const tex = (expr: string) =>
   katex.renderToString(expr, { throwOnError: false, strict: false });
@@ -654,7 +655,14 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       <a href="/accel04/" class="text-[var(--accent)] underline" onclick="event.stopPropagation()">Acceleration blog series</a>
     </summary>
     <div class="border-t border-[var(--border)] px-5 py-4">
-      <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
+      <div class="overflow-x-auto rounded-lg border border-[var(--border)]">
+        <Code
+          code={rosenSnippet}
+          lang="python"
+          themes={{ light: 'github-light', dark: 'github-dark' }}
+          class="p-3.5 font-mono text-xs leading-relaxed"
+        />
+      </div>
       <p class="mt-2.5 text-xs leading-relaxed text-[var(--text-muted)]">
         The live plot above runs directly in your browser in JavaScript (no backend server). In 2D, L-BFGS has memory
         exceeding dimension so it behaves like exact Newton; in the <strong>High-Dim</strong> tabs (<span set:html={kHighDimD} />,
