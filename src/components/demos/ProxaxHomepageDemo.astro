@@ -192,6 +192,63 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     </div>
   </div>
 
+  <!-- Row 2.5: Objective Function Strip -->
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)] bg-[var(--bg)]/60 px-5 py-2.5 text-xs">
+    <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+      Objective
+    </span>
+    <div class="min-w-0 flex-1 overflow-x-auto text-sm text-[var(--text)]">
+      <div id="home-obj-rosen" class="flex flex-wrap items-center justify-between gap-2">
+        <span set:html={kRosenTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · Narrow Valley</span>
+      </div>
+      <div id="home-obj-quad" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kQuadTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Strongly Convex · Ill-Conditioned</span>
+      </div>
+      <div id="home-obj-himm" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kHimmTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · 4 Global Minima</span>
+      </div>
+      <div id="home-obj-lasso" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kL1Title} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Convex Composite · Soft-Thresholding Prox</span>
+      </div>
+      <div id="home-obj-box" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kBoxTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Composite · Saddle → Box Corner</span>
+      </div>
+      <div id="home-obj-chained" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kChainedTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 50 · Nonconvex Smooth · Coupled Chain</span>
+      </div>
+      <div id="home-obj-sparse" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kSparseTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Exact ℓ₁ Prox</span>
+      </div>
+      <div id="home-obj-simplex" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kSimplexTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Constrained · Simplex Projection</span>
+      </div>
+      <div id="home-obj-nuc" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kNucTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">8×8 (64D) · Spectral Composite · Exact SVD Prox</span>
+      </div>
+      <div id="home-obj-group" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kGroupTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Block ℓ₂,₁ Prox</span>
+      </div>
+      <div id="home-obj-logreg" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kLogRegTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Logistic + ℓ₁ Prox</span>
+      </div>
+      <div id="home-obj-spec" class="hidden flex-wrap items-center justify-between gap-2">
+        <span set:html={kSpecTitle} />
+        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 100 · Strongly Convex · Dense Rotated QΛQᵀ</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Row 2: Control Deck (Sliders + Metric + Playback) -->
   <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 lg:grid-cols-[1fr_1fr_auto_auto] lg:items-end">
     <label class="flex flex-col gap-1.5 text-xs">
@@ -407,40 +464,40 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
   <div class="grid gap-4 p-5 md:grid-cols-2">
     <div>
       <div id="home-contour-title-rosen" class="mb-2 text-xs font-medium text-[var(--text-muted)]">
-        Rosenbrock Banana Valley: <span class="text-[var(--text)]" set:html={kRosenTitle} />
+        2D Contours &amp; Trajectories — <span class="text-[var(--text)]">Rosenbrock Valley</span>
       </div>
       <div id="home-contour-title-quad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Ill-Conditioned Quadratic: <span class="text-[var(--text)]" set:html={kQuadTitle} />
+        2D Contours &amp; Trajectories — <span class="text-[var(--text)]">Ill-Conditioned Quadratic</span>
       </div>
       <div id="home-contour-title-himm" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Himmelblau (4 Global Minima): <span class="text-[var(--text)]" set:html={kHimmTitle} />
+        2D Contours &amp; Trajectories — <span class="text-[var(--text)]">Himmelblau (4 Basins)</span>
       </div>
       <div id="home-contour-title-lasso" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Nonsmooth Composite (<span set:html={kL1Btn} /> Prox): <span class="text-[var(--text)]" set:html={kL1Title} />
+        2D Contours &amp; Trajectories — <span class="text-[var(--text)]">Composite <span set:html={kL1Btn} /> Axes</span>
       </div>
       <div id="home-contour-title-box" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Indefinite Box QP (Saddle → Corner): <span class="text-[var(--text)]" set:html={kBoxTitle} />
+        2D Contours &amp; Trajectories — <span class="text-[var(--text)]">Indefinite Box QP ([-1, 1]²)</span>
       </div>
       <div id="home-contour-title-chained" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Coordinate Profile (<span class="text-[var(--text)]" set:html={kChainedTitle} />)
+        Coordinate Profile — <span class="text-[var(--text)]">xᵢ vs. Target x* = 1 (50D)</span>
       </div>
       <div id="home-contour-title-sparse" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Sparse Signal Recovery: <span class="text-[var(--text)]" set:html={kSparseTitle} />
+        Sparse Signal Recovery — <span class="text-[var(--text)]">log₁₀ |xᵢ| (64D)</span>
       </div>
       <div id="home-contour-title-simplex" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Simplex Weights (<span class="text-[var(--text)]" set:html={kSimplexTitle} />)
+        Simplex Portfolio Weights — <span class="text-[var(--text)]">xᵢ ∈ Δ⁶³ (64D)</span>
       </div>
       <div id="home-contour-title-nuc" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Singular Value Spectrum (<span class="text-[var(--text)]" set:html={kNucTitle} />)
+        Singular Value Spectrum — <span class="text-[var(--text)]">log₁₀ σᵢ(X) (Rank-2 Recovery)</span>
       </div>
       <div id="home-contour-title-group" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Group Norms (<span class="text-[var(--text)]" set:html={kGroupTitle} />)
+        Block Sparsity — <span class="text-[var(--text)]">log₁₀ ‖x_g‖₂ Across 8 Groups</span>
       </div>
       <div id="home-contour-title-logreg" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Sparse Feature Weights (<span class="text-[var(--text)]" set:html={kLogRegTitle} />)
+        Sparse Feature Recovery — <span class="text-[var(--text)]">log₁₀ |xᵢ| (64D)</span>
       </div>
       <div id="home-contour-title-spec" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        Per-Eigenmode Error: <span class="text-[var(--text)]" set:html={kSpecTitle} />
+        Per-Eigenmode Error — <span class="text-[var(--text)]">log₁₀ |[Qᵀ(x − x*)]ᵢ| (100D)</span>
       </div>
 
       <div class="relative">
@@ -559,6 +616,20 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       lasso: document.getElementById('home-param-label-lasso'),
       simplex: document.getElementById('home-param-label-simplex'),
       box: document.getElementById('home-param-label-box'),
+    };
+    const objectiveRows = {
+      rosenbrock: document.getElementById('home-obj-rosen'),
+      quadratic: document.getElementById('home-obj-quad'),
+      himmelblau: document.getElementById('home-obj-himm'),
+      lasso: document.getElementById('home-obj-lasso'),
+      box_qp: document.getElementById('home-obj-box'),
+      chained_rosen: document.getElementById('home-obj-chained'),
+      sparse_lasso: document.getElementById('home-obj-sparse'),
+      simplex_qp: document.getElementById('home-obj-simplex'),
+      nuc_norm: document.getElementById('home-obj-nuc'),
+      group_lasso: document.getElementById('home-obj-group'),
+      sparse_logreg: document.getElementById('home-obj-logreg'),
+      spec_quad: document.getElementById('home-obj-spec'),
     };
     const contourTitles = {
       rosenbrock: document.getElementById('home-contour-title-rosen'),
@@ -2874,6 +2945,12 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]';
       });
       Object.entries(contourTitles).forEach(([k, el]) => el?.classList.toggle('hidden', k !== problem));
+      Object.entries(objectiveRows).forEach(([k, el]) => {
+        if (!el) return;
+        const active = k === problem;
+        el.classList.toggle('hidden', !active);
+        el.classList.toggle('flex', active);
+      });
 
       const lblKey =
         problem === 'rosenbrock' || problem === 'chained_rosen'
