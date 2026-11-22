@@ -610,14 +610,14 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         sparseA[i] = row;
       }
       const spikes = [
-        [5, 2.4],
-        [14, -2.0],
-        [23, 2.8],
-        [31, -1.8],
-        [40, 2.2],
-        [49, -2.6],
-        [56, 1.9],
-        [61, -2.1],
+        [5, 0.85],
+        [14, -0.7],
+        [23, 0.95],
+        [31, -0.65],
+        [40, 0.8],
+        [49, -0.9],
+        [56, 0.68],
+        [61, -0.75],
       ];
       spikes.forEach(([idx, val]) => {
         sparseTrue[idx] = val;
@@ -1578,22 +1578,25 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         cCtx.fillText('coord i = 1', pad.l, H - 10);
         cCtx.fillText(`i = ${d}`, W - pad.r - 36, H - 10);
       } else if (problem === 'sparse_lasso') {
-        // Stem plot: true sparse signal vs APD & GD recovered coordinates
-        const yMin = -3.2,
-          yMax = 3.2;
+        // Log-scale magnitude plot: log10|x_i| from 10^0 (1.0) down to 10^-8
+        const minLog = -8,
+          maxLog = 0;
         const sx = (i) => pad.l + ((i + 0.5) / d) * plotW;
-        const sy = (v) => pad.t + ((yMax - Math.max(yMin, Math.min(yMax, v))) / (yMax - yMin)) * plotH;
-        const y0 = sy(0);
+        const sy = (val) => {
+          const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(Math.abs(val), 1e-12))));
+          return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
+        };
+        const yFloor = sy(1e-8);
 
-        [-2, 0, 2].forEach((val) => {
-          const y = sy(val);
-          cCtx.strokeStyle = val === 0 ? axisColor : gridColor;
+        for (let p = minLog; p <= maxLog; p += 2) {
+          const y = pad.t + ((maxLog - p) / (maxLog - minLog)) * plotH;
+          cCtx.strokeStyle = p === minLog ? axisColor : gridColor;
           cCtx.beginPath();
           cCtx.moveTo(pad.l, y);
           cCtx.lineTo(W - pad.r, y);
           cCtx.stroke();
-          cCtx.fillText(String(val), 14, y + 3);
-        });
+          cCtx.fillText(p === 0 ? '1.0' : `10^${p}`, 4, y + 3);
+        }
 
         // True spikes background stems
         for (let i = 0; i < d; i++) {
@@ -1603,47 +1606,44 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.22)';
             cCtx.lineWidth = 5;
             cCtx.beginPath();
-            cCtx.moveTo(px, y0);
+            cCtx.moveTo(px, yFloor);
             cCtx.lineTo(px, py);
             cCtx.stroke();
           }
         }
 
-        // Recovered stems for APD (primary) + dots for GD / Adam if visible
         const drawDots = (vec, color, r) => {
           cCtx.fillStyle = color;
           for (let i = 0; i < d; i++) {
-            if (Math.abs(vec[i]) > 0.03 || sparseTrue[i] !== 0) {
-              cCtx.beginPath();
-              cCtx.arc(sx(i), sy(vec[i]), r, 0, Math.PI * 2);
-              cCtx.fill();
-            }
+            cCtx.beginPath();
+            cCtx.arc(sx(i), sy(vec[i]), r, 0, Math.PI * 2);
+            cCtx.fill();
           }
         };
 
         if (visibleMethods.apd) {
           const vec = trajs.apd[K];
           cCtx.strokeStyle = '#10b981';
-          cCtx.lineWidth = 2;
+          cCtx.lineWidth = 1.8;
           for (let i = 0; i < d; i++) {
-            if (Math.abs(vec[i]) > 0.02) {
+            if (Math.abs(vec[i]) > 1e-8) {
               cCtx.beginPath();
-              cCtx.moveTo(sx(i), y0);
+              cCtx.moveTo(sx(i), yFloor);
               cCtx.lineTo(sx(i), sy(vec[i]));
               cCtx.stroke();
             }
           }
-          drawDots(vec, '#10b981', 3.2);
+          drawDots(vec, '#10b981', 3.0);
         }
-        if (visibleMethods.gd) drawDots(trajs.gd[K], '#ef4444', 2.3);
-        if (visibleMethods.agd) drawDots(trajs.agd[K], '#f59e0b', 2.3);
-        if (visibleMethods.nag) drawDots(trajs.nag[K], '#8b5cf6', 2.3);
-        if (visibleMethods.anag) drawDots(trajs.anag[K], '#0ea5e9', 2.3);
-        if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.3);
-        if (visibleMethods.lbfgs) drawDots(trajs.lbfgs[K], lbfgsColor, 2.2);
+        if (visibleMethods.gd) drawDots(trajs.gd[K], '#ef4444', 2.1);
+        if (visibleMethods.agd) drawDots(trajs.agd[K], '#f59e0b', 2.1);
+        if (visibleMethods.nag) drawDots(trajs.nag[K], '#8b5cf6', 2.1);
+        if (visibleMethods.anag) drawDots(trajs.anag[K], '#0ea5e9', 2.1);
+        if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.1);
+        if (visibleMethods.lbfgs) drawDots(trajs.lbfgs[K], lbfgsColor, 2.1);
 
         cCtx.fillStyle = textColor;
-        cCtx.fillText('gray bars = true spikes · i = 1..64', pad.l, H - 10);
+        cCtx.fillText('log₁₀|xᵢ| · gray bars = true spikes · i = 1..64', pad.l, H - 10);
       } else if (problem === 'simplex_qp') {
         // Simplex weights x_i in [0, 0.32] across i = 1..64
         const yMin = 0,
@@ -1775,7 +1775,11 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       const param = Number(paramSlider.value);
       const K = Number(iterSlider.value);
       paramVal.textContent =
-        problem === 'simplex_qp' ? param.toFixed(2) : isComposite(problem) ? param.toFixed(1) : String(param);
+        problem === 'simplex_qp' || problem === 'sparse_lasso'
+          ? param.toFixed(2)
+          : isComposite(problem)
+            ? param.toFixed(1)
+            : String(param);
       iterVal.textContent = String(K);
 
       const isDark = document.documentElement.classList.contains('dark');
@@ -2157,10 +2161,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         iterSlider.value = '600';
         animStepInput.value = '10';
       } else if (problem === 'sparse_lasso') {
-        paramSlider.min = '0.1';
-        paramSlider.max = '1.5';
-        paramSlider.step = '0.1';
-        paramSlider.value = '0.4';
+        paramSlider.min = '0.05';
+        paramSlider.max = '0.50';
+        paramSlider.step = '0.05';
+        paramSlider.value = '0.15';
         iterSlider.min = '0';
         iterSlider.max = '800';
         iterSlider.value = '300';
