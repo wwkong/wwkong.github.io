@@ -1,4 +1,25 @@
 ---
+import katex from 'katex';
+
+const tex = (expr: string) =>
+  katex.renderToString(expr, { throwOnError: false, strict: false });
+
+const kRosenTitle = tex('f(x_1, x_2) = (1 - x_1)^2 + b(x_2 - x_1^2)^2');
+const kQuadTitle = tex('f(x_1, x_2) = \\tfrac{1}{2}(x_1^2 + \\kappa x_2^2)');
+const kParamRosen = tex('b');
+const kParamQuad = tex('\\kappa = L/\\mu');
+const kIterK = tex('k');
+const kObjMetric = tex('f(x_k) - f^*');
+const kGradMetric = tex('\\|\\nabla f(x_k)\\|');
+const kCurveObj = tex('\\log_{10}(f(x_k) - f^*)');
+const kCurveGrad = tex('\\log_{10}\\|\\nabla f(x_k)\\|');
+const kQuadBtn = tex('\\kappa = 500');
+const kXStar = tex('x^* = (1, 1)');
+const kB100 = tex('b = 100');
+const kKappa2500 = tex('\\kappa \\approx 2500');
+const kL = tex('L');
+const kMu = tex('\\mu');
+
 const rosenSnippet = `import jax.numpy as jnp
 from proxax import px
 
@@ -15,10 +36,7 @@ sol = px.solve(
 print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 ---
 
-<div
-  id="proxax-home-demo"
-  class="card overflow-hidden shadow-sm"
->
+<div id="proxax-home-demo" class="card overflow-hidden shadow-sm">
   <!-- Header -->
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-4">
     <div>
@@ -27,7 +45,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           Interactive Optimization Sandbox
         </span>
         <span class="text-xs text-[var(--text-muted)]">
-          Powered by{' '}
+          Inspired by{' '}
           <a
             href="https://proxax.readthedocs.io/en/latest/"
             target="_blank"
@@ -56,7 +74,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           data-home-problem="quadratic"
           class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
         >
-          Quadratic (κ=500)
+          Quadratic (<span set:html={kQuadBtn} />)
         </button>
       </div>
 
@@ -74,7 +92,12 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
   <div class="grid gap-4 border-b border-[var(--border)] px-5 py-3.5 sm:grid-cols-3">
     <label class="flex flex-col gap-1.5 text-xs">
       <div class="flex items-center justify-between">
-        <span id="home-param-label" class="font-medium text-[var(--text)]">Valley steepness b</span>
+        <span id="home-param-label-rosen" class="font-medium text-[var(--text)]">
+          Valley steepness <span set:html={kParamRosen} />
+        </span>
+        <span id="home-param-label-quad" class="hidden font-medium text-[var(--text)]">
+          Condition number <span set:html={kParamQuad} />
+        </span>
         <span id="home-param-val" class="font-mono font-semibold text-[var(--accent)]">100</span>
       </div>
       <input
@@ -90,16 +113,18 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 
     <label class="flex flex-col gap-1.5 text-xs">
       <div class="flex items-center justify-between">
-        <span class="font-medium text-[var(--text)]">Iterations (k)</span>
-        <span id="home-iter-val" class="font-mono font-semibold text-[var(--accent)]">250</span>
+        <span class="font-medium text-[var(--text)]">
+          Iterations (<span set:html={kIterK} />)
+        </span>
+        <span id="home-iter-val" class="font-mono font-semibold text-[var(--accent)]">2500</span>
       </div>
       <input
         id="home-iter-slider"
         type="range"
-        min="10"
-        max="350"
-        value="250"
-        step="5"
+        min="50"
+        max="3500"
+        value="2500"
+        step="25"
         class="accent-[var(--accent)]"
       />
     </label>
@@ -112,14 +137,14 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           data-home-metric="obj"
           class="home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs"
         >
-          Objective f(xₖ) − f*
+          Objective <span set:html={kObjMetric} />
         </button>
         <button
           type="button"
           data-home-metric="grad"
           class="home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]"
         >
-          Stationarity ‖∇f(xₖ)‖
+          Stationarity <span set:html={kGradMetric} />
         </button>
       </div>
     </div>
@@ -148,8 +173,11 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
   <!-- Canvases -->
   <div class="grid gap-4 p-5 md:grid-cols-2">
     <div>
-      <div id="home-contour-title" class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
-        Rosenbrock Banana Valley: f(x₁, x₂) = (1 − x₁)² + b(x₂ − x₁²)²
+      <div id="home-contour-title-rosen" class="mb-2 text-xs font-medium text-[var(--text-muted)]">
+        Rosenbrock Banana Valley: <span class="text-[var(--text)]" set:html={kRosenTitle} />
+      </div>
+      <div id="home-contour-title-quad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Ill-Conditioned Quadratic: <span class="text-[var(--text)]" set:html={kQuadTitle} />
       </div>
       <canvas
         id="home-contour-canvas"
@@ -160,8 +188,11 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     </div>
 
     <div>
-      <div id="home-curve-title" class="mb-1.5 text-xs font-medium text-[var(--text-muted)]">
-        Log₁₀ Suboptimality (orders of magnitude gap)
+      <div id="home-curve-title-obj" class="mb-2 text-xs font-medium text-[var(--text-muted)]">
+        <span class="text-[var(--text)]" set:html={kCurveObj} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
+      </div>
+      <div id="home-curve-title-grad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        <span class="text-[var(--text)]" set:html={kCurveGrad} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
       </div>
       <canvas
         id="home-curve-canvas"
@@ -180,16 +211,20 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     </summary>
     <div class="border-t border-[var(--border)] px-5 py-4">
       <pre class="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-3.5 font-mono text-xs leading-relaxed text-[var(--text)]"><code>{rosenSnippet}</code></pre>
-      <p class="mt-2.5 text-xs text-[var(--text-muted)]">
-        Because the Rosenbrock valley is nonconvex and severely ill-conditioned (local condition number ≈ 2500 at <em>x*</em> = (1, 1) when <em>b</em> = 100), fixed-step GD crawls along the curved trough. Adaptive curvature estimation combined with accelerated extrapolation and restart—as implemented in{' '}
+      <p class="mt-2.5 text-xs leading-relaxed text-[var(--text-muted)]">
+        The live plot above runs directly in your browser in JavaScript (no backend server). Because the Rosenbrock
+        valley is nonconvex and severely ill-conditioned (local condition number <span set:html={kKappa2500} /> at{' '}
+        <span set:html={kXStar} /> when <span set:html={kB100} />), fixed-step GD crawls along the curved trough.
+        Adaptive curvature estimation combined with accelerated extrapolation and restart—as implemented in{' '}
         <a
           href="https://proxax.readthedocs.io/en/latest/"
           target="_blank"
           rel="noopener noreferrer"
           class="font-semibold text-[var(--accent)] underline"
           >Proxax</a
-        >
-        (<code class="font-mono">px.solvers.APD</code>)—reaches high accuracy orders of magnitude faster without tuning <em>L</em> or <em>μ</em>.
+        >{' '}
+        (<code class="font-mono">px.solvers.APD</code>)—reaches machine precision orders of magnitude faster without
+        tuning <span set:html={kL} /> or <span set:html={kMu} />.
       </p>
     </div>
   </details>
@@ -198,14 +233,17 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 <script is:inline>
   (function () {
     const paramSlider = document.getElementById('home-param-slider');
-    const paramLabel = document.getElementById('home-param-label');
+    const paramLabelRosen = document.getElementById('home-param-label-rosen');
+    const paramLabelQuad = document.getElementById('home-param-label-quad');
     const paramVal = document.getElementById('home-param-val');
     const iterSlider = document.getElementById('home-iter-slider');
     const iterVal = document.getElementById('home-iter-val');
     const playBtn = document.getElementById('home-demo-play');
     const gapBadge = document.getElementById('home-demo-gap');
-    const contourTitle = document.getElementById('home-contour-title');
-    const curveTitle = document.getElementById('home-curve-title');
+    const contourTitleRosen = document.getElementById('home-contour-title-rosen');
+    const contourTitleQuad = document.getElementById('home-contour-title-quad');
+    const curveTitleObj = document.getElementById('home-curve-title-obj');
+    const curveTitleGrad = document.getElementById('home-curve-title-grad');
     const contourCanvas = document.getElementById('home-contour-canvas');
     const curveCanvas = document.getElementById('home-curve-canvas');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
@@ -280,7 +318,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         agd.push(xn);
       }
 
-      // 3. Adaptive Accelerated Proximal Descent (Proxax APD-style: adaptive L + Nesterov extrapolation + adaptive restart)
+      // 3. Adaptive Accelerated Proximal Descent (Proxax APD-style)
       const apd = [[...x0]];
       let xPrev = [...x0];
       let y = [...x0];
@@ -304,7 +342,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           }
           L2 *= 2.0;
         }
-        // Adaptive gradient restart
         if ((y[0] - xn[0]) * (xn[0] - xPrev[0]) + (y[1] - xn[1]) * (xn[1] - xPrev[1]) > 0) {
           t = 1.0;
           y = [...xn];
@@ -334,14 +371,12 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         for (let px = 0; px < W; px++) {
           const wx = xMin + (px / (W - 1)) * (xMax - xMin);
           const v = fEval([wx, wy], param);
-          // Smooth log-scale shading + delicate contour rings
           const lv = Math.log10(v + 1e-3);
           const norm = Math.max(0, Math.min(1, (lv + 2.5) / 5.5));
-          const ring = Math.abs(((lv * 2.2) % 1 + 1) % 1 - 0.5) < 0.045;
+          const ring = Math.abs((((lv * 2.2) % 1) + 1) % 1 - 0.5) < 0.045;
 
           const idx = (py * W + px) * 4;
           if (isDark) {
-            // Deep pine trough -> dark slate highlands
             let r = 10 + norm * 16;
             let g = 46 - norm * 22;
             let b = 33 - norm * 12;
@@ -355,7 +390,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
             data[idx + 2] = b;
             data[idx + 3] = 255;
           } else {
-            // Crisp mint valley -> soft sage off-white highlands
             let r = 205 + norm * 45;
             let g = 242 + norm * 10;
             let b = 221 + norm * 28;
@@ -411,7 +445,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       const toX = (x) => ((x - xMin) / (xMax - xMin)) * W;
       const toY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
 
-      // Subtle valley centerline y = x^2 for Rosenbrock
       if (problem === 'rosenbrock') {
         cCtx.strokeStyle = isDark ? 'rgba(52,211,153,0.35)' : 'rgba(21,128,61,0.28)';
         cCtx.setLineDash([4, 4]);
@@ -454,7 +487,6 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       drawTrail(agd, '#f59e0b', 2);
       drawTrail(apd, '#10b981', 2.4);
 
-      // Start & Optimum markers
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
       cCtx.beginPath();
       cCtx.arc(toX(x0[0]), toY(x0[1]), 4.5, 0, Math.PI * 2);
@@ -478,15 +510,15 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       const GH = curveCanvas.height;
       gCtx.clearRect(0, 0, GW, GH);
 
-      const pad = { l: 48, r: 16, t: 18, b: 30 };
+      const pad = { l: 50, r: 16, t: 18, b: 30 };
       const plotW = GW - pad.l - pad.r;
       const plotH = GH - pad.t - pad.b;
-      const minLog = -10;
-      const maxLog = 3;
+      const minLog = -14;
+      const maxLog = 2;
 
       const gx = (k) => pad.l + (k / Math.max(1, K)) * plotW;
       const gy = (val) => {
-        const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(val, 1e-12))));
+        const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(val, 1e-16))));
         return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
       };
 
@@ -510,18 +542,22 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       gCtx.lineTo(GW - pad.r, GH - pad.b);
       gCtx.stroke();
       gCtx.fillText('0', pad.l - 2, GH - 10);
-      gCtx.fillText(`k = ${K}`, GW - pad.r - 42, GH - 10);
+      gCtx.fillText(`k = ${K}`, GW - pad.r - 52, GH - 10);
 
+      // Stride plotting gently when K is large so canvas stays crisp & fast
+      const stride = Math.max(1, Math.floor(K / 450));
       function drawCurve(pts, color) {
         gCtx.strokeStyle = color;
         gCtx.lineWidth = 2.25;
         gCtx.beginPath();
-        pts.forEach((pt, k) => {
+        for (let k = 0; k < pts.length; k += stride) {
           const px = gx(k);
-          const py = gy(metricFn(pt));
+          const py = gy(metricFn(pts[k]));
           if (k === 0) gCtx.moveTo(px, py);
           else gCtx.lineTo(px, py);
-        });
+        }
+        const lastIdx = pts.length - 1;
+        gCtx.lineTo(gx(lastIdx), gy(metricFn(pts[lastIdx])));
         gCtx.stroke();
       }
 
@@ -537,24 +573,30 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           ? 'home-prob-btn rounded-md bg-[var(--accent)] px-2.5 py-1 text-white'
           : 'home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
       });
-      if (problem === 'rosenbrock') {
-        paramLabel.textContent = 'Valley steepness b';
+      const isRosen = problem === 'rosenbrock';
+      paramLabelRosen?.classList.toggle('hidden', !isRosen);
+      paramLabelQuad?.classList.toggle('hidden', isRosen);
+      contourTitleRosen?.classList.toggle('hidden', !isRosen);
+      contourTitleQuad?.classList.toggle('hidden', isRosen);
+
+      if (isRosen) {
         paramSlider.min = '15';
         paramSlider.max = '180';
         paramSlider.step = '5';
         paramSlider.value = '100';
-        iterSlider.max = '350';
-        iterSlider.value = '250';
-        contourTitle.textContent = 'Rosenbrock Banana Valley: f(x₁, x₂) = (1 − x₁)² + b(x₂ − x₁²)²';
+        iterSlider.min = '50';
+        iterSlider.max = '3500';
+        iterSlider.step = '25';
+        iterSlider.value = '2500';
       } else {
-        paramLabel.textContent = 'Condition number κ = L / μ';
         paramSlider.min = '50';
         paramSlider.max = '1000';
         paramSlider.step = '25';
         paramSlider.value = '500';
-        iterSlider.max = '250';
-        iterSlider.value = '120';
-        contourTitle.textContent = 'Ill-Conditioned Quadratic: f(x₁, x₂) = ½(x₁² + κx₂²)';
+        iterSlider.min = '50';
+        iterSlider.max = '2500';
+        iterSlider.step = '25';
+        iterSlider.value = '1200';
       }
       cachedBgKey = '';
       draw();
@@ -576,10 +618,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
             ? 'home-metric-btn rounded-md bg-[var(--surface)] px-2.5 py-1 text-[var(--text)] shadow-xs'
             : 'home-metric-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--text)]';
         });
-        curveTitle.textContent =
-          metric === 'obj'
-            ? 'Log₁₀ Suboptimality f(xₖ) − f* vs. Iteration k'
-            : 'Log₁₀ Stationarity Residual ‖∇f(xₖ)‖ vs. Iteration k';
+        curveTitleObj?.classList.toggle('hidden', metric !== 'obj');
+        curveTitleGrad?.classList.toggle('hidden', metric === 'obj');
         draw();
       })
     );
@@ -599,7 +639,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         return;
       }
       const targetMax = Number(iterSlider.max);
-      iterSlider.value = '10';
+      const step = Math.max(25, Math.round(targetMax / 70));
+      iterSlider.value = '50';
       playBtn.textContent = 'Pause';
       draw();
       animId = setInterval(() => {
@@ -610,7 +651,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
           playBtn.textContent = 'Play';
           return;
         }
-        iterSlider.value = String(cur + 5);
+        iterSlider.value = String(Math.min(targetMax, cur + step));
         draw();
       }, 45);
     });

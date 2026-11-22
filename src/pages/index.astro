@@ -4,215 +4,204 @@ import ProxaxHomepageDemo from '../components/demos/ProxaxHomepageDemo.astro';
 import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
 ---
 
-<BaseLayout title={SITE.title} description={SITE.description}>
-  <!-- Hero / Bio -->
-  <section class="grid items-start gap-8 pb-12 md:grid-cols-[176px_minmax(0,1fr)]">
-    <div class="flex flex-col items-start gap-4">
-      <img
-        src={SITE.avatar}
-        alt={SITE.name}
-        width="176"
-        height="176"
-        class="h-36 w-36 rounded-2xl border border-[var(--border)] object-cover shadow-sm md:h-44 md:w-44"
-      />
-      <div class="flex flex-wrap gap-2">
-        {
-          SITE.socials.map((s) => (
+<BaseLayout title={SITE.title} description={SITE.description} includeKatex={true}>
+  <div class="space-y-7">
+    <!-- Top Row: Bio + Recent News side-by-side (zero wasted gutter) -->
+    <section class="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+      <!-- Bio Card -->
+      <div class="card p-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <img
+            src={SITE.avatar}
+            alt={SITE.name}
+            width="96"
+            height="96"
+            class="h-24 w-24 shrink-0 rounded-2xl border border-[var(--border)] object-cover shadow-xs"
+          />
+          <div class="min-w-0">
+            <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--text-muted)]">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              {SITE.role} · {SITE.affiliation}
+            </div>
+            <h1 class="mt-1.5 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">
+              {SITE.fullName}
+            </h1>
+            <div class="mt-2.5 flex flex-wrap gap-1.5">
+              {
+                SITE.socials.map((s) => (
+                  <a
+                    href={s.href}
+                    target={s.href.startsWith('http') ? '_blank' : undefined}
+                    rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    class="rounded-lg border border-[var(--border)] bg-[var(--surface-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  >
+                    {s.label}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 space-y-2.5 text-sm leading-relaxed text-[var(--text-muted)]">
+          <p>
+            Hi! I'm <strong class="font-semibold text-[var(--text)]">William Kong</strong>, a Research Software
+            Engineer at{' '}
             <a
-              href={s.href}
-              target={s.href.startsWith('http') ? '_blank' : undefined}
-              rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-            >
-              {s.label}
-            </a>
+              href="https://research.google/locations/new-york/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Google Research (NYC)</a
+            >{' '}
+            in{' '}
+            <a
+              href="https://research.google/teams/athena/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Athena</a
+            >. Here you'll find my{' '}
+            <a href="/publications/" class="font-medium text-[var(--accent)] underline underline-offset-2">publications</a>,
+            open-source{' '}
+            <a href="/software/" class="font-medium text-[var(--accent)] underline underline-offset-2">software</a>,
+            mathematical{' '}
+            <a href="/year-archive/" class="font-medium text-[var(--accent)] underline underline-offset-2">blog posts</a>,
+            and{' '}
+            <a href="/notes/" class="font-medium text-[var(--accent)] underline underline-offset-2">course notes</a>.
+          </p>
+          <p>
+            Previously, I was a postdoc in the{' '}
+            <a
+              href="https://www.ornl.gov/division/csmd"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >CSMD</a
+            >{' '}
+            at{' '}
+            <a
+              href="https://www.ornl.gov/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Oak Ridge National Labs</a
+            >{' '}
+            under{' '}
+            <a
+              href="https://www.ornl.gov/staff-profile/miroslav-k-stoyanov"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Miroslav Stoyanov</a
+            >, a Research Intern at Google Research (MTV), and a Senior Risk Analyst at{' '}
+            <a
+              href="https://www.td.com/us/en/personal-banking"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >TD Bank</a
+            >.
+          </p>
+          <p>
+            I received my Ph.D. in Operations Research from{' '}
+            <a
+              href="https://www.gatech.edu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Georgia Tech</a
+            >{' '}
+            under{' '}
+            <a
+              href="https://sites.gatech.edu/renato-monteiro/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >Renato D. C. Monteiro</a
+            >, along with an M.Sc. in Computational Science &amp; Engineering (Georgia Tech) and a B.Math. from the{' '}
+            <a
+              href="https://uwaterloo.ca/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--accent)] underline underline-offset-2"
+              >University of Waterloo</a
+            >.
+          </p>
+        </div>
+      </div>
+
+      <!-- Recent News Card (above the fold!) -->
+      <div class="card flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
+          <h2 class="text-sm font-bold tracking-tight text-[var(--text)]">Recent News</h2>
+          <a href="/publications/" class="text-xs font-medium text-[var(--accent)] hover:underline">
+            All papers →
+          </a>
+        </div>
+        <ul class="divide-y divide-[var(--border)]">
+          {
+            RECENT_NEWS.map((item) => (
+              <li class="flex items-baseline gap-3 px-5 py-2.5 text-xs leading-relaxed">
+                <span class="w-16 shrink-0 font-mono text-[11px] font-semibold text-[var(--accent)]">
+                  {item.date}
+                </span>
+                <a
+                  href={item.href}
+                  class="text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+                >
+                  {item.text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Research Pillars -->
+    <section>
+      <div class="mb-3 flex items-baseline justify-between">
+        <h2 class="text-lg font-bold tracking-tight text-[var(--text)]">Research Pillars</h2>
+        <a href="/publications/" class="text-xs font-medium text-[var(--accent)] hover:underline">
+          View all 27 publications →
+        </a>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          RESEARCH_PILLARS.map((pillar) => (
+            <div class="card card-hover flex flex-col justify-between p-4">
+              <div>
+                <h3 class="text-sm font-semibold text-[var(--text)]">{pillar.title}</h3>
+                <p class="mt-1.5 text-xs leading-relaxed text-[var(--text-muted)]">{pillar.summary}</p>
+              </div>
+              <div class="mt-3 flex flex-wrap gap-3 pt-1">
+                {pillar.links.map((l) => (
+                  <a
+                    href={l.href}
+                    target={l.href.startsWith('http') ? '_blank' : undefined}
+                    rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    class="text-xs font-semibold text-[var(--accent)] hover:underline"
+                  >
+                    {l.label} →
+                  </a>
+                ))}
+              </div>
+            </div>
           ))
         }
       </div>
-    </div>
+    </section>
 
-    <div class="space-y-4">
-      <div>
-        <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs font-medium text-[var(--text-muted)]">
-          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-          {SITE.role} · {SITE.affiliation}
-        </div>
-        <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--text)] sm:text-4xl">
-          {SITE.fullName}
-        </h1>
+    <!-- Interactive Optimization Demo -->
+    <section>
+      <div class="mb-3 flex items-baseline justify-between">
+        <h2 class="text-lg font-bold tracking-tight text-[var(--text)]">Interactive Demo</h2>
+        <a href="/software/" class="text-xs font-medium text-[var(--accent)] hover:underline">
+          Explore Proxax &amp; software →
+        </a>
       </div>
-
-      <div class="space-y-3 text-[0.96rem] leading-relaxed text-[var(--text-muted)]">
-        <p>
-          Hi there! My name is <strong class="font-semibold text-[var(--text)]">William Kong</strong>, and here
-          you will find my recent{' '}
-          <a href="/publications/" class="font-medium text-[var(--accent)] underline underline-offset-2">publications</a>,
-          open-source{' '}
-          <a href="/software/" class="font-medium text-[var(--accent)] underline underline-offset-2">software</a>,
-          mathematical{' '}
-          <a href="/year-archive/" class="font-medium text-[var(--accent)] underline underline-offset-2">blog posts</a>,
-          and detailed{' '}
-          <a href="/notes/" class="font-medium text-[var(--accent)] underline underline-offset-2">course notes</a>.
-        </p>
-        <p>
-          Currently, I am a Research Software Engineer at{' '}
-          <a
-            href="https://research.google/locations/new-york/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Google Research (NYC)</a
-          >{' '}
-          in{' '}
-          <a
-            href="https://research.google/teams/athena/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Athena</a
-          >, working on differentially private machine learning, synthetic data for large language models, and
-          certified optimization algorithms.
-        </p>
-        <p>
-          Prior to my current role, I was a postdoc in the{' '}
-          <a
-            href="https://www.ornl.gov/division/csmd"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Computer Science and Mathematics Division</a
-          >{' '}
-          at{' '}
-          <a
-            href="https://www.ornl.gov/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Oak Ridge National Labs</a
-          >{' '}
-          under{' '}
-          <a
-            href="https://www.ornl.gov/staff-profile/miroslav-k-stoyanov"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Miroslav Stoyanov</a
-          >. Before that, I worked as a Research Intern for two summers at{' '}
-          <a
-            href="https://research.google/teams/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Google Research (MTV)</a
-          >{' '}
-          and as a Senior Risk Analyst for 2.5 years at{' '}
-          <a
-            href="https://www.td.com/us/en/personal-banking"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >TD Bank</a
-          >.
-        </p>
-        <p>
-          I received my Ph.D. in Operations Research from{' '}
-          <a
-            href="https://www.gatech.edu/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Georgia Tech</a
-          >{' '}
-          under{' '}
-          <a
-            href="https://sites.gatech.edu/renato-monteiro/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >Renato D. C. Monteiro</a
-          >, specializing in accelerated iterative methods for nonconvex continuous optimization. My other degrees
-          include an M.Sc. in Computational Science &amp; Engineering from Georgia Tech and a B.Math. from the{' '}
-          <a
-            href="https://uwaterloo.ca/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-            >University of Waterloo</a
-          >.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Research Pillars -->
-  <section class="border-t border-[var(--border)] py-10">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">Research Pillars</h2>
-      <a href="/publications/" class="text-xs font-medium text-[var(--accent)] hover:underline">
-        View all 27 publications →
-      </a>
-    </div>
-    <div class="grid gap-4 md:grid-cols-3">
-      {
-        RESEARCH_PILLARS.map((pillar) => (
-          <div class="card card-hover flex flex-col justify-between p-5">
-            <div>
-              <h3 class="text-base font-semibold text-[var(--text)]">{pillar.title}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">{pillar.summary}</p>
-            </div>
-            <div class="mt-4 flex flex-wrap gap-3 pt-2">
-              {pillar.links.map((l) => (
-                <a
-                  href={l.href}
-                  target={l.href.startsWith('http') ? '_blank' : undefined}
-                  rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  class="text-xs font-semibold text-[var(--accent)] hover:underline"
-                >
-                  {l.label} →
-                </a>
-              ))}
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  <!-- Interactive Optimization Demo -->
-  <section class="border-t border-[var(--border)] py-10">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">Interactive Demo</h2>
-      <a href="/software/" class="text-xs font-medium text-[var(--accent)] hover:underline">
-        Explore Proxax &amp; software →
-      </a>
-    </div>
-    <ProxaxHomepageDemo />
-  </section>
-
-  <!-- Recent News -->
-  <section class="border-t border-[var(--border)] pt-10">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">Recent News</h2>
-      <a href="/year-archive/" class="text-xs font-medium text-[var(--accent)] hover:underline">
-        Read blog posts →
-      </a>
-    </div>
-    <ul class="card divide-y divide-[var(--border)]">
-      {
-        RECENT_NEWS.map((item) => (
-          <li class="flex flex-col gap-1 px-5 py-3.5 text-sm sm:flex-row sm:items-baseline sm:gap-5">
-            <span class="w-24 shrink-0 font-mono text-xs font-medium text-[var(--accent)]">
-              {item.date}
-            </span>
-            <a
-              href={item.href}
-              class="text-[var(--text)] transition-colors hover:text-[var(--accent)]"
-            >
-              {item.text}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+      <ProxaxHomepageDemo />
+    </section>
+  </div>
 </BaseLayout>
