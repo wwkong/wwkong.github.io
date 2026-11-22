@@ -78,6 +78,30 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         </button>
       </div>
 
+      <label
+        class="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-xs text-[var(--text-muted)]"
+        title="Iterations added per animation frame (and slider step)"
+      >
+        <span>Step</span>
+        <input
+          id="home-anim-step"
+          type="number"
+          min="1"
+          max="2000"
+          value="100"
+          class="w-16 rounded border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 text-right font-mono text-xs font-semibold text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+        />
+      </label>
+
+      <button
+        id="home-demo-reset"
+        type="button"
+        title="Reset iterations to 0"
+        class="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--text)]"
+      >
+        Reset
+      </button>
+
       <button
         id="home-demo-play"
         type="button"
@@ -121,7 +145,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       <input
         id="home-iter-slider"
         type="range"
-        min="200"
+        min="0"
         max="14000"
         value="10000"
         step="100"
@@ -276,6 +300,8 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     const paramVal = document.getElementById('home-param-val');
     const iterSlider = document.getElementById('home-iter-slider');
     const iterVal = document.getElementById('home-iter-val');
+    const animStepInput = document.getElementById('home-anim-step');
+    const resetBtn = document.getElementById('home-demo-reset');
     const playBtn = document.getElementById('home-demo-play');
     const gapBadge = document.getElementById('home-demo-gap');
     const contourTitleRosen = document.getElementById('home-contour-title-rosen');
@@ -679,20 +705,19 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         paramSlider.max = '180';
         paramSlider.step = '5';
         paramSlider.value = '100';
-        iterSlider.min = '200';
+        iterSlider.min = '0';
         iterSlider.max = '14000';
-        iterSlider.step = '100';
         iterSlider.value = '10000';
       } else {
         paramSlider.min = '50';
         paramSlider.max = '1000';
         paramSlider.step = '25';
         paramSlider.value = '500';
-        iterSlider.min = '200';
+        iterSlider.min = '0';
         iterSlider.max = '10000';
-        iterSlider.step = '100';
         iterSlider.value = '4800';
       }
+      iterSlider.step = String(getAnimStep());
       cachedBgKey = '';
       draw();
     }
@@ -739,6 +764,25 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       draw();
     });
 
+    function getAnimStep() {
+      const raw = Number(animStepInput?.value);
+      return Number.isFinite(raw) && raw >= 1 ? Math.round(raw) : 100;
+    }
+
+    animStepInput?.addEventListener('input', () => {
+      iterSlider.step = String(getAnimStep());
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (animId) {
+        clearInterval(animId);
+        animId = null;
+        playBtn.textContent = 'Play';
+      }
+      iterSlider.value = '0';
+      draw();
+    });
+
     playBtn?.addEventListener('click', () => {
       if (animId) {
         clearInterval(animId);
@@ -747,12 +791,16 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         return;
       }
       const targetMax = Number(iterSlider.max);
-      const step = Math.max(25, Math.round(targetMax / 70));
-      iterSlider.value = '50';
+      const startVal = Number(iterSlider.value);
+      // Start from 0 if already at/near max, otherwise play forward from current k
+      if (startVal >= targetMax) {
+        iterSlider.value = '0';
+      }
       playBtn.textContent = 'Pause';
       draw();
       animId = setInterval(() => {
         const cur = Number(iterSlider.value);
+        const step = getAnimStep();
         if (cur >= targetMax) {
           clearInterval(animId);
           animId = null;
