@@ -39,14 +39,15 @@ use_math: true
   <strong> {{ publi.title }}</strong> <br />
   <em>{{ publi.authors }} </em><br />
   {{ publi.display }} {% if publi.year %}({{publi.year}}){% endif %}<br/>
+  {% assign pub_id = publi.url | default: publi.id %}
   {% if publi.url %}<a href="{{ site.url }}{{ site.baseurl }}/files/publications/{{ publi.url }}.pdf" target="_blank"><button class="btn-pdf">PDF</button></a>{% endif %}
-  {% if publi.doi %}<a href="http://dx.doi.org/{{ publi.doi }}" target="_blank"><button class="btn-doi">DOI</button></a> {% endif %}
+  {% if publi.doi %}<a href="{% if publi.doi contains 'http' %}{{ publi.doi }}{% else %}https://doi.org/{{ publi.doi }}{% endif %}" target="_blank"><button class="btn-doi">DOI</button></a> {% endif %}
   {% if publi.arxiv %}<a href="https://arxiv.org/abs/{{ publi.arxiv }}" target="_blank"><button class="btn-arxiv">ARXIV</button></a> {% endif %}
-  {% if publi.abstract %} <a data-bs-toggle="collapse" href="#{{publi.url}}" class="btn-abstract" style="text-decoration:none; color:#ebebeb; hover:#ebebeb;" role="button" aria-expanded="false" aria-controls="{{publi.url}}">ABSTRACT</a>{% endif %}
+  {% if publi.abstract %} <a data-bs-toggle="collapse" href="#{{pub_id}}" class="btn-abstract" style="text-decoration:none; color:#ebebeb; hover:#ebebeb;" role="button" aria-expanded="false" aria-controls="{{pub_id}}">ABSTRACT</a>{% endif %}
 
 {% if publi.abstract %}
 <br/>
-<div class="collapse" id="{{publi.url}}"><div class="well-abstract">
+<div class="collapse" id="{{pub_id}}"><div class="well-abstract">
  {{publi.abstract}}
 </div></div>
 {% endif %}
