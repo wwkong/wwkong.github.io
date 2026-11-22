@@ -122,7 +122,21 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         >
       </span>
     </div>
-    <span class="font-mono text-[11px] text-[var(--text-muted)]">12 benchmarks · 7 solvers · runs in-browser</span>
+    <div class="flex items-center gap-2.5">
+      <span class="hidden font-mono text-[11px] text-[var(--text-muted)] sm:inline">12 benchmarks · 7 solvers · runs in-browser</span>
+      <button
+        id="home-demo-share"
+        type="button"
+        title="Copy a direct link to this problem & configuration"
+        class="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 font-mono text-[11px] font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+      >
+        <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </svg>
+        <span id="home-demo-share-label">Share</span>
+      </button>
+    </div>
   </div>
 
   <!-- Row 2: Dedicated Problems Section (Separate rows for 2D vs High-Dim) -->
@@ -624,14 +638,33 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     </div>
 
     <div>
-      <div id="home-curve-title-obj" class="mb-2 text-xs font-medium text-[var(--text-muted)]">
-        <span class="text-[var(--text)]" set:html={kCurveObj} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
-      </div>
-      <div id="home-curve-title-grad" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        <span class="text-[var(--text)]" set:html={kCurveGrad} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
-      </div>
-      <div id="home-curve-title-dist" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
-        <span class="text-[var(--text)]" set:html={kCurveDist} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
+      <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <div id="home-curve-title-obj" class="text-xs font-medium text-[var(--text-muted)]">
+          <span class="text-[var(--text)]" set:html={kCurveObj} /> vs. <span id="home-xaxis-label-obj" class="text-[var(--text)]">Iteration <span set:html={kIterK} /></span>
+        </div>
+        <div id="home-curve-title-grad" class="hidden text-xs font-medium text-[var(--text-muted)]">
+          <span class="text-[var(--text)]" set:html={kCurveGrad} /> vs. <span id="home-xaxis-label-grad" class="text-[var(--text)]">Iteration <span set:html={kIterK} /></span>
+        </div>
+        <div id="home-curve-title-dist" class="hidden text-xs font-medium text-[var(--text-muted)]">
+          <span class="text-[var(--text)]" set:html={kCurveDist} /> vs. <span id="home-xaxis-label-dist" class="text-[var(--text)]">Iteration <span set:html={kIterK} /></span>
+        </div>
+        <div class="inline-flex rounded-md border border-[var(--border)] bg-[var(--surface-subtle)] p-0.5 font-mono text-[10px]">
+          <button
+            type="button"
+            data-home-xaxis="iter"
+            class="home-xaxis-btn rounded bg-[var(--surface)] px-2 py-0.5 font-semibold text-[var(--text)] shadow-xs"
+          >
+            Iter k
+          </button>
+          <button
+            type="button"
+            data-home-xaxis="evals"
+            title="Plot vs. cumulative function + gradient oracle evaluations (accounts for line-search cost)"
+            class="home-xaxis-btn rounded px-2 py-0.5 text-[var(--text-muted)] hover:text-[var(--text)]"
+          >
+            Oracle Evals
+          </button>
+        </div>
       </div>
       <div class="relative">
         <canvas
@@ -756,6 +789,14 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     const animStepInput = document.getElementById('home-anim-step');
     const resetBtn = document.getElementById('home-demo-reset');
     const playBtn = document.getElementById('home-demo-play');
+    const shareBtn = document.getElementById('home-demo-share');
+    const shareLabel = document.getElementById('home-demo-share-label');
+    const xAxisBtns = Array.from(document.querySelectorAll('.home-xaxis-btn'));
+    const xAxisLabels = [
+      document.getElementById('home-xaxis-label-obj'),
+      document.getElementById('home-xaxis-label-grad'),
+      document.getElementById('home-xaxis-label-dist'),
+    ];
     const gapBadge = document.getElementById('home-demo-gap');
     const readoutEl = document.getElementById('home-demo-readout');
     const lbfgsBtn = document.getElementById('home-method-lbfgs');
@@ -779,6 +820,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
     let problem = 'rosenbrock';
     let metric = 'obj';
+    let xAxisMode = 'iter';
     const visibleMethods = {
       gd: true,
       agd: true,
@@ -1776,13 +1818,16 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       // Helper to run Proxax APD
       function runApd(steps) {
         const traj = [x0.slice()];
+        const ev = new Uint32Array(steps + 1);
         let xp = x0.slice();
         let y = x0.slice();
         let t = 1.0;
         let L = P.Linit;
+        let cum = 0;
         for (let k = 0; k < steps; k++) {
           const fy = P.fSmooth(y);
           const gy = P.grad(y);
+          cum += 2;
           L = Math.max(0.5, L * 0.85);
           let xn = y;
           for (let tries = 0; tries < 35; tries++) {
@@ -1796,6 +1841,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
               dot += gy[i] * dx;
               sq += dx * dx;
             }
+            cum += 1;
             if (P.fSmooth(xn) <= fy + dot + 0.5 * L * sq + 1e-13 || L > 1e8) break;
             L *= 2.0;
           }
@@ -1814,17 +1860,20 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           }
           xp = xn;
           traj.push(xn);
+          ev[k + 1] = cum;
         }
-        return traj;
+        return { traj, ev };
       }
 
       // 5. Proxax APD (also used as exact reference optimum for composite problems!)
-      const apd = runApd(K);
+      const apdRes = runApd(K);
+      const apd = apdRes.traj;
+      const evApd = apdRes.ev;
       let optima = P.optima;
       let fStar = P.fStar;
       if (!optima) {
         // Refine reference solution for composite problems
-        const refTraj = runApd(Math.max(K, 900));
+        const refTraj = runApd(Math.max(K, 900)).traj;
         const xRef = refTraj[refTraj.length - 1];
         optima = [xRef];
         fStar = P.fTotal(xRef);
@@ -1833,21 +1882,26 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       // 1. Classic GD / PG (conservative Lipschitz estimate L_hat = 2 * L => eta = 1 / (2L))
       const etaGd = 0.5 * P.eta;
       const gd = [x0.slice()];
+      const evLin = new Uint32Array(K + 1);
       for (let k = 0; k < K; k++) {
         const x = gd[k];
         const g = P.grad(x);
         const cand = new Array(d);
         for (let i = 0; i < d; i++) cand[i] = x[i] - etaGd * g[i];
         gd.push(applyProx(cand, 1.0 / etaGd));
+        evLin[k + 1] = k + 1;
       }
 
       // 2. Backtracking GD / PG
       const agd = [x0.slice()];
+      const evAgd = new Uint32Array(K + 1);
       let L1 = P.Linit;
+      let cumAgd = 0;
       for (let k = 0; k < K; k++) {
         const x = agd[k];
         const fx = P.fSmooth(x);
         const g = P.grad(x);
+        cumAgd += 2;
         L1 = Math.max(0.5, L1 * 0.7);
         let xn = x;
         for (let tries = 0; tries < 35; tries++) {
@@ -1861,10 +1915,12 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             dot += g[i] * dx;
             sq += dx * dx;
           }
+          cumAgd += 1;
           if (P.fSmooth(xn) <= fx + dot + 0.5 * L1 * sq + 1e-13 || L1 > 1e8) break;
           L1 *= 2.0;
         }
         agd.push(xn);
+        evAgd[k + 1] = cumAgd;
       }
 
       // 3. Classic Nesterov AGD / FISTA (conservative Lipschitz estimate L_hat = 2 * L => eta = 1 / (2L))
@@ -1890,13 +1946,16 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
       // 4. Adaptive Nesterov (no restart)
       const anag = [x0.slice()];
+      const evAnag = new Uint32Array(K + 1);
       let xAnagPrev = x0.slice();
       let yAnag = x0.slice();
       let tAnag = 1.0;
       let LAnag = P.Linit;
+      let cumAnag = 0;
       for (let k = 0; k < K; k++) {
         const fy = P.fSmooth(yAnag);
         const gy = P.grad(yAnag);
+        cumAnag += 2;
         LAnag = Math.max(0.5, LAnag * 0.85);
         let xn = yAnag;
         for (let tries = 0; tries < 35; tries++) {
@@ -1910,6 +1969,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             dot += gy[i] * dx;
             sq += dx * dx;
           }
+          cumAnag += 1;
           if (P.fSmooth(xn) <= fy + dot + 0.5 * LAnag * sq + 1e-13 || LAnag > 1e8) break;
           LAnag *= 2.0;
         }
@@ -1921,6 +1981,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         yAnag = yn;
         tAnag = tn;
         anag.push(xn);
+        evAnag[k + 1] = cumAnag;
       }
 
       // 6. Adam
@@ -1947,7 +2008,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
       // 7. L-BFGS (exact on smooth; smoothed/reparameterized on nonsmooth/constrained problems)
       const lbfgs = [x0.slice()];
+      const evLbfgs = new Uint32Array(K + 1);
       {
+        let cumLb = 0;
         const mode = P.lbfgsMode || (P.prox ? 'huber' : 'smooth');
         const eps = mode === 'nuc_smooth' ? 1e-3 : 1e-4;
         const eps2 = eps * eps;
@@ -2039,13 +2102,16 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         for (let k = 0; k < K; k++) {
           if (converged) {
             lbfgs.push(mapToX(x));
+            evLbfgs[k + 1] = cumLb;
             continue;
           }
           const g = gLbfgs(x);
+          cumLb += 1;
           const gn = vecNorm(g);
           if (gn < 1e-12) {
             converged = true;
             lbfgs.push(mapToX(x));
+            evLbfgs[k + 1] = cumLb;
             continue;
           }
           const q = g.slice();
@@ -2103,16 +2169,19 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             }
           }
           const fx = fLbfgs(x);
+          cumLb += 1;
           let step = 1.0;
           let xn = x;
           for (let tries = 0; tries < 25; tries++) {
             const cand = new Array(d);
             for (let i = 0; i < d; i++) cand[i] = x[i] + step * dir[i];
             xn = cand;
+            cumLb += 1;
             if (fLbfgs(xn) <= fx + 1e-4 * step * dg) break;
             step *= 0.5;
           }
           const gnVec = gLbfgs(xn);
+          cumLb += 1;
           const sv = new Array(d),
             yv = new Array(d);
           let sy = 0,
@@ -2135,6 +2204,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           }
           x = xn;
           lbfgs.push(mapToX(x));
+          evLbfgs[k + 1] = cumLb;
         }
       }
 
@@ -2172,6 +2242,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         optima,
         fStar,
         trajs: { gd, agd, nag, anag, apd, adam, lbfgs },
+        evals: { gd: evLin, agd: evAgd, nag: evLin, anag: evAnag, apd: evApd, adam: evLin, lbfgs: evLbfgs },
         metrics: {
           gd: computeMetrics(gd),
           agd: computeMetrics(agd),
@@ -2738,7 +2809,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       const lbfgsColor = isDark ? '#f8fafc' : '#0f172a';
 
       const sim = runFullSim(problem, param);
-      const { P, optima, fStar, trajs, metrics } = sim;
+      const { P, optima, fStar, trajs, evals, metrics } = sim;
       const lbfgsActive = visibleMethods.lbfgs;
 
       const vGd = metrics.gd[metric][K];
@@ -2962,7 +3033,19 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       const minLog = -14,
         maxLog = 3;
 
-      const gx = (k) => pad.l + (k / Math.max(1, K)) * plotW;
+      const useEvals = xAxisMode === 'evals';
+      let maxXVal = Math.max(1, K);
+      if (useEvals) {
+        maxXVal = 1;
+        if (visibleMethods.gd) maxXVal = Math.max(maxXVal, evals.gd[K]);
+        if (visibleMethods.agd) maxXVal = Math.max(maxXVal, evals.agd[K]);
+        if (visibleMethods.nag) maxXVal = Math.max(maxXVal, evals.nag[K]);
+        if (visibleMethods.anag) maxXVal = Math.max(maxXVal, evals.anag[K]);
+        if (visibleMethods.adam) maxXVal = Math.max(maxXVal, evals.adam[K]);
+        if (visibleMethods.apd) maxXVal = Math.max(maxXVal, evals.apd[K]);
+        if (lbfgsActive) maxXVal = Math.max(maxXVal, evals.lbfgs[K]);
+      }
+      const gx = (xVal) => pad.l + (xVal / Math.max(1, maxXVal)) * plotW;
       const gy = (val) => {
         const lg = Math.max(minLog, Math.min(maxLog, Math.log10(Math.max(val, 1e-16))));
         return pad.t + ((maxLog - lg) / (maxLog - minLog)) * plotH;
@@ -2988,35 +3071,35 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       gCtx.lineTo(GW - pad.r, GH - pad.b);
       gCtx.stroke();
       gCtx.fillText('0', pad.l - 2, GH - 10);
-      gCtx.fillText(`k = ${K}`, GW - pad.r - 56, GH - 10);
+      gCtx.fillText(useEvals ? `evals = ${maxXVal}` : `k = ${K}`, GW - pad.r - (useEvals ? 82 : 56), GH - 10);
 
       const stride = Math.max(1, Math.floor((K + 1) / 450));
-      function drawCurve(arr, color, width, dashed) {
+      function drawCurve(arr, evArr, color, width, dashed) {
         gCtx.strokeStyle = color;
         gCtx.lineWidth = width;
         gCtx.setLineDash(dashed ? [6, 3] : []);
         gCtx.beginPath();
         for (let k = 0; k <= K; k += stride) {
-          const px = gx(k),
+          const px = gx(useEvals ? evArr[k] : k),
             py = gy(arr[k]);
           if (k === 0) gCtx.moveTo(px, py);
           else gCtx.lineTo(px, py);
         }
-        gCtx.lineTo(gx(K), gy(arr[K]));
+        gCtx.lineTo(gx(useEvals ? evArr[K] : K), gy(arr[K]));
         gCtx.stroke();
         gCtx.setLineDash([]);
       }
 
-      if (visibleMethods.gd) drawCurve(metrics.gd[metric], '#ef4444', 2.0, false);
-      if (visibleMethods.agd) drawCurve(metrics.agd[metric], '#f59e0b', 2.0, false);
-      if (visibleMethods.nag) drawCurve(metrics.nag[metric], '#8b5cf6', 2.0, false);
-      if (visibleMethods.anag) drawCurve(metrics.anag[metric], '#0ea5e9', 2.0, false);
-      if (visibleMethods.adam) drawCurve(metrics.adam[metric], '#f472b6', 2.0, false);
-      if (visibleMethods.apd) drawCurve(metrics.apd[metric], '#10b981', 2.6, false);
-      if (lbfgsActive) drawCurve(metrics.lbfgs[metric], lbfgsColor, 2.0, true);
+      if (visibleMethods.gd) drawCurve(metrics.gd[metric], evals.gd, '#ef4444', 2.0, false);
+      if (visibleMethods.agd) drawCurve(metrics.agd[metric], evals.agd, '#f59e0b', 2.0, false);
+      if (visibleMethods.nag) drawCurve(metrics.nag[metric], evals.nag, '#8b5cf6', 2.0, false);
+      if (visibleMethods.anag) drawCurve(metrics.anag[metric], evals.anag, '#0ea5e9', 2.0, false);
+      if (visibleMethods.adam) drawCurve(metrics.adam[metric], evals.adam, '#f472b6', 2.0, false);
+      if (visibleMethods.apd) drawCurve(metrics.apd[metric], evals.apd, '#10b981', 2.6, false);
+      if (lbfgsActive) drawCurve(metrics.lbfgs[metric], evals.lbfgs, lbfgsColor, 2.0, true);
 
       // Hover crosshair + live tooltip on convergence curve
-      if (hoverK !== null && K > 0) {
+      if (hoverK !== null && K > 0 && !useEvals) {
         const hk = Math.max(0, Math.min(K, hoverK));
         const hx = gx(hk);
         gCtx.save();
@@ -3455,8 +3538,78 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       }, 45);
     });
 
-    syncLbfgsState();
-    syncAutoZoomBtn();
-    draw();
+    xAxisBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        xAxisMode = btn.dataset.homeXaxis || 'iter';
+        xAxisBtns.forEach((b) => {
+          const active = b.dataset.homeXaxis === xAxisMode;
+          b.className = active
+            ? 'home-xaxis-btn rounded bg-[var(--surface)] px-2 py-0.5 font-semibold text-[var(--text)] shadow-xs'
+            : 'home-xaxis-btn rounded px-2 py-0.5 text-[var(--text-muted)] hover:text-[var(--text)]';
+        });
+        xAxisLabels.forEach((el) => {
+          if (el) el.textContent = xAxisMode === 'evals' ? 'Oracle Evals' : 'Iteration k';
+        });
+        hoverK = null;
+        draw();
+      })
+    );
+
+    shareBtn?.addEventListener('click', async () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('prob', problem);
+      url.searchParams.set('param', paramSlider.value);
+      url.searchParams.set('k', iterSlider.value);
+      url.searchParams.set('metric', metric);
+      if (xAxisMode === 'evals') url.searchParams.set('x', 'evals');
+      else url.searchParams.delete('x');
+      url.hash = 'proxax-home-demo';
+      window.history.replaceState({}, '', url.toString());
+      try {
+        await navigator.clipboard.writeText(url.toString());
+        if (shareLabel) {
+          shareLabel.textContent = 'Link Copied ✓';
+          setTimeout(() => {
+            shareLabel.textContent = 'Share';
+          }, 1600);
+        }
+      } catch {
+        if (shareLabel) shareLabel.textContent = 'URL Updated';
+      }
+    });
+
+    // Hydrate state from URL query params if present (?prob=...&param=...&k=...&metric=...&x=evals)
+    const initParams = new URLSearchParams(window.location.search);
+    const qProb = initParams.get('prob');
+    if (qProb && qProb in contourTitles) {
+      problem = qProb;
+      updateProblemUI();
+      const qParam = initParams.get('param');
+      if (qParam !== null && Number.isFinite(Number(qParam))) paramSlider.value = qParam;
+      const qK = initParams.get('k');
+      if (qK !== null && Number.isFinite(Number(qK))) iterSlider.value = qK;
+      const qMetric = initParams.get('metric');
+      if (qMetric && ['obj', 'grad', 'dist'].includes(qMetric)) {
+        metric = qMetric;
+        syncMetricUI();
+      }
+      if (initParams.get('x') === 'evals') {
+        xAxisMode = 'evals';
+        xAxisBtns.forEach((b) => {
+          const active = b.dataset.homeXaxis === 'evals';
+          b.className = active
+            ? 'home-xaxis-btn rounded bg-[var(--surface)] px-2 py-0.5 font-semibold text-[var(--text)] shadow-xs'
+            : 'home-xaxis-btn rounded px-2 py-0.5 text-[var(--text-muted)] hover:text-[var(--text)]';
+        });
+        xAxisLabels.forEach((el) => {
+          if (el) el.textContent = 'Oracle Evals';
+        });
+      }
+      draw();
+    } else {
+      syncLbfgsState();
+      syncAutoZoomBtn();
+      draw();
+    }
   })();
 </script>

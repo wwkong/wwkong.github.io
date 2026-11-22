@@ -62,6 +62,13 @@ const nextPost =
 ---
 
 <BaseLayout title={title} description={description} includeKatex={true}>
+  <!-- Thin reading progress bar -->
+  <div
+    id="reading-progress"
+    aria-hidden="true"
+    class="pointer-events-none fixed top-0 left-0 z-50 h-0.5 w-0 bg-[var(--accent)] transition-[width] duration-75"
+  ></div>
+
   <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
     <article class="min-w-0">
       <header class="mb-8 border-b border-[var(--border)] pb-6">
@@ -169,7 +176,8 @@ const nextPost =
                 <li style={`margin-left: ${(h.depth - 1) * 0.5}rem`}>
                   <a
                     href={`#${h.slug}`}
-                    class="block leading-snug text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+                    data-toc-link={h.slug}
+                    class="toc-link block leading-snug text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
                   >
                     {h.text}
                   </a>
@@ -181,4 +189,37 @@ const nextPost =
       )
     }
   </div>
+
+  <script is:inline>
+    (function () {
+      const bar = document.getElementById('reading-progress');
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+      const headings = tocLinks
+        .map((a) => document.getElementById(a.getAttribute('data-toc-link') || ''))
+        .filter(Boolean);
+
+      function updateScroll() {
+        if (bar) {
+          const docH = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docH > 0 ? Math.max(0, Math.min(100, (window.scrollY / docH) * 100)) : 0;
+          bar.style.width = `${pct}%`;
+        }
+        if (headings.length > 0) {
+          let activeId = headings[0].id;
+          for (const h of headings) {
+            if (h.getBoundingClientRect().top <= 130) activeId = h.id;
+          }
+          tocLinks.forEach((a) => {
+            const on = a.getAttribute('data-toc-link') === activeId;
+            a.classList.toggle('font-semibold', on);
+            a.classList.toggle('text-[var(--accent)]', on);
+            a.classList.toggle('text-[var(--text-muted)]', !on);
+          });
+        }
+      }
+
+      window.addEventListener('scroll', updateScroll, { passive: true });
+      updateScroll();
+    })();
+  </script>
 </BaseLayout>

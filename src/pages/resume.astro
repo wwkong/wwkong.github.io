@@ -26,6 +26,65 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </a>
   </header>
 
+  <!-- Scannable Experience & Education Summary -->
+  <section class="mb-6 grid gap-5 md:grid-cols-2">
+    <div class="card p-5">
+      <h2 class="mb-4 text-xs font-semibold tracking-wider text-[var(--accent)] uppercase">Experience</h2>
+      <ol class="space-y-4 border-l border-[var(--border)] pl-4">
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2.5 w-2.5 rounded-full border-2 border-[var(--surface)] bg-[var(--accent)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">Research Software Engineer</div>
+          <div class="text-xs text-[var(--text-muted)]">Google Research (NYC) · Athena Team</div>
+          <p class="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+            Nonconvex composite optimization (Proxax), scalable differentially private ML (JAX-Privacy), and synthetic data &amp; LLM training.
+          </p>
+        </li>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2 w-2 rounded-full bg-[var(--border)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">Postdoctoral Research Associate</div>
+          <div class="text-xs text-[var(--text-muted)]">Oak Ridge National Laboratory · CSMD</div>
+          <p class="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+            Sparse-grid approximation and scientific optimization (TASMANIAN) under Miroslav Stoyanov.
+          </p>
+        </li>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2 w-2 rounded-full bg-[var(--border)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">Research Intern</div>
+          <div class="text-xs text-[var(--text-muted)]">Google Research (Mountain View)</div>
+        </li>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2 w-2 rounded-full bg-[var(--border)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">Senior Risk Analyst</div>
+          <div class="text-xs text-[var(--text-muted)]">TD Bank</div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h2 class="mb-4 text-xs font-semibold tracking-wider text-[var(--accent)] uppercase">Education</h2>
+      <ol class="space-y-4 border-l border-[var(--border)] pl-4">
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2.5 w-2.5 rounded-full border-2 border-[var(--surface)] bg-[var(--accent)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">Ph.D. in Operations Research</div>
+          <div class="text-xs text-[var(--text-muted)]">Georgia Institute of Technology</div>
+          <p class="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+            Advisor: Renato D. C. Monteiro · Accelerated proximal &amp; penalty methods for nonconvex composite optimization.
+          </p>
+        </li>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2 w-2 rounded-full bg-[var(--border)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">M.Sc. in Computational Science &amp; Engineering</div>
+          <div class="text-xs text-[var(--text-muted)]">Georgia Institute of Technology</div>
+        </li>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[1.32rem] h-2 w-2 rounded-full bg-[var(--border)]"></span>
+          <div class="text-sm font-semibold text-[var(--text)]">B.Math. in Mathematical Optimization &amp; Actuarial Science</div>
+          <div class="text-xs text-[var(--text-muted)]">University of Waterloo</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <div class="card overflow-hidden">
     <object
       data="/files/resume_williamkong.pdf"
