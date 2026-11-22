@@ -192,59 +192,130 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     </div>
   </div>
 
-  <!-- Row 2.5: Objective Function Strip -->
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)] bg-[var(--bg)]/60 px-5 py-2.5 text-xs">
-    <span class="mr-1 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+  <!-- Row 2.5: Objective Function & Data Setup Strip -->
+  <div class="flex flex-wrap items-start gap-x-3 gap-y-1.5 border-b border-[var(--border)] bg-[var(--bg)]/60 px-5 py-2.5 text-xs">
+    <span class="mr-1 mt-0.5 min-w-[4.75rem] text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
       Objective
     </span>
     <div class="min-w-0 flex-1 text-sm text-[var(--text)]">
-      <div id="home-obj-rosen" class="flex flex-wrap items-center justify-between gap-2">
-        <span set:html={kRosenTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · Narrow Valley</span>
+      <div id="home-obj-rosen" class="flex flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kRosenTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · Narrow Valley</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Start x₀ = (−1.2, 1.0); unique global minimum at x* = (1, 1) along the curved parabola x₂ = x₁².
+        </div>
       </div>
-      <div id="home-obj-quad" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kQuadTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Strongly Convex · Ill-Conditioned</span>
+
+      <div id="home-obj-quad" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kQuadTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Strongly Convex · Ill-Conditioned</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Start x₀ = (−2.1, 0.85); unique minimum x* = (0, 0) with condition number κ = L/μ.
+        </div>
       </div>
-      <div id="home-obj-himm" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kHimmTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · 4 Global Minima</span>
+
+      <div id="home-obj-himm" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kHimmTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Smooth · 4 Global Minima</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Start x₀ = 1.5·(cos θ₀, sin θ₀); four identical global minima (f* = 0) separated by saddles.
+        </div>
       </div>
-      <div id="home-obj-lasso" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kL1Title} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Convex Composite · Soft-Thresholding Prox</span>
+
+      <div id="home-obj-lasso" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kL1Title} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Convex Composite · Soft-Thresholding Prox</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Rotated quadratic Q = R(28°)·diag(1, 80)·R(28°)ᵀ, c = (2.4, −0.3), start x₀ = (−1.8, 1.4).
+        </div>
       </div>
-      <div id="home-obj-box" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kBoxTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Composite · Saddle → Box Corner</span>
+
+      <div id="home-obj-box" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kBoxTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 2 · Nonconvex Composite · 2 Local Corner Minima</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          H = R(25°)·diag(−α, 6)·R(25°)ᵀ, c = (0.28, −0.18), start x₀ = (0.06, −0.04) near the interior saddle; multiple boundary minima exist so solvers can escape to different basins.
+        </div>
       </div>
-      <div id="home-obj-chained" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kChainedTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 50 · Nonconvex Smooth · Coupled Chain</span>
+
+      <div id="home-obj-chained" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kChainedTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 50 · Nonconvex Smooth · Coupled Chain</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Alternating start x₀ = (−1, 1, −1, 1, …) ∈ ℝ⁵⁰; unique global minimum at x* = (1, …, 1).
+        </div>
       </div>
-      <div id="home-obj-sparse" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kSparseTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Exact ℓ₁ Prox</span>
+
+      <div id="home-obj-sparse" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kSparseTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Exact ℓ₁ Prox</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true with 8 sparse spikes in [0.65, 0.95], start x₀ = 0.
+        </div>
       </div>
-      <div id="home-obj-simplex" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kSimplexTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Constrained · Simplex Projection</span>
+
+      <div id="home-obj-simplex" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kSimplexTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Constrained · Simplex Projection</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), b = A x_true + ε (σ = 0.04), x_true ∈ Δ⁶³ supported on 8 assets, start x₀ = (1/64)·1.
+        </div>
       </div>
-      <div id="home-obj-nuc" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kNucTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">8×8 (64D) · Spectral Composite · Exact SVD Prox</span>
+
+      <div id="home-obj-nuc" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kNucTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">8×8 (64D) · Spectral Composite · Exact SVD Prox</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: M* = U Uᵀ (rank 2, U ∈ ℝ⁸ˣ² i.i.d. N(0, 0.9²)), symmetric mask Ω with 65% entries observed, start X₀ = 0.
+        </div>
       </div>
-      <div id="home-obj-group" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kGroupTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Block ℓ₂,₁ Prox</span>
+
+      <div id="home-obj-group" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kGroupTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Block ℓ₂,₁ Prox</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: A ∈ ℝ⁴⁸ˣ⁶⁴ i.i.d. N(0, 1/48), y = A x_true partitioned into 8 groups of 8; 2 active groups (g = 2, 6; norms 0.85, 0.72), start x₀ = 0.
+        </div>
       </div>
-      <div id="home-obj-logreg" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kLogRegTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Logistic + ℓ₁ Prox</span>
+
+      <div id="home-obj-logreg" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kLogRegTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 64 · Convex Composite · Logistic + ℓ₁ Prox</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: n = 80 samples aᵢ ∈ ℝ⁶⁴ i.i.d. N(0, I/64), labels yᵢ = sign(aᵢᵀ x_true) with 6 active features in [−0.95, 0.90], start x₀ = 0.
+        </div>
       </div>
-      <div id="home-obj-spec" class="hidden flex-wrap items-center justify-between gap-2">
-        <span set:html={kSpecTitle} />
-        <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 100 · Strongly Convex · Dense Rotated QΛQᵀ</span>
+
+      <div id="home-obj-spec" class="hidden flex-col gap-0.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span set:html={kSpecTitle} />
+          <span class="font-mono text-[11px] text-[var(--text-muted)]">d = 100 · Strongly Convex · Dense Rotated QΛQᵀ</span>
+        </div>
+        <div class="text-[11px] text-[var(--text-muted)]">
+          Data: λᵢ = κ^((i−1)/99), Q = H₁₂⋯H₁ (12 random Householder reflections), x*ᵢ = 0.5·sin(0.25i) ± 0.25, start x₀ = 0.
+        </div>
       </div>
     </div>
   </div>
@@ -1221,33 +1292,36 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         const fS = (x) => 0.5 * (h00 * x[0] * x[0] + 2 * h01 * x[0] * x[1] + h11 * x[1] * x[1]) + lin[0] * x[0] + lin[1] * x[1];
         const gr = (x) => [h00 * x[0] + h01 * x[1] + lin[0], h01 * x[0] + h11 * x[1] + lin[1]];
         const prox = (x) => [Math.max(-1, Math.min(1, x[0])), Math.max(-1, Math.min(1, x[1]))];
-        // Exact global optimum on boundary [-1, 1]^2 (check corners + 4 edges)
-        let bestF = Infinity;
-        let bestX = [-1, 1];
+        // Find all local boundary minima on [-1, 1]^2 (global + secondary basin)
         const candPts = [
           [-1, -1],
           [-1, 1],
           [1, -1],
           [1, 1],
         ];
-        // Edges: x0 = +-1 -> x1 = clamp(-(h01*x0 + lin[1])/h11)
         [-1, 1].forEach((x0e) => {
           if (h11 > 1e-9) candPts.push([x0e, Math.max(-1, Math.min(1, -(h01 * x0e + lin[1]) / h11))]);
           if (h00 > 1e-9) candPts.push([Math.max(-1, Math.min(1, -(h01 * x0e + lin[0]) / h00)), x0e]);
         });
-        candPts.forEach((pt) => {
-          const val = fS(pt);
-          if (val < bestF) {
-            bestF = val;
-            bestX = pt;
-          }
+        const localMins = candPts
+          .filter((pt) => {
+            const g = gr(pt);
+            const pStep = prox([pt[0] - 0.05 * g[0], pt[1] - 0.05 * g[1]]);
+            return Math.hypot(pStep[0] - pt[0], pStep[1] - pt[1]) < 1e-5;
+          })
+          .sort((a, b) => fS(a) - fS(b));
+        const uniqueMins = [];
+        localMins.forEach((pt) => {
+          if (!uniqueMins.some((u) => Math.hypot(u[0] - pt[0], u[1] - pt[1]) < 1e-3)) uniqueMins.push(pt);
         });
+        const optimaList = uniqueMins.length > 0 ? uniqueMins : [candPts.sort((a, b) => fS(a) - fS(b))[0]];
+        const bestF = fS(optimaList[0]);
         const Lmax = Math.max(param, 6.0);
         return {
           dim: 2,
           maxK: 200,
           x0: [0.06, -0.04],
-          optima: [bestX],
+          optima: optimaList,
           fStar: bestF,
           eta: 1.0 / (Lmax * 1.4),
           etaNag: 1.0 / (Lmax * 1.6),
