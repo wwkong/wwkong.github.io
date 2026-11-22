@@ -33,21 +33,28 @@ const canonicalUrl = new URL(canonicalPath, SITE.url).href;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <meta name="theme-color" content="#059669" />
     <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/feed.xml" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph & Social Card -->
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={SITE.name} />
     <meta property="og:image" content={new URL(SITE.avatar, SITE.url).href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(SITE.avatar, SITE.url).href} />
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap"
       rel="stylesheet"
     />
 
@@ -104,5 +111,38 @@ const canonicalUrl = new URL(canonicalPath, SITE.url).href;
     </main>
     <Footer wide={wide} />
     <SearchModal />
+
+    <!-- Copy-to-clipboard buttons for all Shiki code blocks -->
+    <script is:inline>
+      (function () {
+        document.querySelectorAll('pre.astro-code').forEach((pre) => {
+          if (pre.parentElement?.classList.contains('code-block-wrap')) return;
+          const wrap = document.createElement('div');
+          wrap.className = 'code-block-wrap relative group';
+          pre.parentNode?.insertBefore(wrap, pre);
+          wrap.appendChild(pre);
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'code-copy-btn';
+          btn.textContent = 'Copy';
+          btn.setAttribute('aria-label', 'Copy code to clipboard');
+          btn.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(pre.innerText);
+              btn.textContent = 'Copied ✓';
+              btn.classList.add('copied');
+              setTimeout(() => {
+                btn.textContent = 'Copy';
+                btn.classList.remove('copied');
+              }, 1600);
+            } catch {
+              btn.textContent = 'Error';
+            }
+          });
+          wrap.appendChild(btn);
+        });
+      })();
+    </script>
   </body>
 </html>

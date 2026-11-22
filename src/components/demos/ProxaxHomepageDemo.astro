@@ -633,12 +633,19 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       <div id="home-curve-title-dist" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         <span class="text-[var(--text)]" set:html={kCurveDist} /> vs. Iteration <span class="text-[var(--text)]" set:html={kIterK} />
       </div>
-      <canvas
-        id="home-curve-canvas"
-        width="520"
-        height="330"
-        class="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)]"
-      ></canvas>
+      <div class="relative">
+        <canvas
+          id="home-curve-canvas"
+          width="520"
+          height="330"
+          title="Hover to inspect · Click to jump to iteration k"
+          class="w-full cursor-crosshair rounded-xl border border-[var(--border)] bg-[var(--bg)]"
+        ></canvas>
+        <div
+          id="home-curve-tooltip"
+          class="pointer-events-none absolute top-2.5 hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]/92 px-2.5 py-2 font-mono text-[10px] leading-snug text-[var(--text)] shadow-sm backdrop-blur-xs"
+        ></div>
+      </div>
     </div>
   </div>
 
@@ -761,6 +768,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     const zoomResetBtn = document.getElementById('home-zoom-reset');
     const contourCanvas = document.getElementById('home-contour-canvas');
     const curveCanvas = document.getElementById('home-curve-canvas');
+    const curveTooltip = document.getElementById('home-curve-tooltip');
     const probBtns = Array.from(document.querySelectorAll('.home-prob-btn'));
     const metricBtns = Array.from(document.querySelectorAll('.home-metric-btn'));
     const methodBtns = Array.from(document.querySelectorAll('.home-method-btn'));
@@ -789,6 +797,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     let autoZoom = false;
     let isDragging = false;
     let dragStart = null;
+    let hoverK = null;
 
     const isHighDim = (p) =>
       p === 'chained_rosen' ||
@@ -3005,6 +3014,59 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       if (visibleMethods.adam) drawCurve(metrics.adam[metric], '#f472b6', 2.0, false);
       if (visibleMethods.apd) drawCurve(metrics.apd[metric], '#10b981', 2.6, false);
       if (lbfgsActive) drawCurve(metrics.lbfgs[metric], lbfgsColor, 2.0, true);
+
+      // Hover crosshair + live tooltip on convergence curve
+      if (hoverK !== null && K > 0) {
+        const hk = Math.max(0, Math.min(K, hoverK));
+        const hx = gx(hk);
+        gCtx.save();
+        gCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.45)' : 'rgba(19,32,24,0.4)';
+        gCtx.lineWidth = 1;
+        gCtx.setLineDash([3, 3]);
+        gCtx.beginPath();
+        gCtx.moveTo(hx, pad.t);
+        gCtx.lineTo(hx, GH - pad.b);
+        gCtx.stroke();
+        gCtx.setLineDash([]);
+
+        const hoverSeries = [
+          { name: 'Classic GD', color: '#ef4444', val: metrics.gd[metric][hk], show: visibleMethods.gd },
+          { name: 'BT-GD', color: '#f59e0b', val: metrics.agd[metric][hk], show: visibleMethods.agd },
+          { name: 'Classic NAG', color: '#8b5cf6', val: metrics.nag[metric][hk], show: visibleMethods.nag },
+          { name: 'Adapt-NAG', color: '#0ea5e9', val: metrics.anag[metric][hk], show: visibleMethods.anag },
+          { name: 'Proxax APD', color: '#10b981', val: metrics.apd[metric][hk], show: visibleMethods.apd },
+          { name: 'Adam', color: '#f472b6', val: metrics.adam[metric][hk], show: visibleMethods.adam },
+          { name: 'L-BFGS', color: lbfgsColor, val: metrics.lbfgs[metric][hk], show: lbfgsActive },
+        ].filter((s) => s.show);
+
+        hoverSeries.forEach((s) => {
+          gCtx.fillStyle = s.color;
+          gCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
+          gCtx.lineWidth = 1.4;
+          gCtx.beginPath();
+          gCtx.arc(hx, gy(s.val), 3.6, 0, Math.PI * 2);
+          gCtx.fill();
+          gCtx.stroke();
+        });
+        gCtx.restore();
+
+        if (curveTooltip) {
+          const onRightHalf = hx > GW * 0.55;
+          curveTooltip.style.left = onRightHalf ? 'auto' : `${Math.min(72, (hx / GW) * 100 + 2)}%`;
+          curveTooltip.style.right = onRightHalf ? `${Math.min(72, ((GW - hx) / GW) * 100 + 2)}%` : 'auto';
+          curveTooltip.innerHTML =
+            `<div class="mb-1 font-semibold text-[var(--accent)]">k = ${hk} <span class="font-normal text-[var(--text-muted)]">(click to jump)</span></div>` +
+            hoverSeries
+              .map(
+                (s) =>
+                  `<div class="flex items-center justify-between gap-3"><span class="inline-flex items-center gap-1.5"><span style="background:${s.color}" class="inline-block h-1.5 w-1.5 rounded-full"></span>${s.name}</span><span class="font-semibold">${s.val.toExponential(1)}</span></div>`
+              )
+              .join('');
+          curveTooltip.classList.remove('hidden');
+        }
+      } else if (curveTooltip) {
+        curveTooltip.classList.add('hidden');
+      }
     }
 
     function getAnimStep() {
@@ -3285,6 +3347,37 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     };
     contourCanvas.addEventListener('pointerup', endDrag);
     contourCanvas.addEventListener('pointercancel', endDrag);
+
+    // Convergence plot hover crosshair + click-to-scrub
+    function mapCurveEventToK(e) {
+      const rect = curveCanvas.getBoundingClientRect();
+      const mx = ((e.clientX - rect.left) / rect.width) * curveCanvas.width;
+      const padL = 50,
+        padR = 16;
+      const plotW = curveCanvas.width - padL - padR;
+      const frac = Math.max(0, Math.min(1, (mx - padL) / plotW));
+      const K = Number(iterSlider.value);
+      return Math.round(frac * K);
+    }
+    curveCanvas.addEventListener('pointermove', (e) => {
+      hoverK = mapCurveEventToK(e);
+      draw();
+    });
+    curveCanvas.addEventListener('pointerleave', () => {
+      hoverK = null;
+      draw();
+    });
+    curveCanvas.addEventListener('click', (e) => {
+      const targetK = mapCurveEventToK(e);
+      if (animId) {
+        clearInterval(animId);
+        animId = null;
+        playBtn.textContent = 'Play';
+      }
+      iterSlider.value = String(targetK);
+      hoverK = null;
+      draw();
+    });
 
     probBtns.forEach((btn) =>
       btn.addEventListener('click', () => {

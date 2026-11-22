@@ -65,7 +65,7 @@
   font-size: 1.04em;
 }
 
-/* Shiki dual theme support */
+/* Shiki dual theme support + Copy button */
 .astro-code,
 .astro-code span {
   background-color: var(--bg) !important;
@@ -75,6 +75,68 @@
 .dark .astro-code span {
   color: var(--shiki-dark) !important;
   background-color: var(--bg) !important;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.6rem;
+  z-index: 5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.code-block-wrap:hover .code-copy-btn,
+.code-copy-btn:focus-visible,
+.code-copy-btn.copied {
+  opacity: 1;
+}
+
+.code-copy-btn:hover,
+.code-copy-btn.copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Subtle emerald hero atmosphere + faint coordinate dot grid */
+body {
+  background-image:
+    radial-gradient(ellipse 80% 38% at 50% -6%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 72%),
+    radial-gradient(color-mix(in srgb, var(--border) 65%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 26px 26px;
+  background-position: 0 0, 0 0;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -6%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+    radial-gradient(color-mix(in srgb, var(--border) 55%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 26px 26px;
+}
+
+/* Editorial serif for mathematical blog prose */
+.prose {
+  font-family: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+  font-size: 1.075rem;
+  line-height: 1.78;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 /* Prose polish for math blogs */
