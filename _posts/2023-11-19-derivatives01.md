@@ -11,7 +11,7 @@ use_math: true
 
 Multivariate calculus has always been a core part of any mathematics degree, but is often taught through computation or simplified assumptions instead of foundational abstractions. In this series of posts, I describe *a few* of the key concepts that were glanced over in my undergraduate studies, but carefully scrutinized during my graduate studies. I will assume that readers are familiar with the material in an introductory multivariate calculus class.
 
-A good portion of the material below can be found in Chapter 3 of *Iterative solution of nonlinear equations in several variables* by J. M. Ortega and W. C. Rheinboldt. A more in-depth presentation can be found in Appendix A of *Lectures on Modern Convex Optimization* by A. Ben-Tal and A. Nemirovski
+A good portion of the material below can be found in Chapter 3 of *Iterative solution of nonlinear equations in several variables* by J. M. Ortega and W. C. Rheinboldt. A more in-depth presentation can be found in Appendix A of *Lectures on Modern Convex Optimization* by A. Ben-Tal and A. Nemirovski.
 
 # The Fréchet derivative: robust and standard
 
@@ -21,7 +21,7 @@ $$
 (\alpha)\qquad\lim_{\Delta\to0}\frac{\left\Vert f(x+\Delta)-[f(x)+{\cal A}_{x}^{f}(\Delta)]\right\Vert }{\|\Delta\|}=0
 $$
 
-where the limit is taken over all subsequences $$\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$$ tending to zero. Notice that this is a natural generalization of the one-dimensional case where we replace absolute value errors with norm errors. 
+where the limit is taken over all sequences $$\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$$ tending to zero. Notice that this is a natural generalization of the one-dimensional case where we replace absolute value errors with norm errors. 
 
 Before giving more definitions, let us discuss some nuances and implications of the above definition.
 
@@ -41,23 +41,23 @@ In other works of literature, we might see the following variations and applicat
 
 $$\lim_{y\to x}\frac{\left\Vert f(y)-[f(x)+{\cal A}_{x}^{f}(y-x)]\right\Vert }{\|y-x\|}=0$$ 
 
-where the limit is over all subsequences $$\{y_{n}\}$$ going to $x$. (*Prove this as a simple exercise*!)
+where the limit is over all sequences $$\{y_{n}\}$$ going to $x$. (*Prove this as a simple exercise*!)
 
 -   $${\cal A}_{x}^{f}(\Delta)$$ may be written as $Df(x)[\Delta]$, $Df_{x}(\Delta)$, or $f'(x)\Delta$ to emphasize the dependence on $f$ and $x$.
 
 -   In optimization theory, the term $f(x)+{\cal A}_{x}^{f}(\Delta)$ is often called the **first-order approximation of $f$ at $x$**.
 
-Once we have the above definition of a derivative, we can make the several follow-up definitions. The function $f$ is **Fréchet** (or **F-**) **differentiable at $x$** if its F-derivative ${\cal A}_{x}^{f}$ exists. Consequently, the function $f$ is **Fréchet** (or **F-**) **differentiable** or has **Fréchet** (or **F-**) **differentiability** if it is F-differentiable at all points in $\mathbb{R}^{n}$.
+Once we have the above definition of a derivative, we can make several follow-up definitions. The function $f$ is **Fréchet** (or **F-**) **differentiable at $x$** if its F-derivative ${\cal A}_{x}^{f}$ exists. Consequently, the function $f$ is **Fréchet** (or **F-**) **differentiable** or has **Fréchet** (or **F-**) **differentiability** if it is F-differentiable at all points in $\mathbb{R}^{n}$.
 
 Some important properties that are unique to F-differentiability are as follows.
 
 -   If $f$ is F-differentiable at $x$ then $f$ is **continuous** at $x$, i.e., $\lim_{\bar{x}\to x}f(\bar{x})=f(x)$.
 
--   The set $$\{f(x)+{\cal A}_{x}^{f}(\Delta):\Delta\in\mathbb{R}^{n}\}$$ is a tangent plane of $f$ at $x$.
+-   The set $$\{(x+\Delta,f(x)+{\cal A}_{x}^{f}(\Delta)):\Delta\in\mathbb{R}^{n}\}$$ is a tangent plane of $f$ at $x$.
 
 Finally, some important anti-properties of F-derivatives and F-differentiability are as follows.
 
--   The subsequences $$\{\Delta_{n}\}$$ **need not** lie on a line, e.g., like in the definition of a **partial derivative** $\partial f_{i}/\partial x_{j}$.
+-   The sequences $$\{\Delta_{n}\}$$ **need not** lie on a line, e.g., like in the definition of a **partial derivative** $\partial f_{i}/\partial x_{j}$.
 
 -   In fact, the existence of the partial derivatives at $x$ **is generally not** sufficient to conclude F-differentiability at $x$.
 

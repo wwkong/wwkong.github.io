@@ -25,21 +25,21 @@ A function $f:\mathbb{R}^{n}\mapsto\mathbb{R}^{m}$ is said to have a **Gateaux**
 
 $$(\pi_{1})\qquad V^{f}(x,\Delta)=\lim_{t\to0}\frac{f(x+t\Delta)-f(x)}{t},$$ 
 
-called the G-differential, is well-defined. Here, the limit is taken over all subsequences $$\{t_{n}\}\subseteq\mathbb{R}$$. If, in addition, 
+called the G-differential, is well-defined. Here, the limit is taken over all sequences $$\{t_{n}\}\subseteq\mathbb{R}$$ tending to zero. If, in addition, 
 
-$$(\pi_{2})\qquad\lim_{\Delta\to0}\frac{\|f(x+t\Delta)-f(x)-V^{f}(x,\Delta)\|}{\|\Delta\|}=0$$ 
+$$(\pi_{2})\qquad\lim_{\Delta\to0}\frac{\|f(x+\Delta)-f(x)-V^{f}(x,\Delta)\|}{\|\Delta\|}=0$$ 
 
-where the limit is taken over all subsequences $$\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$$, then $f$ is also said to have a **Fréchet** (or **F-**) **differential at** $x\in\mathbb{R}^{n}$ (also denoted by $V^{f}(x,\Delta)$).
+where the limit is taken over all sequences $$\{\Delta_{n}\}\subseteq\mathbb{R}^{n}$$ tending to zero, then $f$ is also said to have a **Fréchet** (or **F-**) **differential at** $x\in\mathbb{R}^{n}$ (also denoted by $V^{f}(x,\Delta)$).
 
 Let us now make a few glancing remarks.
 
 -   Unlike the definitions of an F-derivative or G-derivative, the definition of $V^{f}$ in $(\pi_{1})$ is constructive.
 
--   Similar to the one-dimensional case, the well-definedness of $V^{f}(x,\Delta)$ equivalent to the left and right limits (in terms of $t$) being equal.
+-   Similar to the one-dimensional case, the well-definedness of $V^{f}(x,\Delta)$ is equivalent to the left and right limits (in terms of $t$) being equal.
 
 -   In the one-dimensional case of $n=m=1$, we have $$V^{f}(x,1)=f'(x)=-V^{f}(x,-1).$$
 
--   It is straightforward to see that if $V^{f}(x,\Delta)$ exists for $\Delta\in\mathbb{R}^{n}$ and is linear in $\Delta$ then $$V^{f}(x,\Delta)={\cal B}_{x}^{f}(\Delta)$$. Furthermore, if $(\pi_{2})$ holds then $$V^{f}(x,\Delta)={\cal A}_{x}^{f}(\Delta)$$.
+-   It is straightforward to see that if $V^{f}(x,\Delta)$ exists for all $\Delta\in\mathbb{R}^{n}$ and is linear in $\Delta$ then $$V^{f}(x,\Delta)={\cal B}_{x}^{f}(\Delta)$$. Furthermore, if $(\pi_{2})$ holds then $$V^{f}(x,\Delta)={\cal A}_{x}^{f}(\Delta)$$.
 
 While we have fulfilled property (i), the following anti-properties (given as exercises) show that property (ii) cannot be fully realized.
 
@@ -52,7 +52,7 @@ $$f(x_{1},x_{2})=\begin{cases}
 
 Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero. As a bonus, show that $f$ is not continuous at zero.
 
--   Consider the function 
+-   *Exercise*. Consider the function 
 
 $$f(x_{1},x_{2})={\rm sgn}(x_{2})\min(|x_{1}|,|x_{2}|)$$ 
 
@@ -70,9 +70,9 @@ V^{h}(M,\Delta) & =\lim_{t\to0}\frac{\det(M+t\Delta)-\det(M)}{t}\\
 
  Hence, by the chain rule, we have 
 
- $${\cal A}_{M}^{f}(\Delta)={\cal A}_{\det M}^{\log(\cdot)}{\cal {\cal A}}_{M}^{h}(\Delta)=\frac{\det(M){\rm tr}(M^{-1}\Delta)}{\det(M)}={\rm tr}(M^{-1}\Delta).$$ 
+ $${\cal A}_{M}^{f}(\Delta)={\cal A}_{\det M}^{\log(\cdot)}{\cal A}_{M}^{h}(\Delta)=\frac{\det(M){\rm tr}(M^{-1}\Delta)}{\det(M)}={\rm tr}(M^{-1}\Delta).$$ 
 
- One can even obtain the gradient $\nabla f(x)=M^{-T}$ by using the fact that 
+ One can even obtain the gradient $\nabla f(M)=M^{-T}$ by using the fact that 
 
  $${\cal A}_{M}^{f}(\Delta)={\rm tr}(M^{-1}\Delta)=\left\langle M^{-T},\Delta\right\rangle .$$
 
