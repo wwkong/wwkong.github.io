@@ -326,6 +326,17 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
         ></canvas>
         <div class="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)]/90 p-0.5 text-[11px] font-semibold text-[var(--text)] shadow-xs backdrop-blur-xs">
           <button
+            id="home-zoom-auto"
+            type="button"
+            aria-pressed="false"
+            title="Dynamically zoom into active iterates as k progresses"
+            class="rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]"
+          >
+            Auto
+          </button>
+          <span id="home-zoom-level" class="hidden px-1 font-mono text-[10px] text-[var(--accent)]">1.0×</span>
+          <span class="h-3.5 w-px bg-[var(--border)]"></span>
+          <button
             id="home-zoom-in"
             type="button"
             title="Zoom in"
@@ -439,6 +450,8 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     const lbfgsNote = document.getElementById('lbfgs-smooth-note');
     const contourCanvas = document.getElementById('home-contour-canvas');
     const curveCanvas = document.getElementById('home-curve-canvas');
+    const zoomAutoBtn = document.getElementById('home-zoom-auto');
+    const zoomLevelEl = document.getElementById('home-zoom-level');
     const zoomInBtn = document.getElementById('home-zoom-in');
     const zoomOutBtn = document.getElementById('home-zoom-out');
     const zoomResetBtn = document.getElementById('home-zoom-reset');
@@ -465,6 +478,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     let cachedBgKey = '';
     let cachedBgImg = null;
     let viewBox = null; // { xMin, xMax, yMin, yMax } when zoomed/panned
+    let autoZoom = false;
     let isDragging = false;
     let dragStart = null;
 
@@ -986,6 +1000,87 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
             .join('');
       }
 
+      // Compute dynamic auto-zoom bounding box around active solver endpoints + nearest optimum
+      const baseBounds = getBounds(param);
+      const baseW = baseBounds.xMax - baseBounds.xMin;
+      const baseH = baseBounds.yMax - baseBounds.yMin;
+      const aspect = contourCanvas.width / contourCanvas.height;
+
+      if (autoZoom && K > 0) {
+        const focusPts = [];
+        const addEnd = (arr) => {
+          if (arr && arr.length > K) focusPts.push(arr[K]);
+        };
+        if (visibleMethods.gd) addEnd(gd);
+        if (visibleMethods.agd) addEnd(agd);
+        if (visibleMethods.nag) addEnd(nag);
+        if (visibleMethods.anag) addEnd(anag);
+        if (visibleMethods.adam) addEnd(adam);
+        if (visibleMethods.apd) addEnd(apd);
+        if (lbfgsActive) addEnd(lbfgs);
+
+        if (focusPts.length > 0) {
+          // Include the optimum nearest to APD (or first visible solver)
+          const refPt = visibleMethods.apd ? apd[K] : focusPts[0];
+          let nearestOpt = optima[0];
+          let bestD = Infinity;
+          optima.forEach((opt) => {
+            const d = Math.hypot(refPt[0] - opt[0], refPt[1] - opt[1]);
+            if (d < bestD) {
+              bestD = d;
+              nearestOpt = opt;
+            }
+          });
+          focusPts.push(nearestOpt);
+
+          let minX = Infinity,
+            maxX = -Infinity,
+            minY = Infinity,
+            maxY = -Infinity;
+          focusPts.forEach((p) => {
+            if (p[0] < minX) minX = p[0];
+            if (p[0] > maxX) maxX = p[0];
+            if (p[1] < minY) minY = p[1];
+            if (p[1] > maxY) maxY = p[1];
+          });
+
+          const cx = 0.5 * (minX + maxX);
+          const cy = 0.5 * (minY + maxY);
+          // Pad by 1.6x, clamp between tiny microscopic floor and full base bounds
+          let spanX = Math.max((maxX - minX) * 1.6, baseW * 0.008);
+          let spanY = Math.max((maxY - minY) * 1.6, baseH * 0.008);
+          if (spanX / spanY > aspect) {
+            spanY = spanX / aspect;
+          } else {
+            spanX = spanY * aspect;
+          }
+          if (spanX >= baseW * 0.96 || spanY >= baseH * 0.96) {
+            viewBox = null;
+          } else {
+            viewBox = {
+              xMin: cx - 0.5 * spanX,
+              xMax: cx + 0.5 * spanX,
+              yMin: cy - 0.5 * spanY,
+              yMax: cy + 0.5 * spanY,
+            };
+          }
+        }
+      } else if (autoZoom && K === 0) {
+        viewBox = null;
+      }
+
+      // Update zoom scale readout
+      if (zoomLevelEl) {
+        const vbCur = getViewBounds(param);
+        const scale = baseW / Math.max(vbCur.xMax - vbCur.xMin, 1e-9);
+        if (scale > 1.05) {
+          zoomLevelEl.textContent = scale >= 10 ? `${Math.round(scale)}×` : `${scale.toFixed(1)}×`;
+          zoomLevelEl.classList.remove('hidden');
+        } else {
+          zoomLevelEl.classList.add('hidden');
+        }
+      }
+
       // ---- 1. 2D Contour Heatmap + Trajectories ----
       const W = contourCanvas.width;
       const H = contourCanvas.height;
@@ -1217,7 +1312,17 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       draw();
     }
 
+    function syncAutoZoomBtn() {
+      if (!zoomAutoBtn) return;
+      zoomAutoBtn.setAttribute('aria-pressed', String(autoZoom));
+      zoomAutoBtn.className = autoZoom
+        ? 'rounded bg-[var(--accent)] px-1.5 py-0.5 font-mono text-[10px] text-white transition-colors'
+        : 'rounded px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]';
+    }
+
     function zoomAt(factor, cxFrac, cyFrac) {
+      autoZoom = false;
+      syncAutoZoomBtn();
       const param = Number(paramSlider.value);
       const vb = getViewBounds(param);
       const curW = vb.xMax - vb.xMin;
@@ -1236,11 +1341,21 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
       draw();
     }
 
+    zoomAutoBtn?.addEventListener('click', () => {
+      autoZoom = !autoZoom;
+      if (!autoZoom) viewBox = null;
+      cachedBgKey = '';
+      syncAutoZoomBtn();
+      draw();
+    });
+
     zoomInBtn?.addEventListener('click', () => zoomAt(0.6, 0.5, 0.5));
     zoomOutBtn?.addEventListener('click', () => zoomAt(1.6, 0.5, 0.5));
     zoomResetBtn?.addEventListener('click', () => {
+      autoZoom = false;
       viewBox = null;
       cachedBgKey = '';
+      syncAutoZoomBtn();
       draw();
     });
 
@@ -1252,6 +1367,8 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     });
 
     contourCanvas.addEventListener('pointerdown', (e) => {
+      autoZoom = false;
+      syncAutoZoomBtn();
       const param = Number(paramSlider.value);
       const vb = getViewBounds(param);
       isDragging = true;
@@ -1375,6 +1492,7 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     });
 
     syncLbfgsState();
+    syncAutoZoomBtn();
     draw();
   })();
 </script>
