@@ -83,19 +83,19 @@ export const RESEARCH_PILLARS = [
 
 export const RECENT_NEWS = [
   {
+    date: 'Nov 2026',
+    text: 'Released Proxax — a library of certified composite optimization solvers in JAX and Optax.',
+    href: '/software/',
+  },
+  {
     date: 'Aug 2026',
     text: 'New preprint: A Mini-Batch Counterexample to Last-Iterate Convergence in Definable Optimization.',
     href: '/publications/#minibatch_counterexample',
   },
   {
-    date: 'Jun 2026',
+    date: 'Jul 2026',
     text: 'ContinuousBench accepted to the ICML 2026 Workshop on Memorization in Trustworthy Foundation Models.',
     href: '/publications/#continuous_bench',
-  },
-  {
-    date: '2026',
-    text: 'Escaping Collapse: The Strength of Weak Data for Large Language Model Training published at NeurIPS 38.',
-    href: '/publications/#escaping_collapse',
   },
   {
     date: 'Feb 2026',
@@ -103,12 +103,12 @@ export const RECENT_NEWS = [
     href: '/publications/#jax_privacy',
   },
   {
-    date: '2026',
-    text: 'Released Proxax — a library of certified composite optimization solvers in JAX and Optax.',
-    href: '/software/',
+    date: 'Jan 2026',
+    text: 'Escaping Collapse: The Strength of Weak Data for Large Language Model Training published at NeurIPS 38.',
+    href: '/publications/#escaping_collapse',
   },
   {
-    date: '2025',
+    date: 'Apr 2025',
     text: 'Differentially Private Optimization for Non-Decomposable Objective Functions accepted to ICLR 2025.',
     href: '/publications/#dp_nondecomposable',
   },

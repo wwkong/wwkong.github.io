@@ -116,15 +116,15 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         <span class="font-medium text-[var(--text)]">
           Iterations (<span set:html={kIterK} />)
         </span>
-        <span id="home-iter-val" class="font-mono font-semibold text-[var(--accent)]">2500</span>
+        <span id="home-iter-val" class="font-mono font-semibold text-[var(--accent)]">10000</span>
       </div>
       <input
         id="home-iter-slider"
         type="range"
-        min="50"
-        max="3500"
-        value="2500"
-        step="25"
+        min="200"
+        max="14000"
+        value="10000"
+        step="100"
         class="accent-[var(--accent)]"
       />
     </label>
@@ -163,6 +163,10 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
     <span class="inline-flex items-center gap-1.5">
       <span class="h-2.5 w-2.5 rounded-full bg-[#8b5cf6]"></span>
       Nesterov AGD (Fixed)
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#0ea5e9]"></span>
+      Adaptive Nesterov
     </span>
     <span class="inline-flex items-center gap-1.5">
       <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
@@ -339,7 +343,39 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         nag.push([...xn]);
       }
 
-      // 4. Adaptive Accelerated Proximal Descent (Proxax APD-style)
+      // 4. Adaptive Nesterov's Accelerated Gradient (adaptive L, no restart)
+      const anag = [[...x0]];
+      let xAnagPrev = [...x0];
+      let yAnag = [...x0];
+      let tAnag = 1.0;
+      let LAnag = problem === 'rosenbrock' ? 10.0 : param * 0.5;
+      for (let k = 0; k < K; k++) {
+        const fy = fEval(yAnag, param);
+        const gy = gEval(yAnag, param);
+        LAnag = Math.max(1.0, LAnag * 0.85);
+        let xn = yAnag;
+        for (let tries = 0; tries < 40; tries++) {
+          xn = [yAnag[0] - gy[0] / LAnag, yAnag[1] - gy[1] / LAnag];
+          const dx0 = xn[0] - yAnag[0];
+          const dx1 = xn[1] - yAnag[1];
+          if (
+            fEval(xn, param) <=
+              fy + gy[0] * dx0 + gy[1] * dx1 + 0.5 * LAnag * (dx0 * dx0 + dx1 * dx1) + 1e-15 ||
+            LAnag > 1e8
+          ) {
+            break;
+          }
+          LAnag *= 2.0;
+        }
+        const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tAnag * tAnag));
+        const beta = (tAnag - 1.0) / tNew;
+        yAnag = [xn[0] + beta * (xn[0] - xAnagPrev[0]), xn[1] + beta * (xn[1] - xAnagPrev[1])];
+        xAnagPrev = xn;
+        tAnag = tNew;
+        anag.push([...xn]);
+      }
+
+      // 5. Adaptive Accelerated Proximal Descent (Proxax APD-style: adaptive L + restart)
       const apd = [[...x0]];
       let xPrev = [...x0];
       let y = [...x0];
@@ -376,7 +412,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         apd.push([...xn]);
       }
 
-      return { gd, agd, nag, apd };
+      return { gd, agd, nag, anag, apd };
     }
 
     function renderHeatmapBg(W, H, param, isDark) {
@@ -442,7 +478,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       const axisColor = isDark ? 'rgba(147,175,160,0.45)' : 'rgba(75,95,82,0.45)';
       const textColor = isDark ? '#93afa0' : '#4b5f52';
 
-      const { gd, agd, nag, apd } = simulate(param, K);
+      const { gd, agd, nag, anag, apd } = simulate(param, K);
       const metricFn = (pt) => (metric === 'obj' ? fEval(pt, param) : gradNorm(pt, param));
 
       const vGd = metricFn(gd[K]);
@@ -482,19 +518,21 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       }
 
       function drawTrail(pts, color, width) {
+        const tStride = Math.max(1, Math.floor(pts.length / 1500));
         cCtx.strokeStyle = color;
         cCtx.lineWidth = width;
         cCtx.lineJoin = 'round';
         cCtx.beginPath();
-        pts.forEach((p, i) => {
-          const px = toX(p[0]);
-          const py = toY(p[1]);
+        for (let i = 0; i < pts.length; i += tStride) {
+          const px = toX(pts[i][0]);
+          const py = toY(pts[i][1]);
           if (i === 0) cCtx.moveTo(px, py);
           else cCtx.lineTo(px, py);
-        });
+        }
+        const last = pts[pts.length - 1];
+        cCtx.lineTo(toX(last[0]), toY(last[1]));
         cCtx.stroke();
 
-        const last = pts[pts.length - 1];
         cCtx.fillStyle = color;
         cCtx.strokeStyle = isDark ? '#09110d' : '#ffffff';
         cCtx.lineWidth = 1.5;
@@ -507,6 +545,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       drawTrail(gd, '#ef4444', 2);
       drawTrail(agd, '#f59e0b', 2);
       drawTrail(nag, '#8b5cf6', 2);
+      drawTrail(anag, '#0ea5e9', 2);
       drawTrail(apd, '#10b981', 2.4);
 
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
@@ -586,6 +625,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       drawCurve(gd, '#ef4444');
       drawCurve(agd, '#f59e0b');
       drawCurve(nag, '#8b5cf6');
+      drawCurve(anag, '#0ea5e9');
       drawCurve(apd, '#10b981');
     }
 
@@ -607,19 +647,19 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         paramSlider.max = '180';
         paramSlider.step = '5';
         paramSlider.value = '100';
-        iterSlider.min = '50';
-        iterSlider.max = '3500';
-        iterSlider.step = '25';
-        iterSlider.value = '2500';
+        iterSlider.min = '200';
+        iterSlider.max = '14000';
+        iterSlider.step = '100';
+        iterSlider.value = '10000';
       } else {
         paramSlider.min = '50';
         paramSlider.max = '1000';
         paramSlider.step = '25';
         paramSlider.value = '500';
-        iterSlider.min = '50';
-        iterSlider.max = '2500';
-        iterSlider.step = '25';
-        iterSlider.value = '1200';
+        iterSlider.min = '200';
+        iterSlider.max = '10000';
+        iterSlider.step = '100';
+        iterSlider.value = '4800';
       }
       cachedBgKey = '';
       draw();
