@@ -1,11 +1,20 @@
 ---
 import { SITE } from '../data/site';
+
+interface Props {
+  wide?: boolean;
+}
+
+const { wide = false } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-16 border-t border-[var(--border)] bg-[var(--surface)]/50">
+<footer class="mt-14 border-t border-[var(--border)] bg-[var(--surface)]/50">
   <div
-    class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-[var(--text-muted)] sm:flex-row sm:px-6 lg:px-8"
+    class:list={[
+      'mx-auto flex flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-[var(--text-muted)] sm:flex-row sm:px-6 lg:px-8',
+      wide ? 'max-w-7xl' : 'max-w-5xl',
+    ]}
   >
     <p>
       © {year} {SITE.name}. Built with <a
