@@ -476,9 +476,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         type="button"
         data-home-method="adam"
         aria-pressed="true"
-        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ec4899]"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f472b6]"
       >
-        <span class="h-2 w-2 rounded-full bg-[#ec4899]"></span>
+        <span class="h-2 w-2 rounded-full bg-[#f472b6]"></span>
         Adam
       </button>
 
@@ -2268,7 +2268,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawProfile(trajs.agd[K], '#f59e0b', 1.7, false);
         if (visibleMethods.nag) drawProfile(trajs.nag[K], '#8b5cf6', 1.7, false);
         if (visibleMethods.anag) drawProfile(trajs.anag[K], '#0ea5e9', 1.7, false);
-        if (visibleMethods.adam) drawProfile(trajs.adam[K], '#ec4899', 1.7, false);
+        if (visibleMethods.adam) drawProfile(trajs.adam[K], '#f472b6', 1.7, false);
         if (visibleMethods.apd) drawProfile(trajs.apd[K], '#10b981', 2.4, false);
         if (lbfgsActive) drawProfile(trajs.lbfgs[K], lbfgsColor, 1.9, true);
 
@@ -2336,7 +2336,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawDots(trajs.agd[K], '#f59e0b', 2.1);
         if (visibleMethods.nag) drawDots(trajs.nag[K], '#8b5cf6', 2.1);
         if (visibleMethods.anag) drawDots(trajs.anag[K], '#0ea5e9', 2.1);
-        if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.1);
+        if (visibleMethods.adam) drawDots(trajs.adam[K], '#f472b6', 2.1);
         if (visibleMethods.lbfgs) drawDots(trajs.lbfgs[K], lbfgsColor, 2.1);
 
         cCtx.fillStyle = textColor;
@@ -2402,7 +2402,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawWeightDots(trajs.agd[K], '#f59e0b', 2.3);
         if (visibleMethods.nag) drawWeightDots(trajs.nag[K], '#8b5cf6', 2.3);
         if (visibleMethods.anag) drawWeightDots(trajs.anag[K], '#0ea5e9', 2.3);
-        if (visibleMethods.adam) drawWeightDots(trajs.adam[K], '#ec4899', 2.3);
+        if (visibleMethods.adam) drawWeightDots(trajs.adam[K], '#f472b6', 2.3);
         if (visibleMethods.lbfgs) drawWeightDots(trajs.lbfgs[K], lbfgsColor, 2.2);
 
         cCtx.fillStyle = textColor;
@@ -2469,7 +2469,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawSigs(trajs.agd[K], '#f59e0b', 1.6, false);
         if (visibleMethods.nag) drawSigs(trajs.nag[K], '#8b5cf6', 1.6, false);
         if (visibleMethods.anag) drawSigs(trajs.anag[K], '#0ea5e9', 1.6, false);
-        if (visibleMethods.adam) drawSigs(trajs.adam[K], '#ec4899', 1.6, false);
+        if (visibleMethods.adam) drawSigs(trajs.adam[K], '#f472b6', 1.6, false);
         if (visibleMethods.apd) drawSigs(trajs.apd[K], '#10b981', 2.4, false);
         if (visibleMethods.lbfgs) drawSigs(trajs.lbfgs[K], lbfgsColor, 1.8, true);
 
@@ -2544,7 +2544,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawGrpDots(trajs.agd[K], '#f59e0b', 2.8, -6);
         if (visibleMethods.nag) drawGrpDots(trajs.nag[K], '#8b5cf6', 2.8, -3);
         if (visibleMethods.anag) drawGrpDots(trajs.anag[K], '#0ea5e9', 2.8, 3);
-        if (visibleMethods.adam) drawGrpDots(trajs.adam[K], '#ec4899', 2.8, 6);
+        if (visibleMethods.adam) drawGrpDots(trajs.adam[K], '#f472b6', 2.8, 6);
         if (visibleMethods.lbfgs) drawGrpDots(trajs.lbfgs[K], lbfgsColor, 3.0, 10);
 
         cCtx.fillStyle = textColor;
@@ -2610,7 +2610,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawDots(trajs.agd[K], '#f59e0b', 2.1);
         if (visibleMethods.nag) drawDots(trajs.nag[K], '#8b5cf6', 2.1);
         if (visibleMethods.anag) drawDots(trajs.anag[K], '#0ea5e9', 2.1);
-        if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.1);
+        if (visibleMethods.adam) drawDots(trajs.adam[K], '#f472b6', 2.1);
         if (visibleMethods.lbfgs) drawDots(trajs.lbfgs[K], lbfgsColor, 2.1);
 
         cCtx.fillStyle = textColor;
@@ -2658,7 +2658,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawSpec(trajs.agd[K], '#f59e0b', 1.8, false);
         if (visibleMethods.nag) drawSpec(trajs.nag[K], '#8b5cf6', 1.8, false);
         if (visibleMethods.anag) drawSpec(trajs.anag[K], '#0ea5e9', 1.8, false);
-        if (visibleMethods.adam) drawSpec(trajs.adam[K], '#ec4899', 1.8, false);
+        if (visibleMethods.adam) drawSpec(trajs.adam[K], '#f472b6', 1.8, false);
         if (visibleMethods.apd) drawSpec(trajs.apd[K], '#10b981', 2.4, false);
         if (lbfgsActive) drawSpec(trajs.lbfgs[K], lbfgsColor, 1.9, true);
 
@@ -2727,7 +2727,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           { name: 'NAG', color: '#8b5cf6', val: metrics.nag[metric][K], show: visibleMethods.nag },
           { name: 'Adapt-NAG', color: '#0ea5e9', val: metrics.anag[metric][K], show: visibleMethods.anag },
           { name: 'Proxax APD', color: '#10b981', val: metrics.apd[metric][K], show: visibleMethods.apd },
-          { name: 'Adam', color: '#ec4899', val: metrics.adam[metric][K], show: visibleMethods.adam },
+          { name: 'Adam', color: '#f472b6', val: metrics.adam[metric][K], show: visibleMethods.adam },
           {
             name: 'L-BFGS',
             color: lbfgsColor,
@@ -2884,7 +2884,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         if (visibleMethods.agd) drawTrail(trajs.agd, '#f59e0b', 1.9, false);
         if (visibleMethods.nag) drawTrail(trajs.nag, '#8b5cf6', 1.9, false);
         if (visibleMethods.anag) drawTrail(trajs.anag, '#0ea5e9', 1.9, false);
-        if (visibleMethods.adam) drawTrail(trajs.adam, '#ec4899', 1.9, false);
+        if (visibleMethods.adam) drawTrail(trajs.adam, '#f472b6', 1.9, false);
         if (visibleMethods.apd) drawTrail(trajs.apd, '#10b981', 2.6, false);
         if (lbfgsActive) drawTrail(trajs.lbfgs, lbfgsColor, 2.0, true);
 
@@ -2969,7 +2969,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       if (visibleMethods.agd) drawCurve(metrics.agd[metric], '#f59e0b', 2.0, false);
       if (visibleMethods.nag) drawCurve(metrics.nag[metric], '#8b5cf6', 2.0, false);
       if (visibleMethods.anag) drawCurve(metrics.anag[metric], '#0ea5e9', 2.0, false);
-      if (visibleMethods.adam) drawCurve(metrics.adam[metric], '#ec4899', 2.0, false);
+      if (visibleMethods.adam) drawCurve(metrics.adam[metric], '#f472b6', 2.0, false);
       if (visibleMethods.apd) drawCurve(metrics.apd[metric], '#10b981', 2.6, false);
       if (lbfgsActive) drawCurve(metrics.lbfgs[metric], lbfgsColor, 2.0, true);
     }
