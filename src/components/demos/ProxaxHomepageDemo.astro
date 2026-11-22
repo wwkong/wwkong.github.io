@@ -216,84 +216,94 @@ sol_l1 = px.solve(problem_l1, x0=jnp.array([-1.8, 1.4]), solver=px.solvers.APD(o
     </div>
   </div>
 
-  <!-- Row 3: Solver Toggle Pills -->
-  <div class="flex flex-wrap items-center gap-1.5 border-b border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2.5 text-xs">
-    <span class="mr-1 text-[11px] font-semibold tracking-wide text-[var(--text-muted)] uppercase">
-      Solvers
-    </span>
+  <!-- Row 3: Solver Toggle Pills (Grouped by 1st-Order vs 2nd-Order / Quasi-Newton) -->
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2.5 text-xs">
+    <div class="flex flex-wrap items-center gap-1.5">
+      <span class="mr-0.5 text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+        1st-Order
+      </span>
 
-    <button
-      type="button"
-      data-home-method="gd"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#ef4444]"></span>
-      Fixed GD
-    </button>
+      <button
+        type="button"
+        data-home-method="gd"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ef4444]"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#ef4444]"></span>
+        Fixed GD
+      </button>
 
-    <button
-      type="button"
-      data-home-method="agd"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#f59e0b]"></span>
-      Backtracking GD
-    </button>
+      <button
+        type="button"
+        data-home-method="agd"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#f59e0b]"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#f59e0b]"></span>
+        Backtracking GD
+      </button>
 
-    <button
-      type="button"
-      data-home-method="nag"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#8b5cf6]"></span>
-      Nesterov (Fixed)
-    </button>
+      <button
+        type="button"
+        data-home-method="nag"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#8b5cf6]"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#8b5cf6]"></span>
+        Nesterov (Fixed)
+      </button>
 
-    <button
-      type="button"
-      data-home-method="anag"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#0ea5e9]"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#0ea5e9]"></span>
-      Adaptive Nesterov
-    </button>
+      <button
+        type="button"
+        data-home-method="anag"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#0ea5e9]"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#0ea5e9]"></span>
+        Adaptive Nesterov
+      </button>
 
-    <button
-      type="button"
-      data-home-method="apd"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent)] transition-opacity"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#10b981]"></span>
-      Proxax <code class="font-mono">APD</code>
-    </button>
+      <button
+        type="button"
+        data-home-method="apd"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent)] transition-opacity"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#10b981]"></span>
+        Proxax <code class="font-mono">APD</code>
+      </button>
 
-    <button
-      type="button"
-      data-home-method="adam"
-      aria-pressed="true"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ec4899]"
-    >
-      <span class="h-2 w-2 rounded-full bg-[#ec4899]"></span>
-      Adam
-    </button>
+      <button
+        type="button"
+        data-home-method="adam"
+        aria-pressed="true"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[#ec4899]"
+      >
+        <span class="h-2 w-2 rounded-full bg-[#ec4899]"></span>
+        Adam
+      </button>
+    </div>
 
-    <button
-      type="button"
-      id="home-method-lbfgs"
-      data-home-method="lbfgs"
-      aria-pressed="true"
-      title="Quasi-Newton L-BFGS (smooth problems only)"
-      class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[var(--text)]"
-    >
-      <span class="inline-block h-0.5 w-3 border-t-2 border-dashed border-[var(--text)]"></span>
-      <span>L-BFGS</span>
-      <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smooth only)</span>
-    </button>
+    <span class="hidden h-4 w-px bg-[var(--border)] sm:inline-block"></span>
+
+    <div class="flex flex-wrap items-center gap-1.5">
+      <span class="mr-0.5 text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+        2nd-Order / Quasi-Newton
+      </span>
+
+      <button
+        type="button"
+        id="home-method-lbfgs"
+        data-home-method="lbfgs"
+        aria-pressed="true"
+        title="Quasi-Newton L-BFGS (smooth problems only)"
+        class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[var(--text)]"
+      >
+        <span class="inline-block h-0.5 w-3 border-t-2 border-dashed border-[var(--text)]"></span>
+        <span>L-BFGS</span>
+        <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smooth only)</span>
+      </button>
+    </div>
 
     <span
       id="home-demo-gap"
