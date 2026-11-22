@@ -151,14 +151,18 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
   </div>
 
   <!-- Legend + Live Disparity Readout -->
-  <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--border)] px-5 py-2.5 text-xs text-[var(--text-muted)]">
     <span class="inline-flex items-center gap-1.5">
       <span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>
       Fixed-Step GD
     </span>
     <span class="inline-flex items-center gap-1.5">
       <span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
-      Adaptive Backtracking GD
+      Backtracking GD
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#8b5cf6]"></span>
+      Nesterov AGD (Fixed)
     </span>
     <span class="inline-flex items-center gap-1.5">
       <span class="h-2.5 w-2.5 rounded-full bg-[#10b981]"></span>
@@ -318,7 +322,24 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         agd.push(xn);
       }
 
-      // 3. Adaptive Accelerated Proximal Descent (Proxax APD-style)
+      // 3. Fixed-Step Nesterov's Accelerated Gradient (NAG, no restart/adaptation)
+      const etaNag = problem === 'rosenbrock' ? 1.0 / (10.0 * param + 20.0) : 1.0 / param;
+      const nag = [[...x0]];
+      let xNagPrev = [...x0];
+      let yNag = [...x0];
+      let tNag = 1.0;
+      for (let k = 0; k < K; k++) {
+        const g = gEval(yNag, param);
+        const xn = [yNag[0] - etaNag * g[0], yNag[1] - etaNag * g[1]];
+        const tNew = 0.5 * (1.0 + Math.sqrt(1.0 + 4.0 * tNag * tNag));
+        const beta = (tNag - 1.0) / tNew;
+        yNag = [xn[0] + beta * (xn[0] - xNagPrev[0]), xn[1] + beta * (xn[1] - xNagPrev[1])];
+        xNagPrev = xn;
+        tNag = tNew;
+        nag.push([...xn]);
+      }
+
+      // 4. Adaptive Accelerated Proximal Descent (Proxax APD-style)
       const apd = [[...x0]];
       let xPrev = [...x0];
       let y = [...x0];
@@ -355,7 +376,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
         apd.push([...xn]);
       }
 
-      return { gd, agd, apd };
+      return { gd, agd, nag, apd };
     }
 
     function renderHeatmapBg(W, H, param, isDark) {
@@ -421,7 +442,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
       const axisColor = isDark ? 'rgba(147,175,160,0.45)' : 'rgba(75,95,82,0.45)';
       const textColor = isDark ? '#93afa0' : '#4b5f52';
 
-      const { gd, agd, apd } = simulate(param, K);
+      const { gd, agd, nag, apd } = simulate(param, K);
       const metricFn = (pt) => (metric === 'obj' ? fEval(pt, param) : gradNorm(pt, param));
 
       const vGd = metricFn(gd[K]);
@@ -485,6 +506,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 
       drawTrail(gd, '#ef4444', 2);
       drawTrail(agd, '#f59e0b', 2);
+      drawTrail(nag, '#8b5cf6', 2);
       drawTrail(apd, '#10b981', 2.4);
 
       cCtx.fillStyle = isDark ? '#ecf4ef' : '#132018';
@@ -563,6 +585,7 @@ print(sol.status_enum.name, sol.x, sol.stats.opt_residual)`;
 
       drawCurve(gd, '#ef4444');
       drawCurve(agd, '#f59e0b');
+      drawCurve(nag, '#8b5cf6');
       drawCurve(apd, '#10b981');
     }
 

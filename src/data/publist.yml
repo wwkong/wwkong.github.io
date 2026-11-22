@@ -9,6 +9,7 @@
   tags:
   - Nonconvex Optimization
   selected: true
+  month: 11
 - title: An efficient adaptive accelerated inexact proximal point method for solving linearly constrained nonconvex composite problems
   authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
   url: r_aipp
@@ -21,6 +22,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 6
 - title: 'A new dog learns old tricks: RL finds classic optimization algorithms'
   authors: Weiwei Kong, Christopher Liaw, Aranyak Mehta, & D. Sivakumar
   url: rl_opt
@@ -31,6 +33,7 @@
   - Reinforcement Learning
   - Nonconvex Optimization
   selected: false
+  month: 5
 - title: An accelerated inexact proximal point method for solving nonconvex-concave min-max problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: aipp_s
@@ -42,6 +45,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 11
 - title: Accelerated inexact composite gradient methods for nonconvex spectral optimization problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: spectral_icg
@@ -54,6 +58,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 7
 - title: Iteration-complexity of a proximal augmented Lagrangian method for solving nonconvex composite optimization problems with nonlinear convex constraints
   authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
   url: nl_iapial
@@ -65,6 +70,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 5
 - title: 'Rankmax: An adaptive projection alternative to the Softmax function'
   authors: Weiwei Kong, Walid Krichene, Nicolas Mayoraz, Steffen Rendle, & Li Zhang
   url: rankmax
@@ -74,6 +80,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 12
 - title: Iteration-complexity of an inner accelerated inexact proximal augmented Lagrangian method based on the classical Lagrangian function
   authors: Weiwei Kong, Renato D. C. Monteiro, & Jefferson G. Melo
   url: iaipal
@@ -85,6 +92,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 3
 - title: FISTA and extensions - Review and new insights
   authors: Weiwei Kong, Jefferson G. Melo, & Renato D. C. Monteiro
   url: fista
@@ -96,6 +104,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 7
 - title: An accelerated inexact dampened augmented Lagrangian method for linearly-constrained nonconvex composite optimization problems
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: aidal
@@ -107,6 +116,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 6
 - title: Accelerated inexact first-order methods for solving nonconvex composite optimization problems
   authors: Weiwei Kong
   url: thesis_william_kong
@@ -118,6 +128,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 4
 - title: Global complexity bound of a proximal ADMM for linearly-constrained nonseparable nonconvex composite programming
   authors: Weiwei Kong & Renato D. C. Monteiro
   url: dp_admm
@@ -129,6 +140,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 3
 - title: Complexity-optimal and parameter-free first-order methods for finding stationary points of composite optimization problems
   authors: Weiwei Kong
   url: apd
@@ -141,6 +153,7 @@
   tags:
   - Nonconvex Optimization
   selected: true
+  month: 9
 - title: A unified fast gradient clipping framework for DP-SGD
   authors: Weiwei Kong & Andrés Muñoz Medina
   url: unified_fast_clipping
@@ -150,6 +163,7 @@
   tags:
   - Differential Privacy
   selected: true
+  month: 12
 - title: A Mini-Batch Counterexample to Last-Iterate Convergence in Definable Optimization
   authors: Weiwei Kong
   url: minibatch_counterexample
@@ -162,6 +176,7 @@
   tags:
   - Nonconvex Optimization
   selected: false
+  month: 8
 - title: 'Escaping collapse: The strength of weak data for large language model training'
   authors: Kareem Amin, Sara Babakniya, Alex Bie, Weiwei Kong, Umar Syed, & Sergei Vassilvitskii
   url: escaping_collapse
@@ -174,6 +189,7 @@
   tags:
   - Synthetic Data & LLMs
   selected: true
+  month: 1
 - title: Decomposing Private Image Generation via Coarse-to-Fine Wavelet Modeling
   authors: Jasmine Bayrooti, Weiwei Kong, Natalia Ponomareva, Carlos Esteves, Ameesh Makadia, & Amanda Prorok
   url: wavelet_private_gen
@@ -186,6 +202,7 @@
   tags:
   - Differential Privacy
   selected: false
+  month: 2
 - title: 'JAX-Privacy: A library for differentially private machine learning'
   authors: Ryan McKenna, Galen Andrew, Borja Balle, Vadym Doroshenko, Arun Ganesh, Weiwei Kong, Alex Kurakin, Brendan McMahan, & Mikhail Pravilov
   url: jax_privacy
@@ -197,6 +214,7 @@
   tags:
   - Differential Privacy
   selected: false
+  month: 2
 - title: 'Learning from Synthetic Data: Limitations of ERM'
   authors: Kareem Amin, Alex Bie, Weiwei Kong, Umar Syed, & Sergei Vassilvitskii
   url: synthetic_data_erm
@@ -209,6 +227,7 @@
   tags:
   - Synthetic Data & LLMs
   selected: false
+  month: 1
 - title: 'ContinuousBench: Can Differentially Private Synthetic Text Improve Capabilities?'
   authors: Peihan Liu, Lucas Rosenblatt, Weiwei Kong, Natalia Ponomareva, Gautam Kamath, Rachel Cummings, Roxana Geambasu, Yu Gan, Lillian Tsai, & Alex Bie
   url: continuous_bench
@@ -222,6 +241,7 @@
   - Differential Privacy
   - Synthetic Data & LLMs
   selected: false
+  month: 7
 - title: 'Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities'
   authors: Gemini Team, Google (incl. Weiwei Kong)
   url: gemini_2_5
@@ -234,6 +254,7 @@
   tags:
   - Synthetic Data & LLMs
   selected: false
+  month: 7
 - title: Clustering and Median Aggregation Improve Differentially Private Inference
   authors: Kareem Amin, Salman Avestimehr, Sara Babakniya, Alex Bie, Weiwei Kong, Natalia Ponomareva, & Umar Syed
   url: clustering_median_dp
@@ -247,6 +268,7 @@
   - Differential Privacy
   - Synthetic Data & LLMs
   selected: false
+  month: 6
 - title: Differentially Private Optimization for Non-Decomposable Objective Functions
   authors: Weiwei Kong, Andrés Muñoz Medina, & Mónica Ribero
   url: dp_nondecomposable
@@ -260,6 +282,7 @@
   - Differential Privacy
   - Nonconvex Optimization
   selected: true
+  month: 4
 - title: Private prediction for large-scale synthetic text generation
   authors: Kareem Amin, Alex Bie, Weiwei Kong, Alexey Kurakin, Natalia Ponomareva, Umar Syed, Andreas Terzis, & Sergei Vassilvitskii
   url: private_prediction_text
@@ -273,6 +296,7 @@
   - Differential Privacy
   - Synthetic Data & LLMs
   selected: true
+  month: 11
 - title: Privacy of the last iterate in cyclically-sampled DP-SGD on nonconvex composite losses
   authors: Weiwei Kong & Mónica Ribero
   url: cyclical_dpsgd
@@ -286,6 +310,7 @@
   - Differential Privacy
   - Nonconvex Optimization
   selected: false
+  month: 7
 - title: 'DP-Auditorium: a Large Scale Library for Auditing Differential Privacy'
   authors: William Kong, Andrés Muñoz Medina, Mónica Ribero, & Umar Syed
   url: dp_auditorium
@@ -298,6 +323,7 @@
   tags:
   - Differential Privacy
   selected: true
+  month: 5
 - title: Efficient Gradient Clipping Methods in DP-SGD for Convolution Models
   authors: Weiwei Kong, Mónica Ribero, & Grigoris Velegkas
   url: conv_fast_clipping
@@ -308,3 +334,4 @@
   tags:
   - Differential Privacy
   selected: false
+  month: 10

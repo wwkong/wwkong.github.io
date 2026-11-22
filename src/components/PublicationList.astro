@@ -8,12 +8,29 @@ export interface Publication {
   id?: string;
   display: string;
   year: number;
+  month?: number;
   arxiv?: string | number;
   doi?: string;
   abstract?: string;
   tags?: string[];
   selected?: boolean;
 }
+
+const MONTH_NAMES = [
+  '',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 interface Props {
   publications: Publication[];
@@ -55,6 +72,7 @@ function makeBibtex(p: Publication): string {
     `  ${venueField}={${venue}},`,
     `  year={${p.year}},`,
   ];
+  if (p.month && MONTH_NAMES[p.month]) lines.push(`  month={${MONTH_NAMES[p.month].toLowerCase()}},`);
   if (p.arxiv) lines.push(`  eprint={${p.arxiv}},`, `  archivePrefix={arXiv},`);
   if (p.doi) lines.push(`  doi={${p.doi.replace(/^https?:\/\/(dx\.)?doi\.org\//, '')}},`);
   lines.push('}');
@@ -67,14 +85,17 @@ const allTags = Array.from(
   new Set(publications.flatMap((p) => p.tags ?? []))
 ).sort();
 
-const enriched = publications.map((p) => ({
-  ...p,
-  slugId: p.url || p.id || `pub-${p.year}`,
-  doiHref: p.doi ? (p.doi.startsWith('http') ? p.doi : `https://doi.org/${p.doi}`) : undefined,
-  abstractHtml: p.abstract ? renderMathText(p.abstract) : undefined,
-  bibtex: makeBibtex(p),
-  searchBlob: `${p.title} ${p.authors} ${stripHtml(p.display)} ${p.year} ${(p.tags ?? []).join(' ')} ${p.abstract ?? ''}`.toLowerCase(),
-}));
+const enriched = publications
+  .map((p) => ({
+    ...p,
+    slugId: p.url || p.id || `pub-${p.year}`,
+    dateLabel: p.month && MONTH_NAMES[p.month] ? `${MONTH_NAMES[p.month]} ${p.year}` : String(p.year),
+    doiHref: p.doi ? (p.doi.startsWith('http') ? p.doi : `https://doi.org/${p.doi}`) : undefined,
+    abstractHtml: p.abstract ? renderMathText(p.abstract) : undefined,
+    bibtex: makeBibtex(p),
+    searchBlob: `${p.title} ${p.authors} ${stripHtml(p.display)} ${p.year} ${p.month ? MONTH_NAMES[p.month] : ''} ${(p.tags ?? []).join(' ')} ${p.abstract ?? ''}`.toLowerCase(),
+  }))
+  .sort((a, b) => (b.year - a.year) || ((b.month ?? 0) - (a.month ?? 0)));
 ---
 
 <div id="pub-controls" class="card mb-8 p-4 sm:p-5">
@@ -175,7 +196,7 @@ const enriched = publications.map((p) => ({
                 <p class="mt-1.5 text-sm text-[var(--text-muted)]">{p.authors}</p>
 
                 <p class="mt-1 text-sm text-[var(--text)]">
-                  <span set:html={p.display} /> ({p.year})
+                  <span set:html={p.display} /> ({p.dateLabel})
                 </p>
 
                 <div class="mt-3.5 flex flex-wrap items-center gap-2">
