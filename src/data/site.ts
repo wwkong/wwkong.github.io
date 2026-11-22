@@ -52,6 +52,16 @@ export const SITE = {
 
 export const RESEARCH_PILLARS = [
   {
+    title: 'Nonconvex Composite Optimization',
+    tag: 'Nonconvex Optimization',
+    summary:
+      'Accelerated proximal, penalty, spectral, and augmented Lagrangian solvers with certified stationarity bounds—implemented in Proxax (JAX) and NC-OPT.',
+    links: [
+      { label: 'Filter Papers', href: '/publications/?tag=Nonconvex+Optimization' },
+      { label: 'Explore Proxax', href: 'https://proxax.readthedocs.io/en/latest/' },
+    ],
+  },
+  {
     title: 'Differential Privacy & Scalable DP-ML',
     tag: 'Differential Privacy',
     summary:
@@ -67,16 +77,6 @@ export const RESEARCH_PILLARS = [
       'Escaping model collapse with weak data, limitations of ERM on synthetic corpora, private prediction for synthetic text, and ContinuousBench.',
     links: [
       { label: 'Filter Papers', href: '/publications/?tag=Synthetic+Data+%26+LLMs' },
-    ],
-  },
-  {
-    title: 'Nonconvex Composite Optimization',
-    tag: 'Nonconvex Optimization',
-    summary:
-      'Accelerated proximal, penalty, spectral, and augmented Lagrangian solvers with certified stationarity bounds—implemented in Proxax (JAX) and NC-OPT.',
-    links: [
-      { label: 'Filter Papers', href: '/publications/?tag=Nonconvex+Optimization' },
-      { label: 'Explore Proxax', href: 'https://proxax.readthedocs.io/en/latest/' },
     ],
   },
 ] as const;

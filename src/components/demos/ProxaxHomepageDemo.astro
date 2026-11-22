@@ -10,7 +10,7 @@ const kHimmTitle = tex('f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2
 const kL1Title = tex('\\phi(x) = \\tfrac{1}{2}x^{\\top}Qx - c^{\\top}x + \\lambda\\|x\\|_1');
 const kChainedTitle = tex('f(x) = \\sum_{i=1}^{49}\\bigl[(1-x_i)^2 + b(x_{i+1}-x_i^2)^2\\bigr]');
 const kSparseTitle = tex('\\phi(x) = \\tfrac{1}{2}\\|Ax - y\\|_2^2 + \\lambda\\|x\\|_1 \\;(d=64)');
-const kSpecTitle = tex('f(x) = \\tfrac{1}{2}\\sum_{i=1}^{100} \\lambda_i x_i^2,\\; \\lambda_i \\in [1, \\kappa]');
+const kSpecTitle = tex('f(x) = \\tfrac{1}{2}\\sum_{i=1}^{100} \\lambda_i (x_i - x_i^*)^2,\\; \\lambda_i \\in [1, \\kappa]');
 
 const kParamRosen = tex('b');
 const kParamQuad = tex('\\kappa = L/\\mu');
@@ -337,12 +337,12 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         id="home-method-lbfgs"
         data-home-method="lbfgs"
         aria-pressed="true"
-        title="Quasi-Newton L-BFGS (m=5 on high-dim, smooth problems only)"
+        title="Quasi-Newton L-BFGS (m=5 on high-dim; uses pseudo-Huber smoothing ε=1e-4 on nonsmooth ℓ1)"
         class="home-method-btn inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text)] transition-opacity hover:border-[var(--text)]"
       >
         <span class="inline-block h-0.5 w-3 border-t-2 border-dashed border-[var(--text)]"></span>
         <span>L-BFGS</span>
-        <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smooth only)</span>
+        <span id="lbfgs-smooth-note" class="hidden text-[10px] text-[var(--text-muted)]">(smoothed)</span>
       </button>
     </div>
   </div>
@@ -460,8 +460,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         The live plot above runs directly in your browser in JavaScript (no backend server). In 2D, L-BFGS has memory
         exceeding dimension so it behaves like exact Newton; in the <strong>High-Dim</strong> tabs (<span set:html={kHighDimD} />,
         L-BFGS memory <span set:html={kLbfgsM} />), curvature is only partially captured, giving a realistic high-dimensional race.
-        On nonsmooth <strong>Composite / Sparse <span set:html={kL1Btn} /></strong> problems, L-BFGS is disabled and
-        all first-order solvers apply exact soft-thresholding proximal steps.{' '}
+        On nonsmooth <strong>Composite / Sparse <span set:html={kL1Btn} /></strong> problems, L-BFGS cannot handle the
+        nonsmooth kink directly and must smooth the <span set:html={kL1Btn} /> penalty (pseudo-Huber, ε = 10⁻⁴),
+        causing curvature blow-up and stalling while <strong>Proxax APD</strong> applies exact soft-thresholding
+        proximal steps to converge orders of magnitude faster with exact sparsity.{' '}
         <a
           href="https://proxax.readthedocs.io/en/latest/"
           target="_blank"
@@ -829,11 +831,11 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           lam: param,
         };
       }
-      // spec_quad: d = 100, log-spaced eigenvalues [1, kappa]
+      // spec_quad: d = 100, log-spaced eigenvalues [1, kappa], non-zero target x*
       const d = 100;
       const eigs = Array.from({ length: d }, (_, i) => Math.pow(param, i / (d - 1)));
-      const x0 = Array.from({ length: d }, (_, i) => (i % 2 === 0 ? 1 : -1) / Math.sqrt(d));
-      const opt = new Array(d).fill(0);
+      const opt = Array.from({ length: d }, (_, i) => 0.5 * Math.sin(0.25 * (i + 1)) + (i % 2 === 0 ? 0.25 : -0.25));
+      const x0 = new Array(d).fill(0);
       return {
         dim: d,
         maxK: 800,
@@ -848,17 +850,23 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         Linit: param * 0.5,
         fSmooth: (x) => {
           let s = 0;
-          for (let i = 0; i < d; i++) s += eigs[i] * x[i] * x[i];
+          for (let i = 0; i < d; i++) {
+            const diff = x[i] - opt[i];
+            s += eigs[i] * diff * diff;
+          }
           return 0.5 * s;
         },
         fTotal: (x) => {
           let s = 0;
-          for (let i = 0; i < d; i++) s += eigs[i] * x[i] * x[i];
+          for (let i = 0; i < d; i++) {
+            const diff = x[i] - opt[i];
+            s += eigs[i] * diff * diff;
+          }
           return 0.5 * s;
         },
         grad: (x) => {
           const g = new Array(d);
-          for (let i = 0; i < d; i++) g[i] = eigs[i] * x[i];
+          for (let i = 0; i < d; i++) g[i] = eigs[i] * (x[i] - opt[i]);
           return g;
         },
         prox: null,
@@ -1061,9 +1069,26 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         adam.push(P.prox ? P.prox(cand, 1.0 / P.adamLr) : cand);
       }
 
-      // 7. L-BFGS (smooth problems only)
+      // 7. L-BFGS (exact on smooth problems; pseudo-Huber smoothed ε=1e-4 on nonsmooth ℓ1)
       const lbfgs = [x0.slice()];
-      if (!P.prox) {
+      {
+        const eps = 1e-4;
+        const eps2 = eps * eps;
+        const isComp = Boolean(P.prox);
+        const fLbfgs = isComp
+          ? (x) => {
+              let h = 0;
+              for (let i = 0; i < d; i++) h += Math.sqrt(x[i] * x[i] + eps2) - eps;
+              return P.fSmooth(x) + P.lam * h;
+            }
+          : P.fSmooth;
+        const gLbfgs = isComp
+          ? (x) => {
+              const g = P.grad(x);
+              for (let i = 0; i < d; i++) g[i] += (P.lam * x[i]) / Math.sqrt(x[i] * x[i] + eps2);
+              return g;
+            }
+          : P.grad;
         const S = [],
           Y = [];
         let x = x0.slice();
@@ -1073,7 +1098,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             lbfgs.push(x);
             continue;
           }
-          const g = P.grad(x);
+          const g = gLbfgs(x);
           const gn = vecNorm(g);
           if (gn < 1e-12) {
             converged = true;
@@ -1134,17 +1159,17 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
               dg -= g[i] * g[i];
             }
           }
-          const fx = P.fSmooth(x);
+          const fx = fLbfgs(x);
           let step = 1.0;
           let xn = x;
           for (let tries = 0; tries < 25; tries++) {
             const cand = new Array(d);
             for (let i = 0; i < d; i++) cand[i] = x[i] + step * dir[i];
             xn = cand;
-            if (P.fSmooth(xn) <= fx + 1e-4 * step * dg) break;
+            if (fLbfgs(xn) <= fx + 1e-4 * step * dg) break;
             step *= 0.5;
           }
-          const gnVec = P.grad(xn);
+          const gnVec = gLbfgs(xn);
           const sv = new Array(d),
             yv = new Array(d);
           let sy = 0,
@@ -1211,7 +1236,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           anag: computeMetrics(anag),
           apd: computeMetrics(apd),
           adam: computeMetrics(adam),
-          lbfgs: P.prox ? null : computeMetrics(lbfgs),
+          lbfgs: computeMetrics(lbfgs),
         },
       };
       return simCache;
@@ -1295,9 +1320,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       const pad = { l: 46, r: 16, t: 18, b: 30 };
       const plotW = W - pad.l - pad.r;
       const plotH = H - pad.t - pad.b;
-      const { P, trajs } = sim;
+      const { P, optima, trajs } = sim;
       const d = P.dim;
-      const lbfgsActive = !P.prox && visibleMethods.lbfgs;
+      const lbfgsActive = visibleMethods.lbfgs;
 
       cCtx.font = '10px JetBrains Mono, monospace';
       cCtx.fillStyle = textColor;
@@ -1405,12 +1430,17 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           drawDots(vec, '#10b981', 3.2);
         }
         if (visibleMethods.gd) drawDots(trajs.gd[K], '#ef4444', 2.3);
+        if (visibleMethods.agd) drawDots(trajs.agd[K], '#f59e0b', 2.3);
+        if (visibleMethods.nag) drawDots(trajs.nag[K], '#8b5cf6', 2.3);
+        if (visibleMethods.anag) drawDots(trajs.anag[K], '#0ea5e9', 2.3);
         if (visibleMethods.adam) drawDots(trajs.adam[K], '#ec4899', 2.3);
+        if (visibleMethods.lbfgs) drawDots(trajs.lbfgs[K], lbfgsColor, 2.2);
 
         cCtx.fillStyle = textColor;
         cCtx.fillText('gray bars = true spikes · i = 1..64', pad.l, H - 10);
       } else {
-        // spec_quad: per-eigenmode log10|x_i| across i = 1..100
+        // spec_quad: per-eigenmode log10|x_i - x*_i| across i = 1..100
+        const opt = optima[0];
         const minLog = -12,
           maxLog = 1;
         const sx = (i) => pad.l + (i / (d - 1)) * plotW;
@@ -1436,7 +1466,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           cCtx.beginPath();
           for (let i = 0; i < d; i++) {
             const px = sx(i),
-              py = sy(vec[i]);
+              py = sy(vec[i] - opt[i]);
             if (i === 0) cCtx.moveTo(px, py);
             else cCtx.lineTo(px, py);
           }
@@ -1480,17 +1510,26 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
       const sim = runFullSim(problem, param);
       const { P, optima, fStar, trajs, metrics } = sim;
-      const lbfgsActive = !P.prox && visibleMethods.lbfgs;
+      const lbfgsActive = visibleMethods.lbfgs;
 
       const vGd = metrics.gd[metric][K];
       const vApd = metrics.apd[metric][K];
-      const ratio = vGd / Math.max(vApd, 1e-16);
-      const orders = Math.log10(Math.max(1, ratio));
+      const vLbfgs = metrics.lbfgs[metric][K];
       if (gapBadge) {
-        gapBadge.textContent =
-          orders >= 1
-            ? `APD ~10^${orders.toFixed(1)}× better than GD`
-            : `k=${K}: APD=${vApd.toExponential(1)}`;
+        if (isComposite(problem) && lbfgsActive) {
+          const ordersLb = Math.log10(Math.max(1, vLbfgs / Math.max(vApd, 1e-16)));
+          if (ordersLb >= 1) {
+            gapBadge.textContent = `APD ~10^${ordersLb.toFixed(1)}× better than L-BFGS`;
+          } else {
+            const orders = Math.log10(Math.max(1, vGd / Math.max(vApd, 1e-16)));
+            gapBadge.textContent =
+              orders >= 1 ? `APD ~10^${orders.toFixed(1)}× better than GD` : `k=${K}: APD=${vApd.toExponential(1)}`;
+          }
+        } else {
+          const orders = Math.log10(Math.max(1, vGd / Math.max(vApd, 1e-16)));
+          gapBadge.textContent =
+            orders >= 1 ? `APD ~10^${orders.toFixed(1)}× better than GD` : `k=${K}: APD=${vApd.toExponential(1)}`;
+        }
       }
 
       // Live numeric readout strip
@@ -1748,14 +1787,14 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     }
 
     function syncLbfgsState() {
-      const disabled = isComposite(problem);
+      const smoothed = isComposite(problem);
       if (lbfgsBtn) {
-        lbfgsBtn.disabled = disabled;
-        lbfgsBtn.classList.toggle('cursor-not-allowed', disabled);
-        lbfgsBtn.classList.toggle('opacity-35', disabled || !visibleMethods.lbfgs);
-        lbfgsBtn.classList.toggle('line-through', !disabled && !visibleMethods.lbfgs);
+        lbfgsBtn.disabled = false;
+        lbfgsBtn.classList.remove('cursor-not-allowed');
+        lbfgsBtn.classList.toggle('opacity-35', !visibleMethods.lbfgs);
+        lbfgsBtn.classList.toggle('line-through', !visibleMethods.lbfgs);
       }
-      lbfgsNote?.classList.toggle('hidden', !disabled);
+      lbfgsNote?.classList.toggle('hidden', !smoothed);
     }
 
     function syncAutoZoomBtn() {
@@ -1852,8 +1891,8 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         paramSlider.value = '2000';
         iterSlider.min = '0';
         iterSlider.max = '800';
-        iterSlider.value = '400';
-        animStepInput.value = '10';
+        iterSlider.value = '100';
+        animStepInput.value = '5';
       }
 
       iterSlider.step = String(getAnimStep());
@@ -1967,7 +2006,6 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       btn.addEventListener('click', () => {
         const key = btn.dataset.homeMethod;
         if (!key || !(key in visibleMethods)) return;
-        if (key === 'lbfgs' && isComposite(problem)) return;
         visibleMethods[key] = !visibleMethods[key];
         const on = visibleMethods[key];
         btn.setAttribute('aria-pressed', String(on));
