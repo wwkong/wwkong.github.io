@@ -10,12 +10,14 @@ const kHimmTitle = tex('f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2
 const kL1Title = tex('\\phi(x) = \\tfrac{1}{2}x^{\\top}Qx - c^{\\top}x + \\lambda\\|x\\|_1');
 const kChainedTitle = tex('f(x) = \\sum_{i=1}^{49}\\bigl[(1-x_i)^2 + b(x_{i+1}-x_i^2)^2\\bigr]');
 const kSparseTitle = tex('\\phi(x) = \\tfrac{1}{2}\\|Ax - y\\|_2^2 + \\lambda\\|x\\|_1 \\;(d=64)');
+const kSimplexTitle = tex('\\min_{x \\in \\Delta^{63}} \\tfrac{1}{2}\\|Ax - b\\|_2^2 + \\tfrac{\\mu}{2}\\|x\\|_2^2');
 const kSpecTitle = tex('f(x) = \\tfrac{1}{2}(x - x^*)^{\\top} Q \\Lambda Q^{\\top} (x - x^*),\\; \\lambda_i \\in [1, \\kappa]');
 
 const kParamRosen = tex('b');
 const kParamQuad = tex('\\kappa = L/\\mu');
 const kParamHimm = tex('\\theta_0');
 const kParamL1 = tex('\\lambda');
+const kParamSimplex = tex('\\mu');
 
 const kIterK = tex('k');
 const kObjMetric = tex('f(x_k) - f^*');
@@ -132,6 +134,13 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           </button>
           <button
             type="button"
+            data-home-problem="simplex_qp"
+            class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+          >
+            Simplex QP <span class="font-mono text-[10px] opacity-75">64D</span>
+          </button>
+          <button
+            type="button"
             data-home-problem="spec_quad"
             class="home-prob-btn rounded-md px-2.5 py-1 text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
           >
@@ -157,6 +166,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         </span>
         <span id="home-param-label-lasso" class="hidden font-medium text-[var(--text)]">
           Sparsity weight <span set:html={kParamL1} />
+        </span>
+        <span id="home-param-label-simplex" class="hidden font-medium text-[var(--text)]">
+          Ridge regularization <span set:html={kParamSimplex} />
         </span>
         <span id="home-param-val" class="font-mono font-semibold text-[var(--accent)]">100</span>
       </div>
@@ -368,6 +380,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       <div id="home-contour-title-sparse" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         Sparse Signal Recovery: <span class="text-[var(--text)]" set:html={kSparseTitle} />
       </div>
+      <div id="home-contour-title-simplex" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
+        Simplex Weights (<span class="text-[var(--text)]" set:html={kSimplexTitle} />)
+      </div>
       <div id="home-contour-title-spec" class="mb-2 hidden text-xs font-medium text-[var(--text-muted)]">
         Per-Eigenmode Error: <span class="text-[var(--text)]" set:html={kSpecTitle} />
       </div>
@@ -486,6 +501,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       quad: document.getElementById('home-param-label-quad'),
       himm: document.getElementById('home-param-label-himm'),
       lasso: document.getElementById('home-param-label-lasso'),
+      simplex: document.getElementById('home-param-label-simplex'),
     };
     const contourTitles = {
       rosenbrock: document.getElementById('home-contour-title-rosen'),
@@ -494,6 +510,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       lasso: document.getElementById('home-contour-title-lasso'),
       chained_rosen: document.getElementById('home-contour-title-chained'),
       sparse_lasso: document.getElementById('home-contour-title-sparse'),
+      simplex_qp: document.getElementById('home-contour-title-simplex'),
       spec_quad: document.getElementById('home-contour-title-spec'),
     };
     const curveTitles = {
@@ -548,8 +565,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     let isDragging = false;
     let dragStart = null;
 
-    const isHighDim = (p) => p === 'chained_rosen' || p === 'sparse_lasso' || p === 'spec_quad';
-    const isComposite = (p) => p === 'lasso' || p === 'sparse_lasso';
+    const isHighDim = (p) =>
+      p === 'chained_rosen' || p === 'sparse_lasso' || p === 'simplex_qp' || p === 'spec_quad';
+    const isComposite = (p) => p === 'lasso' || p === 'sparse_lasso' || p === 'simplex_qp';
 
     // ---- Precomputed deterministic data ----
     // 1. 2D Composite L1 rotated quadratic
@@ -613,7 +631,81 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
       sparseY[i] = sum;
     }
 
-    // Deterministic dense orthogonal rotation Q = H_r ... H_1 for Spectrum Quad (d = 100)
+    // 4. Deterministic 48 x 64 problem data for Simplex QP (64D)
+    const SIMPLEX_M = 48;
+    const SIMPLEX_D = 64;
+    const simplexA = new Array(SIMPLEX_M);
+    const simplexTrue = new Array(SIMPLEX_D).fill(0);
+    const simplexB = new Float64Array(SIMPLEX_M);
+    {
+      let seed = 2026;
+      const rand = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      const randn = () => {
+        const u1 = Math.max(1e-9, rand());
+        const u2 = rand();
+        return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      };
+      const scale = 1.0 / Math.sqrt(SIMPLEX_M);
+      for (let i = 0; i < SIMPLEX_M; i++) {
+        const row = new Float64Array(SIMPLEX_D);
+        for (let j = 0; j < SIMPLEX_D; j++) row[j] = randn() * scale;
+        simplexA[i] = row;
+      }
+      const weights = [
+        [3, 0.22],
+        [11, 0.18],
+        [19, 0.15],
+        [28, 0.14],
+        [37, 0.11],
+        [45, 0.09],
+        [52, 0.06],
+        [60, 0.05],
+      ];
+      weights.forEach(([idx, val]) => {
+        simplexTrue[idx] = val;
+      });
+      for (let i = 0; i < SIMPLEX_M; i++) {
+        let sum = 0;
+        const row = simplexA[i];
+        for (let j = 0; j < SIMPLEX_D; j++) sum += row[j] * simplexTrue[j];
+        simplexB[i] = sum + 0.04 * randn();
+      }
+    }
+    function projSimplex(v) {
+      const n = v.length;
+      const u = v.slice().sort((a, b) => b - a);
+      let cssv = 0;
+      let rho = -1;
+      for (let i = 0; i < n; i++) {
+        cssv += u[i];
+        if (u[i] - (cssv - 1.0) / (i + 1) > 0) rho = i;
+      }
+      let sumRho = 0;
+      for (let i = 0; i <= rho; i++) sumRho += u[i];
+      const theta = (sumRho - 1.0) / (rho + 1);
+      const out = new Array(n);
+      for (let i = 0; i < n; i++) out[i] = Math.max(v[i] - theta, 0);
+      return out;
+    }
+    function softmaxVec(z) {
+      const n = z.length;
+      let mx = -Infinity;
+      for (let i = 0; i < n; i++) if (z[i] > mx) mx = z[i];
+      const out = new Array(n);
+      let s = 0;
+      for (let i = 0; i < n; i++) {
+        const e = Math.exp(Math.max(-50, z[i] - mx));
+        out[i] = e;
+        s += e;
+      }
+      for (let i = 0; i < n; i++) out[i] /= s;
+      return out;
+    }
+
+    // 5. Deterministic dense orthogonal rotation Q = H_r ... H_1 for Spectrum Quad (d = 100)
     const SPEC_D = 100;
     const SPEC_REFL = 12;
     const specHouseholder = [];
@@ -882,6 +974,59 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
           prox,
           Lref: 6.0,
           lam: param,
+          lbfgsMode: 'huber',
+        };
+      }
+      if (prob === 'simplex_qp') {
+        const d = SIMPLEX_D;
+        const x0 = new Array(d).fill(1.0 / d);
+        const fS = (x) => {
+          let s = 0;
+          for (let i = 0; i < SIMPLEX_M; i++) {
+            const row = simplexA[i];
+            let r = -simplexB[i];
+            for (let j = 0; j < d; j++) r += row[j] * x[j];
+            s += r * r;
+          }
+          let n2 = 0;
+          for (let j = 0; j < d; j++) n2 += x[j] * x[j];
+          return 0.5 * s + 0.5 * param * n2;
+        };
+        const gr = (x) => {
+          const res = new Float64Array(SIMPLEX_M);
+          for (let i = 0; i < SIMPLEX_M; i++) {
+            const row = simplexA[i];
+            let r = -simplexB[i];
+            for (let j = 0; j < d; j++) r += row[j] * x[j];
+            res[i] = r;
+          }
+          const g = new Array(d);
+          for (let j = 0; j < d; j++) g[j] = param * x[j];
+          for (let i = 0; i < SIMPLEX_M; i++) {
+            const row = simplexA[i];
+            const ri = res[i];
+            for (let j = 0; j < d; j++) g[j] += row[j] * ri;
+          }
+          return g;
+        };
+        return {
+          dim: d,
+          maxK: 600,
+          x0,
+          optima: null,
+          fStar: 0,
+          eta: 1.0 / (6.0 + param),
+          etaNag: 1.0 / (6.0 + param),
+          adamLr: 0.03,
+          lbfgsMem: 5,
+          Linit: 4.0 + param,
+          fSmooth: fS,
+          fTotal: fS,
+          grad: gr,
+          prox: (x) => projSimplex(x),
+          Lref: 6.0 + param,
+          lam: 0,
+          lbfgsMode: 'softmax',
         };
       }
       // spec_quad: d = 100, dense rotated quadratic Q Λ Q^T with log-spaced eigenvalues [1, kappa]
@@ -1117,40 +1262,53 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         adam.push(P.prox ? P.prox(cand, 1.0 / P.adamLr) : cand);
       }
 
-      // 7. L-BFGS (exact on smooth problems; pseudo-Huber smoothed ε=1e-4 on nonsmooth ℓ1)
+      // 7. L-BFGS (exact on smooth; pseudo-Huber smoothed on ℓ1; softmax logits on simplex)
       const lbfgs = [x0.slice()];
       {
         const eps = 1e-4;
         const eps2 = eps * eps;
-        const isComp = Boolean(P.prox);
-        const fLbfgs = isComp
-          ? (x) => {
-              let h = 0;
-              for (let i = 0; i < d; i++) h += Math.sqrt(x[i] * x[i] + eps2) - eps;
-              return P.fSmooth(x) + P.lam * h;
+        const isSoftmax = P.lbfgsMode === 'softmax';
+        const isHuber = Boolean(P.prox) && !isSoftmax;
+        const fLbfgs = isSoftmax
+          ? (z) => P.fSmooth(softmaxVec(z))
+          : isHuber
+            ? (x) => {
+                let h = 0;
+                for (let i = 0; i < d; i++) h += Math.sqrt(x[i] * x[i] + eps2) - eps;
+                return P.fSmooth(x) + P.lam * h;
+              }
+            : P.fSmooth;
+        const gLbfgs = isSoftmax
+          ? (z) => {
+              const sm = softmaxVec(z);
+              const gx = P.grad(sm);
+              let dot = 0;
+              for (let i = 0; i < d; i++) dot += sm[i] * gx[i];
+              const gz = new Array(d);
+              for (let i = 0; i < d; i++) gz[i] = sm[i] * (gx[i] - dot);
+              return gz;
             }
-          : P.fSmooth;
-        const gLbfgs = isComp
-          ? (x) => {
-              const g = P.grad(x);
-              for (let i = 0; i < d; i++) g[i] += (P.lam * x[i]) / Math.sqrt(x[i] * x[i] + eps2);
-              return g;
-            }
-          : P.grad;
+          : isHuber
+            ? (x) => {
+                const g = P.grad(x);
+                for (let i = 0; i < d; i++) g[i] += (P.lam * x[i]) / Math.sqrt(x[i] * x[i] + eps2);
+                return g;
+              }
+            : P.grad;
         const S = [],
           Y = [];
-        let x = x0.slice();
+        let x = isSoftmax ? new Array(d).fill(0) : x0.slice();
         let converged = false;
         for (let k = 0; k < K; k++) {
           if (converged) {
-            lbfgs.push(x);
+            lbfgs.push(isSoftmax ? softmaxVec(x) : x);
             continue;
           }
           const g = gLbfgs(x);
           const gn = vecNorm(g);
           if (gn < 1e-12) {
             converged = true;
-            lbfgs.push(x);
+            lbfgs.push(isSoftmax ? softmaxVec(x) : x);
             continue;
           }
           const q = g.slice();
@@ -1239,7 +1397,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             }
           }
           x = xn;
-          lbfgs.push(x);
+          lbfgs.push(isSoftmax ? softmaxVec(x) : x);
         }
       }
 
@@ -1486,6 +1644,72 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
 
         cCtx.fillStyle = textColor;
         cCtx.fillText('gray bars = true spikes · i = 1..64', pad.l, H - 10);
+      } else if (problem === 'simplex_qp') {
+        // Simplex weights x_i in [0, 0.32] across i = 1..64
+        const yMin = 0,
+          yMax = 0.3;
+        const sx = (i) => pad.l + ((i + 0.5) / d) * plotW;
+        const sy = (v) => pad.t + ((yMax - Math.max(yMin, Math.min(yMax, v))) / (yMax - yMin)) * plotH;
+        const y0 = sy(0);
+
+        [0, 0.1, 0.2, 0.3].forEach((val) => {
+          const y = sy(val);
+          cCtx.strokeStyle = val === 0 ? axisColor : gridColor;
+          cCtx.beginPath();
+          cCtx.moveTo(pad.l, y);
+          cCtx.lineTo(W - pad.r, y);
+          cCtx.stroke();
+          cCtx.fillText(val.toFixed(1), 10, y + 3);
+        });
+
+        // True sparse portfolio weights background bars
+        for (let i = 0; i < d; i++) {
+          if (simplexTrue[i] > 0) {
+            const px = sx(i),
+              py = sy(simplexTrue[i]);
+            cCtx.strokeStyle = isDark ? 'rgba(236,244,239,0.28)' : 'rgba(19,32,24,0.22)';
+            cCtx.lineWidth = 5;
+            cCtx.beginPath();
+            cCtx.moveTo(px, y0);
+            cCtx.lineTo(px, py);
+            cCtx.stroke();
+          }
+        }
+
+        const drawWeightDots = (vec, color, r) => {
+          cCtx.fillStyle = color;
+          for (let i = 0; i < d; i++) {
+            if (vec[i] > 0.004 || simplexTrue[i] > 0) {
+              cCtx.beginPath();
+              cCtx.arc(sx(i), sy(vec[i]), r, 0, Math.PI * 2);
+              cCtx.fill();
+            }
+          }
+        };
+
+        if (visibleMethods.apd) {
+          const vec = trajs.apd[K];
+          cCtx.strokeStyle = '#10b981';
+          cCtx.lineWidth = 2;
+          for (let i = 0; i < d; i++) {
+            if (vec[i] > 0.004) {
+              cCtx.beginPath();
+              cCtx.moveTo(sx(i), y0);
+              cCtx.lineTo(sx(i), sy(vec[i]));
+              cCtx.stroke();
+            }
+          }
+          drawWeightDots(vec, '#10b981', 3.2);
+        }
+        if (visibleMethods.gd) drawWeightDots(trajs.gd[K], '#ef4444', 2.3);
+        if (visibleMethods.agd) drawWeightDots(trajs.agd[K], '#f59e0b', 2.3);
+        if (visibleMethods.nag) drawWeightDots(trajs.nag[K], '#8b5cf6', 2.3);
+        if (visibleMethods.anag) drawWeightDots(trajs.anag[K], '#0ea5e9', 2.3);
+        if (visibleMethods.adam) drawWeightDots(trajs.adam[K], '#ec4899', 2.3);
+        if (visibleMethods.lbfgs) drawWeightDots(trajs.lbfgs[K], lbfgsColor, 2.2);
+
+        cCtx.fillStyle = textColor;
+        cCtx.fillText('gray bars = true weights · Σxᵢ = 1, xᵢ ≥ 0', pad.l, H - 10);
       } else {
         // spec_quad: per-eigenmode log10|x_i - x*_i| across i = 1..100
         const opt = optima[0];
@@ -1550,7 +1774,8 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     function draw() {
       const param = Number(paramSlider.value);
       const K = Number(iterSlider.value);
-      paramVal.textContent = isComposite(problem) ? param.toFixed(1) : String(param);
+      paramVal.textContent =
+        problem === 'simplex_qp' ? param.toFixed(2) : isComposite(problem) ? param.toFixed(1) : String(param);
       iterVal.textContent = String(K);
 
       const isDark = document.documentElement.classList.contains('dark');
@@ -1838,6 +2063,7 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     }
 
     function syncLbfgsState() {
+      const isSimplex = problem === 'simplex_qp';
       const smoothed = isComposite(problem);
       if (lbfgsBtn) {
         lbfgsBtn.disabled = false;
@@ -1845,7 +2071,10 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         lbfgsBtn.classList.toggle('opacity-35', !visibleMethods.lbfgs);
         lbfgsBtn.classList.toggle('line-through', !visibleMethods.lbfgs);
       }
-      lbfgsNote?.classList.toggle('hidden', !smoothed);
+      if (lbfgsNote) {
+        lbfgsNote.textContent = isSimplex ? '(softmax)' : '(smoothed)';
+        lbfgsNote.classList.toggle('hidden', !smoothed);
+      }
     }
 
     function syncAutoZoomBtn() {
@@ -1872,7 +2101,9 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
             ? 'quad'
             : problem === 'himmelblau'
               ? 'himm'
-              : 'lasso';
+              : problem === 'simplex_qp'
+                ? 'simplex'
+                : 'lasso';
       Object.entries(paramLabelEls).forEach(([k, el]) => el?.classList.toggle('hidden', k !== lblKey));
 
       // Hide 2D zoom/pan overlay on high-dim plots
@@ -1934,6 +2165,15 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
         iterSlider.max = '800';
         iterSlider.value = '300';
         animStepInput.value = '10';
+      } else if (problem === 'simplex_qp') {
+        paramSlider.min = '0.0';
+        paramSlider.max = '0.5';
+        paramSlider.step = '0.05';
+        paramSlider.value = '0.05';
+        iterSlider.min = '0';
+        iterSlider.max = '600';
+        iterSlider.value = '200';
+        animStepInput.value = '5';
       } else {
         // spec_quad
         paramSlider.min = '100';
