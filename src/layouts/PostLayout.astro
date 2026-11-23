@@ -221,8 +221,9 @@ const nextPost =
       window.addEventListener('scroll', updateScroll, { passive: true });
       updateScroll();
 
-      // Style Theorem / Lemma / Proposition / Definition / Exercise / Remark blocks as subtle math callouts
+      // Style Theorem / Lemma / Proposition / Definition / Exercise / Remark blocks as unified math callouts
       const calloutRe = /^(Exercise|Theorem|Lemma|Proposition|Corollary|Definition|Remark|Example)\b/i;
+      const contRe = /^(where|which|for|and|with|such|when|in which|here|as a bonus)\b/i;
       const getLeadEl = (el) => {
         const first = el.firstElementChild;
         if (!first) return null;
@@ -238,8 +239,35 @@ const nextPost =
         const lead = getLeadEl(el);
         if (!lead) return;
         const txt = (lead.textContent || '').replace(/^\[|\]$/g, '').trim();
-        if (calloutRe.test(txt)) {
+        if (!calloutRe.test(txt)) return;
+
+        if (el.tagName === 'LI') {
           el.classList.add('math-callout');
+          return;
+        }
+        // Top-level <p>: wrap in a <div class="math-callout"> and absorb following display math & continuations
+        const box = document.createElement('div');
+        box.className = 'math-callout';
+        el.parentNode?.insertBefore(box, el);
+        box.appendChild(el);
+        let absorbedMath = false;
+        while (box.nextElementSibling) {
+          const nxt = box.nextElementSibling;
+          if (nxt.classList.contains('katex-display')) {
+            box.appendChild(nxt);
+            absorbedMath = true;
+          } else if (absorbedMath && nxt.tagName === 'P') {
+            const t = (nxt.textContent || '').trim();
+            const isItalicCont = nxt.children.length === 1 && nxt.firstElementChild?.tagName === 'EM';
+            if (contRe.test(t) || isItalicCont) {
+              box.appendChild(nxt);
+              absorbedMath = false;
+            } else {
+              break;
+            }
+          } else {
+            break;
+          }
         }
       });
     })();

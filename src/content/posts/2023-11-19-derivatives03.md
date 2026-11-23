@@ -52,24 +52,24 @@ Let us now make a few glancing remarks.
 
 While we have fulfilled property (i), the following anti-properties (given as exercises) show that property (ii) cannot be fully realized.
 
--   *Exercise*. Consider the function 
+-   *Exercise*. Consider the function
 
-$$
-f(x_{1},x_{2})=\begin{cases}
-    0, & \text{if }x=0,\\
-    \dfrac{x_{1}x_{2}^{2}}{x_{1}^{2}+x_{2}^{4}}, & \text{otherwise}.
-\end{cases}
-$$
+    $$
+    f(x_{1},x_{2})=\begin{cases}
+        0, & \text{if }x=0,\\
+        \dfrac{x_{1}x_{2}^{2}}{x_{1}^{2}+x_{2}^{4}}, & \text{otherwise}.
+    \end{cases}
+    $$
 
-Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero. As a bonus, show that $f$ is not continuous at zero.
+    Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero. As a bonus, show that $f$ is not continuous at zero.
 
--   *Exercise*. Consider the function 
+-   *Exercise*. Consider the function
 
-$$
-f(x_{1},x_{2})={\rm sgn}(x_{2})\min(|x_{1}|,|x_{2}|)
-$$
+    $$
+    f(x_{1},x_{2})={\rm sgn}(x_{2})\min(|x_{1}|,|x_{2}|)
+    $$
 
-which is clearly continuous at zero. Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero.
+    which is clearly continuous at zero. Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero.
 
 On the other hand, the nice property about the G-differential (resp. F-differential) is that it gives a good initial estimate for the G-derivative (or F-derivative) if one can extract the appropriate linear form from it (and verify property $(\pi_{2})$ in the case of the F-derivative) or we know that $f$ is G-differentiable (resp. F-differentiable). A classic example of the utility of the differential is in deriving the derivative of the log determinant of a matrix, which we show below.
 
