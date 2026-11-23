@@ -44,11 +44,13 @@ const canonicalUrl = new URL(canonicalPath, SITE.url).href;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:image" content={new URL(SITE.avatar, SITE.url).href} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL('/images/og-card.png', SITE.url).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(SITE.avatar, SITE.url).href} />
+    <meta name="twitter:image" content={new URL('/images/og-card.png', SITE.url).href} />
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -111,6 +113,35 @@ const canonicalUrl = new URL(canonicalPath, SITE.url).href;
     </main>
     <Footer wide={wide} />
     <SearchModal />
+
+    <!-- Floating Back-to-Top Pill -->
+    <button
+      id="back-to-top"
+      type="button"
+      aria-label="Back to top"
+      title="Back to top"
+      class="pointer-events-none fixed right-5 bottom-5 z-40 inline-flex h-10 w-10 translate-y-2 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)]/90 text-[var(--text-muted)] opacity-0 shadow-md backdrop-blur-md transition-all duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+    >
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="m18 15-6-6-6 6" />
+      </svg>
+    </button>
+
+    <script is:inline>
+      (function () {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        function syncTopBtn() {
+          const show = window.scrollY > 420;
+          btn.classList.toggle('opacity-0', !show);
+          btn.classList.toggle('pointer-events-none', !show);
+          btn.classList.toggle('translate-y-2', !show);
+        }
+        window.addEventListener('scroll', syncTopBtn, { passive: true });
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        syncTopBtn();
+      })();
+    </script>
 
     <!-- Copy-to-clipboard buttons for all Shiki code blocks -->
     <script is:inline>

@@ -9,7 +9,7 @@ import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
     <!-- Top Row: 3-Column Bento Grid (Bio | Recent News | Research Pillars) -->
     <section class="grid gap-5 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
       <!-- Column 1: Bio Card -->
-      <div class="card flex flex-col justify-between p-5 lg:col-span-2 xl:col-span-1">
+      <div class="card bento-enter flex flex-col justify-between p-5 lg:col-span-2 xl:col-span-1">
         <div>
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
             <img
@@ -130,7 +130,7 @@ import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
       </div>
 
       <!-- Column 2: Recent News Card -->
-      <div class="card flex flex-col overflow-hidden">
+      <div class="card bento-enter bento-delay-1 flex flex-col overflow-hidden">
         <div class="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
           <h2 class="text-sm font-bold tracking-tight text-[var(--text)]">Recent News</h2>
           <a href="/year-archive/" class="text-xs font-medium text-[var(--accent)] hover:underline">
@@ -157,7 +157,7 @@ import { SITE, RESEARCH_PILLARS, RECENT_NEWS } from '../data/site';
       </div>
 
       <!-- Column 3: Research Pillars Card -->
-      <div class="card flex flex-col overflow-hidden">
+      <div class="card bento-enter bento-delay-2 flex flex-col overflow-hidden">
         <div class="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-subtle)]/70 px-5 py-3.5">
           <h2 class="text-sm font-bold tracking-tight text-[var(--text)]">Research Pillars</h2>
           <a href="/publications/" class="text-xs font-medium text-[var(--accent)] hover:underline">

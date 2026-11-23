@@ -220,6 +220,18 @@ const nextPost =
 
       window.addEventListener('scroll', updateScroll, { passive: true });
       updateScroll();
+
+      // Style Theorem / Lemma / Proposition / Definition / Exercise / Remark blocks as subtle math callouts
+      const calloutRe = /^(Exercise|Theorem|Lemma|Proposition|Corollary|Definition|Remark|Example)\b/i;
+      document.querySelectorAll('.prose p, .prose li').forEach((el) => {
+        if (el.closest('.math-callout')) return;
+        const firstChild = el.firstElementChild;
+        if (!firstChild || (firstChild.tagName !== 'EM' && firstChild.tagName !== 'STRONG')) return;
+        const txt = (firstChild.textContent || '').replace(/^\[|\]$/g, '').trim();
+        if (calloutRe.test(txt)) {
+          el.classList.add('math-callout');
+        }
+      });
     })();
   </script>
 </BaseLayout>

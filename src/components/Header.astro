@@ -14,7 +14,7 @@ const isActive = (href: string) => {
 ---
 
 <header
-  class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/85 backdrop-blur-md"
+  class="sticky top-0 z-40 border-b border-[var(--border)]/80 bg-[var(--bg)]/80 backdrop-blur-lg transition-colors"
 >
   <div
     class:list={[
@@ -24,14 +24,14 @@ const isActive = (href: string) => {
   >
     <a
       href="/"
-      class="flex items-center gap-2.5 font-semibold tracking-tight text-[var(--text)] transition-opacity hover:opacity-80"
+      class="group flex items-center gap-2.5 font-semibold tracking-tight text-[var(--text)] transition-opacity hover:opacity-90"
     >
       <img
         src={SITE.avatar}
         alt={SITE.name}
         width="30"
         height="30"
-        class="h-7 w-7 rounded-full border border-[var(--border)] object-cover"
+        class="h-7 w-7 rounded-full border border-[var(--border)] object-cover ring-2 ring-transparent transition-all group-hover:ring-[var(--accent)]/40"
       />
       <span class="text-[0.95rem]">{SITE.name}</span>
     </a>
@@ -41,14 +41,18 @@ const isActive = (href: string) => {
         SITE.nav.map((item) => (
           <a
             href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
             class:list={[
-              'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+              'relative rounded-lg px-3 py-1.5 text-sm font-medium transition-all',
               isActive(item.href)
-                ? 'bg-[var(--accent-soft)] text-[var(--accent)]'
+                ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold'
                 : 'text-[var(--text-muted)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text)]',
             ]}
           >
             {item.label}
+            {isActive(item.href) && (
+              <span class="absolute right-3 -bottom-[1.08rem] left-3 h-0.5 rounded-full bg-[var(--accent)]" />
+            )}
           </a>
         ))
       }

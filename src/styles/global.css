@@ -197,15 +197,65 @@ body {
   padding: 0.5rem;
 }
 
-/* Subtle card styling */
+/* Subtle card styling + emerald hover glow */
 .card {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.875rem;
+  box-shadow: 0 1px 2px 0 rgba(10, 24, 16, 0.03);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card-hover:hover {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-  box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.14);
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+  box-shadow: 0 8px 24px -10px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Gentle Bento entrance animation (respects reduced motion) */
+@keyframes bentoFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bento-enter {
+  animation: bentoFadeUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.bento-delay-1 {
+  animation-delay: 60ms;
+}
+
+.bento-delay-2 {
+  animation-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-enter {
+    animation: none;
+  }
+}
+
+/* Mathematical Theorem / Exercise / Remark callouts inside .prose */
+.prose blockquote,
+.prose .math-callout {
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
+  border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+  border-right: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+  border-radius: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  margin: 1rem 0;
+  font-style: normal;
+}
+
+.prose li.math-callout {
+  list-style: none;
+  margin-left: -1rem;
 }
