@@ -63,6 +63,19 @@ While we have fulfilled property (i), the following anti-properties (given as ex
 
     Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero. As a bonus, show that $f$ is not continuous at zero.
 
+    <details class="solution-box">
+    <summary>Show solution</summary>
+
+    If $\Delta_{1}=0$ or $\Delta_{2}=0$, then $f(t\Delta)=0$ for all $t$, so $V^{f}(0,\Delta)=0$. If $\Delta_{1}\neq 0$ and $\Delta_{2}\neq 0$, then
+
+    $$
+    V^{f}(0,\Delta)=\lim_{t\to 0}\frac{t^{3}\Delta_{1}\Delta_{2}^{2}}{t(t^{2}\Delta_{1}^{2}+t^{4}\Delta_{2}^{4})}=\lim_{t\to 0}\frac{\Delta_{1}\Delta_{2}^{2}}{\Delta_{1}^{2}+t^{2}\Delta_{2}^{4}}=\frac{\Delta_{2}^{2}}{\Delta_{1}}.
+    $$
+
+    Thus $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but it is **not linear** in $\Delta$: $V^{f}(0,(1,0))=V^{f}(0,(0,1))=0$, whereas $V^{f}(0,(1,1))=1\neq 0+0$. Hence $f$ has no G-derivative at zero. For the bonus, along $x_{1}=x_{2}^{2}$ ($x_{2}\neq 0$), $f(x_{2}^{2},x_{2})=\frac{x_{2}^{4}}{2x_{2}^{4}}=\frac{1}{2}\not\to 0=f(0,0)$, so $f$ is discontinuous at zero.
+
+    </details>
+
 -   *Exercise*. Consider the function
 
     $$
@@ -70,6 +83,19 @@ While we have fulfilled property (i), the following anti-properties (given as ex
     $$
 
     which is clearly continuous at zero. Show that $V^{f}(0,\Delta)$ exists for every $\Delta\in\mathbb{R}^{2}$, but $f$ does not have a G-derivative at zero.
+
+    <details class="solution-box">
+    <summary>Show solution</summary>
+
+    Observe that $f$ is homogeneous of degree $1$ for all $t\in\mathbb{R}$ (both $t>0$ and $t<0$), since $\operatorname{sgn}(t\Delta_{2})|t|=t\operatorname{sgn}(\Delta_{2})$:
+
+    $$
+    f(t\Delta)=\operatorname{sgn}(t\Delta_{2})\min(|t||\Delta_{1}|,|t||\Delta_{2}|)=t\,f(\Delta).
+    $$
+
+    Consequently, $\frac{f(t\Delta)-f(0)}{t}=f(\Delta)$ for every $t\neq 0$, so $V^{f}(0,\Delta)=f(\Delta)$ exists for all $\Delta\in\mathbb{R}^{2}$. However, $V^{f}(0,\Delta)$ is **not linear** in $\Delta$: $V^{f}(0,(1,0))=V^{f}(0,(0,1))=0$, while $V^{f}(0,(1,1))=1\neq 0+0$, so $f$ has no G-derivative at zero.
+
+    </details>
 
 On the other hand, the nice property about the G-differential (resp. F-differential) is that it gives a good initial estimate for the G-derivative (or F-derivative) if one can extract the appropriate linear form from it (and verify property $(\pi_{2})$ in the case of the F-derivative) or we know that $f$ is G-differentiable (resp. F-differentiable). A classic example of the utility of the differential is in deriving the derivative of the log determinant of a matrix, which we show below.
 

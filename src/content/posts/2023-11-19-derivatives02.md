@@ -59,6 +59,25 @@ With the above definitions in mind, we give a few properties that merely require
 
         Show that $f$ has a G-derivative at zero, but not an F-derivative at zero. Show, moreover, that $f$ is hemicontinuous at zero.
 
+        <details class="solution-box">
+        <summary>Show solution</summary>
+
+        Fix $\Delta=(\Delta_{1},\Delta_{2})\neq 0$. If $\Delta_{2}=0$, then $f(t\Delta)=0$ for all $t$. If $\Delta_{2}\neq 0$, then for $t\neq 0$,
+
+        $$
+        \frac{f(t\Delta)-f(0)}{t}=\frac{\Delta_{2}\|\Delta\|^{3}|t|^{3}}{t^{4}\|\Delta\|^{4}+t^{2}\Delta_{2}^{2}}=\frac{\Delta_{2}\|\Delta\|^{3}|t|}{t^{2}\|\Delta\|^{4}+\Delta_{2}^{2}}\xrightarrow{t\to 0}0.
+        $$
+
+        Hence ${\cal B}_{0}^{f}(\Delta)=0$ is linear in $\Delta$, so $f$ is G-differentiable at zero (and therefore hemicontinuous at zero). If $f$ were F-differentiable at zero, its F-derivative would also have to be ${\cal A}_{0}^{f}=0$. Yet along the parabola $x_{2}=x_{1}^{2}$ ($x_{1}>0$),
+
+        $$
+        \frac{|f(x_{1},x_{1}^{2})-f(0)|}{\|(x_{1},x_{1}^{2})\|}=\frac{x_{1}^{2}(x_{1}^{2}+x_{1}^{4})}{(x_{1}^{2}+x_{1}^{4})^{2}+x_{1}^{4}}=\frac{1+x_{1}^{2}}{(1+x_{1}^{2})^{2}+1}\xrightarrow{x_{1}\to 0^{+}}\frac{1}{2}\neq 0,
+        $$
+
+        so $f$ is not F-differentiable at zero.
+
+        </details>
+
 -   If $f$ is G-differentiable at $x$ and $\|x\|=\sqrt{x^{T}x}$ for every $x\in\mathbb{R}^{n}$, then the partial derivatives of $f$ exist at $x$. Furthermore, the matrix representation of ${\cal B}_{x}^{f}$ is given by the **Jacobian**
 
 $$
@@ -83,11 +102,31 @@ If, in addition, ${\cal B}_{x}^{f}$ is an F-derivative then ${\cal B}_{x}^{h}$ i
 
 -   *Exercise*. Let $f$ be as in $(\gamma_{2})$ and let $g:\mathbb{R}^{2}\mapsto\mathbb{R}^{2}$ be given by $g(x)=(x_{1},x_{2}^{2})^{T}$. Show that the composite function $h=f\circ g$ does not have a G-derivative at zero.
 
+    <details class="solution-box">
+    <summary>Show solution</summary>
+
+    Note $g(0)=0$ and $h(0)=f(0)=0$. Choosing $\Delta=(1,1)^{T}$, we have $g(t\Delta)=(t,t^{2})^{T}$, so for $t\neq 0$,
+
+    $$
+    \frac{h(t\Delta)-h(0)}{t}=\frac{t^{2}(t^{2}+t^{4})^{3/2}}{t\bigl((t^{2}+t^{4})^{2}+t^{4}\bigr)}=\operatorname{sgn}(t)\,\frac{(1+t^{2})^{3/2}}{(1+t^{2})^{2}+1}.
+    $$
+
+    As $t\to 0^{+}$ this limit is $+\frac{1}{2}$, whereas as $t\to 0^{-}$ it is $-\frac{1}{2}$. Since the two-sided limit fails to exist, $h$ has no G-derivative at zero (here $f$ is only G-differentiable, not F-differentiable, at $g(0)=0$).
+
+    </details>
+
 Finally, some important anti-properties of G-derivatives and G-differentiability are as follows.
 
 -   Surprisingly, just like the F-derivative, the existence of the partial derivatives at $x$ **does not** imply that the G-derivative exists at $x$.
 
     -   *Exercise*. Consider the same function in equation $(\gamma_{1})$ of the previous post. Show that $f$ is not G-differentiable at zero.
+
+        <details class="solution-box">
+        <summary>Show solution</summary>
+
+        Along $\Delta=(1,1)^{T}$, we have $f(t\Delta)=f(t,t)=1$ for all $t\neq 0$, while $f(0,0)=0$. Thus $\frac{f(t\Delta)-f(0)}{t}=\frac{1}{t}$ has no finite limit as $t\to 0$ (and $f$ is not hemicontinuous along $\Delta$), so $f$ is not G-differentiable at zero.
+
+        </details>
 
 -   The G-differentiability of $f$ **does not** imply that $f$ is continuous (unlike for F-differentiability).
 
@@ -101,3 +140,22 @@ Finally, some important anti-properties of G-derivatives and G-differentiability
         $$
 
         at zero. Show that the G-derivative of $f$ exists at zero, but $f$ is not continuous.
+
+        <details class="solution-box">
+        <summary>Show solution</summary>
+
+        Fix $\Delta=(\Delta_{1},\Delta_{2})\neq 0$. If $\Delta_{1}=0$ or $\Delta_{2}=0$, then $f(t\Delta)=0$ for all $t$. Otherwise, since $\exp(-(t\Delta_{1})^{-2})$ decays faster than any power of $|t|$ as $t\to 0$,
+
+        $$
+        \left|\frac{f(t\Delta)-f(0)}{t}\right|=\frac{2|\Delta_{2}|\exp(-(t\Delta_{1})^{-2})}{t^{2}\Delta_{2}^{2}+\exp(-2(t\Delta_{1})^{-2})}\leq\frac{2\exp(-(t\Delta_{1})^{-2})}{t^{2}|\Delta_{2}|}\xrightarrow{t\to 0}0.
+        $$
+
+        Hence ${\cal B}_{0}^{f}=0$ exists at zero. However, along the curve $x_{2}=\exp(-x_{1}^{-2})$ as $x_{1}\to 0$, we have $(x_{1},x_{2})\to(0,0)$ while
+
+        $$
+        f\bigl(x_{1},\exp(-x_{1}^{-2})\bigr)=\frac{2\exp(-2x_{1}^{-2})}{2\exp(-2x_{1}^{-2})}=1\not\to 0=f(0,0),
+        $$
+
+        so $f$ is discontinuous at zero.
+
+        </details>

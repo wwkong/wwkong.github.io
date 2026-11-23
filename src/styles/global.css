@@ -267,3 +267,41 @@ body {
 .prose .math-callout > p:last-child {
   margin-bottom: 0;
 }
+
+.prose details.solution-box {
+  margin-top: 0.75rem;
+  border-top: 1px dashed color-mix(in srgb, var(--accent) 28%, var(--border));
+  padding-top: 0.55rem;
+}
+
+.prose details.solution-box > summary {
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.prose details.solution-box > summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose details.solution-box > summary::before {
+  content: '▸';
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.prose details.solution-box[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.prose details.solution-box > :not(summary) {
+  margin-top: 0.5rem;
+  font-size: 0.96rem;
+}

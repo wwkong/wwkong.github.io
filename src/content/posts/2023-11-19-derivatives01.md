@@ -79,3 +79,16 @@ Finally, some important anti-properties of F-derivatives and F-differentiability
         $$
 
         at zero. Show that the partial derivatives of $f$ exist at zero, but the function itself is not F-differentiable.
+
+        <details class="solution-box">
+        <summary>Show solution</summary>
+
+        Along the coordinate axes, $f(t,0)=t$ and $f(0,t)=t$ for all $t\in\mathbb{R}$, while $f(0,0)=0$. Hence both partial derivatives exist at zero:
+
+        $$
+        \frac{\partial f}{\partial x_{1}}(0,0)=\lim_{t\to 0}\frac{t-0}{t}=1, \qquad \frac{\partial f}{\partial x_{2}}(0,0)=\lim_{t\to 0}\frac{t-0}{t}=1.
+        $$
+
+        However, along the diagonal $(t,t)$ with $t\neq 0$, we have $f(t,t)=1\not\to 0=f(0,0)$ as $t\to 0$. Thus $f$ is not continuous at zero, and therefore cannot be F-differentiable at zero.
+
+        </details>
