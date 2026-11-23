@@ -705,11 +705,25 @@ sol_lasso = px.solve(problem_lasso, x0=jnp.zeros(64), solver=px.solvers.APD(opt_
     class="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-[var(--border)] bg-[var(--surface-subtle)]/35 px-5 py-2 font-mono text-[11px] text-[var(--text-muted)]"
   ></div>
 
-  <!-- Row 6: Collapsible Proxax Snippet -->
+  <!-- Row 6: Collapsible Proxax Snippet + Open in Colab -->
   <details class="border-t border-[var(--border)] bg-[var(--surface-subtle)]/50">
-    <summary class="cursor-pointer select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
-      Solve these problems in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
-      <a href="/accel04/" class="text-[var(--accent)] underline" onclick="event.stopPropagation()">Acceleration blog series</a>
+    <summary class="flex cursor-pointer flex-wrap items-center justify-between gap-2 select-none px-5 py-3 text-xs font-medium text-[var(--text)] hover:text-[var(--accent)]">
+      <span>
+        Solve these problems in Python / JAX with Proxax (<code>px.solvers.APD</code>) — or read the{' '}
+        <a href="/accel04/" class="text-[var(--accent)] underline" onclick="event.stopPropagation()">Acceleration blog series</a>
+      </span>
+      <a
+        href="https://colab.research.google.com/github/wwkong/wwkong.github.io/blob/master/notebooks/proxax_quickstart.ipynb"
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick="event.stopPropagation()"
+        class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/35 bg-amber-500/12 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-amber-700 transition-colors hover:border-amber-500 hover:bg-amber-500/20 dark:text-amber-300"
+      >
+        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M16.9 4.8c-2.6-2.6-6.9-2.6-9.5 0a6.7 6.7 0 0 0 0 9.5l1.6-1.6a4.5 4.5 0 0 1 6.3-6.3l1.6-1.6zm-9.8 14.4c2.6 2.6 6.9 2.6 9.5 0a6.7 6.7 0 0 0 0-9.5l-1.6 1.6a4.5 4.5 0 0 1-6.3 6.3l-1.6 1.6z" />
+        </svg>
+        Open in Colab
+      </a>
     </summary>
     <div class="border-t border-[var(--border)] px-5 py-4">
       <div class="overflow-x-auto rounded-lg border border-[var(--border)]">
