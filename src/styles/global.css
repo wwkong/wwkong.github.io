@@ -259,3 +259,11 @@ body {
   list-style: none;
   margin-left: -1rem;
 }
+
+.prose .math-callout > p:first-child {
+  margin-top: 0;
+}
+
+.prose .math-callout > p:last-child {
+  margin-bottom: 0;
+}
